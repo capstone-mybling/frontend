@@ -36,7 +36,7 @@ export default function Layout({
       {/* Header */}
       <div
         className={
-          "z-10 bg-pantone w-full h-12 max-w-xl text-lg px-10 font-medium fixed text-white border-b tp-0 flex items-center"
+          "z-10 bg-pantone w-full h-12 max-w-[390px] text-lg px-10 font-medium fixed text-white border-b tp-0 flex items-center"
         }
       >
         {canGoBack ? (
@@ -93,7 +93,7 @@ export default function Layout({
       {hasTabBar ? (
         <nav
           className={
-            "bg-white max-w-xl text-pantone border-t fixed bottom-0 w-full pb-3 pt-5 flex justify-between text-xs"
+            "bg-white max-w-[390px] text-pantone border-t fixed bottom-0 w-full pb-3 pt-5 flex justify-between text-xs"
           }
         >
           {/* 홈 */}
