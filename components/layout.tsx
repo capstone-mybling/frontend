@@ -40,10 +40,7 @@ export default function Layout({
         }
       >
         {canGoBack ? (
-          <button
-            onClick={onClick}
-            className={"absolute left-4"}
-          >
+          <button onClick={onClick} className={"absolute left-4"}>
             <svg
               className="w-6 h-6"
               fill="none"
@@ -62,14 +59,13 @@ export default function Layout({
         ) : null}
 
         {title ? (
-          <span className={cls(canGoBack ? "mx-2" : "", "text-xl font-bold")}>{title}</span>
+          <span className={cls(canGoBack ? "mx-2" : "", "text-xl font-bold")}>
+            {title}
+          </span>
         ) : null}
 
         {alarmBtnDisable ? null : (
-          <Link
-            className={"absolute right-3"}
-            href={"/notification/"}
-          >
+          <Link className={"absolute right-3"} href={"/notification/"}>
             <svg
               width="25"
               height="25"
@@ -97,10 +93,7 @@ export default function Layout({
           }
         >
           {/* 홈 */}
-          <Link
-            href={"/"}
-            legacyBehavior
-          >
+          <Link href={"/"} legacyBehavior>
             <a
               className={cls(
                 "flex flex-col items-center space-y-2 w-1/4",
@@ -160,10 +153,7 @@ export default function Layout({
           </Link>
 
           {/* 게시판 */}
-          <Link
-            href={"/bulletins"}
-            legacyBehavior
-          >
+          <Link href={"/bulletins"} legacyBehavior>
             <a
               className={cls(
                 "flex flex-col items-center space-y-2 w-1/4",
@@ -212,10 +202,7 @@ export default function Layout({
           </Link>
 
           {/* 관리자 채팅 */}
-          <Link
-            href={"/chats"}
-            legacyBehavior
-          >
+          <Link href={"/chats"} legacyBehavior>
             <a
               className={cls(
                 "flex flex-col items-center space-y-2 w-1/4",
@@ -276,10 +263,7 @@ export default function Layout({
           </Link>
 
           {/* 마이페이지 */}
-          <Link
-            href={"/profile"}
-            legacyBehavior
-          >
+          <Link href={"/profile"} legacyBehavior>
             <a
               className={cls(
                 "flex flex-col items-center space-y-2 text-pantone w-1/4",
