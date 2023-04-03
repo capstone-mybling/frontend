@@ -2,9 +2,12 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import Layout from "@/components/layout";
+import Link from "next/Link";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 const Home: NextPage = () => {
+  const router = useRouter();
   return (
     <Layout hasTabBar>
       <Head>
@@ -18,6 +21,16 @@ const Home: NextPage = () => {
           캡스톤 하준 브랜치 입니당.
         </h1>
       </section>
+      <>
+        <button
+          className="p-8 rounded-3xl bg-rose-300 border-double border-4 border-sky-500"
+          onClick={() => {
+            router.push("/posts");
+          }}
+        >
+          post페이지 이동하기 (임시버전)
+        </button>
+      </>
     </Layout>
   );
 };
