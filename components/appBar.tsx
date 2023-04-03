@@ -49,7 +49,7 @@ function ResponsiveAppBar() {
           sx={{ justifyContent: "flex-end" }}
         >
           {/* 로고버튼 */}
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none", justifySelf: "baseline" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <Image
               className="pr-3"
               src={Logo}
@@ -59,12 +59,7 @@ function ResponsiveAppBar() {
             />
           </Box>
           {/* 검색 버튼 */}
-          <Box
-            sx={{
-              display: { xs: "flex" },
-              direction: "row-reverse",
-            }}
-          >
+          <Box sx={{ direction: "row-reverse" }}>
             <IconButton
               size="large"
               aria-label="search-bar"
