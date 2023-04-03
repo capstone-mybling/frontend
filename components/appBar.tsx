@@ -43,15 +43,14 @@ function ResponsiveAppBar() {
       position="static"
       color="inherit"
     >
-      <Container maxWidth="xl">
+      <Container>
         <Toolbar
           disableGutters
-          sx={{ justifyContent: "flex-end" }}
+          sx={{ justifyContent: "space-between" }}
         >
           {/* 로고버튼 */}
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box>
             <Image
-              className="pr-3"
               src={Logo}
               alt="mybling"
               width={50}
@@ -59,7 +58,7 @@ function ResponsiveAppBar() {
             />
           </Box>
           {/* 검색 버튼 */}
-          <Box sx={{ direction: "row-reverse" }}>
+          <Box>
             <IconButton
               size="large"
               aria-label="search-bar"
