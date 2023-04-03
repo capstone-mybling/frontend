@@ -12,10 +12,10 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="h-screen">
+    <>
       <ResponsiveAppBar />
       {/* 본문 */}
       <div className={"pt-12"}>{children}</div>
-    </div>
+    </>
   );
 }

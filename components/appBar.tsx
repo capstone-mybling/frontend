@@ -40,8 +40,8 @@ function ResponsiveAppBar() {
 
   return (
     <AppBar
-      position="static"
       color="inherit"
+      className="flex shrink-0 w-full"
     >
       <Container>
         <Toolbar

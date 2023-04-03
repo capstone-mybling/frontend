@@ -6,7 +6,7 @@ import Layout from "@/components/layout";
 const inter = Inter({ subsets: ["latin"] });
 const Home: NextPage = () => {
   return (
-    <Layout hasTabBar>
+    <Layout>
       <Head>
         <title>mybling | 마블링</title>
         <meta
@@ -22,8 +22,27 @@ const Home: NextPage = () => {
           href="/favicon.ico"
         />
       </Head>
+      {/* 드래그 테스트용 */}
       <section className={"border-y-2 mt-24"}>
         <h1 className={"text-3xl font-bold underline underline-offset-1"}>hello capstone</h1>
+      </section>
+      <section className={"border-y-2 mt-24"}>
+        <h1 className={"text-3xl font-bold underline underline-offset-1"}>test</h1>
+      </section>
+      <section className={"border-y-2 mt-24"}>
+        <h1 className={"text-3xl font-bold underline underline-offset-1"}>test</h1>
+      </section>
+      <section className={"border-y-2 mt-24"}>
+        <h1 className={"text-3xl font-bold underline underline-offset-1"}>test</h1>
+      </section>
+      <section className={"border-y-2 mt-24"}>
+        <h1 className={"text-3xl font-bold underline underline-offset-1"}>test</h1>
+      </section>
+      <section className={"border-y-2 mt-24"}>
+        <h1 className={"text-3xl font-bold underline underline-offset-1"}>test</h1>
+      </section>
+      <section className={"border-y-2 mt-24"}>
+        <h1 className={"text-3xl font-bold underline underline-offset-1"}>test</h1>
       </section>
     </Layout>
   );
