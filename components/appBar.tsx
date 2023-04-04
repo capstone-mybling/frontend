@@ -10,9 +10,8 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import SearchIcon from "@mui/icons-material/Search";
-import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import Logo from "../public/logo.png";
+import Logo from "@public/logo.png";
 
 const pages = ["메뉴내용1", "메뉴내용2", "메뉴내용3"];
 
