@@ -20,8 +20,8 @@ export default function Home({ data }: any) {
             >
               <Link href={`/posts/${item.id}`}>
                 <Image
-                  src={`/${data.image}`}
-                  alt={data.body}
+                  src={`/${item.image}`}
+                  alt={item.body}
                   width="300"
                   height="300"
                 />

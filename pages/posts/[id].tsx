@@ -16,7 +16,7 @@ const Post = () => {
   const { id } = router.query;
 
   // id에 해당하는 데이터를 찾아서 보여주는 로직
-  const post = data.find((post: Post) => post.id === Number(id));
+  const post = data.find((post: any) => post.id === Number(id));
   console.log("post나오나? -> ", post);
 
   if (!post) {
