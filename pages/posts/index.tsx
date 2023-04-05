@@ -9,7 +9,7 @@ export default function Home({ data }: any) {
   return (
     <Layout hasTabBar>
       <div>
-        <h1 className="w-full flex-none mb-2 text-2xl font-semibold text-blue-700">
+        <h1 className="w-full flex-none mb-2 text-2xl font-semibold text-blue-700 pt-12">
           임의로 만든 포스트.. 딱! 3개
         </h1>
         <ul className="">
