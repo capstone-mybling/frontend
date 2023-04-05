@@ -5,7 +5,7 @@ import Layout from "../../components/layout";
 import Image from "next/image";
 
 export default function Home({ data }: any) {
-  console.log(data);
+  // console.log(data);
   return (
     <Layout>
       <div>

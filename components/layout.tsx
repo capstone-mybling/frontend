@@ -15,7 +15,7 @@ export default function Layout({ children }: LayoutProps) {
     <>
       <ResponsiveAppBar />
       {/* 본문 */}
-      <div className={"pt-12"}>{children}</div>
+      <div className={"pt-16"}>{children}</div>
     </>
   );
 }

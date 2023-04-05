@@ -17,8 +17,11 @@ import Logo from "../public/logo.png";
 const pages = ["메뉴내용1", "메뉴내용2", "메뉴내용3"];
 
 function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElSearchr, setAnchorElSearch] = React.useState<null | HTMLElement>(null);
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+    null
+  );
+  const [anchorElSearchr, setAnchorElSearch] =
+    React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -44,18 +47,10 @@ function ResponsiveAppBar() {
       className="absolute inset-x-0 mx-auto w-full h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] max-w-[390px]"
     >
       <Container>
-        <Toolbar
-          disableGutters
-          sx={{ justifyContent: "space-between" }}
-        >
+        <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
           {/* 로고버튼 */}
           <Box>
-            <Image
-              src={Logo}
-              alt="mybling"
-              width={50}
-              onClick={Onclick}
-            />
+            <Image src={Logo} alt="mybling" width={50} onClick={Onclick} />
           </Box>
           {/* 검색 버튼 */}
           <Box>
@@ -100,10 +95,7 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                >
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
