@@ -1,6 +1,6 @@
 import * as React from "react";
 import Image from "next/image";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,7 +10,6 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import SearchIcon from "@mui/icons-material/Search";
-import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Logo from "../public/logo.png";
 
@@ -33,9 +32,9 @@ function ResponsiveAppBar() {
   const handleCloseSearchBar = () => {
     setAnchorElSearch(null);
   };
-
+  const router = useRouter();
   const Onclick = () => {
-    Router.push("/");
+    router.push("/");
   };
 
   return (
@@ -43,7 +42,7 @@ function ResponsiveAppBar() {
       color="inherit"
       className="absolute inset-x-0 mx-auto w-full h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] max-w-[390px]"
     >
-      <Container>
+      <Container className="pr-1">
         <Toolbar
           disableGutters
           sx={{ justifyContent: "space-between" }}
