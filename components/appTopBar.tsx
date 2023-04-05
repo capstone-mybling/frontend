@@ -1,6 +1,6 @@
 import * as React from "react";
 import Image from "next/image";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -16,14 +16,17 @@ import Logo from "../public/logo.png";
 const pages = ["메뉴내용1", "메뉴내용2", "메뉴내용3"];
 
 function ResponsiveAppBar() {
+  const [isSearchOpen, setIsSearchOpen] = React.useState<boolean>(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElSearchr, setAnchorElSearch] = React.useState<null | HTMLElement>(null);
-
+  const router = useRouter();
+  
+  const handleSearchBar = () =>{
+    setIsSearchOpen(!isSearchOpen);
+    console.log(isSearchOpen);
+  }
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenSearchBar = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElSearch(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
@@ -32,7 +35,6 @@ function ResponsiveAppBar() {
   const handleCloseSearchBar = () => {
     setAnchorElSearch(null);
   };
-  const router = useRouter();
   const Onclick = () => {
     router.push("/");
   };
@@ -42,6 +44,13 @@ function ResponsiveAppBar() {
       color="inherit"
       className="absolute inset-x-0 mx-auto w-full h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] max-w-[390px]"
     >
+    {/* 검색창 */}
+    {isSearchOpen && <div className="absolute top-0 left-0 right-0 m-0 w-full h-screen bg-slate-600 z-30 inset-x-0 ">
+      <button onClick={handleSearchBar}>
+        x
+      </button>
+      111
+    </div>}
       <Container className="pr-1">
         <Toolbar
           disableGutters
@@ -63,7 +72,7 @@ function ResponsiveAppBar() {
               aria-label="search-bar"
               aria-controls="search-appbar"
               aria-haspopup="true"
-              onClick={handleOpenSearchBar}
+              onClick={handleSearchBar}
               color="inherit"
             >
               <SearchIcon />
