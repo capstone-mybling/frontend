@@ -1,54 +1,57 @@
-import { useState } from "react";
+import * as React from "react";
 import Image from "next/image";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import SearchIcon from "@mui/icons-material/Search";
-import Logo from "@public/logo.png";
-import { cls } from "@/libs/client/utils";
+import MenuItem from "@mui/material/MenuItem";
+import Logo from "../public/logo.png";
+
+const pages = ["메뉴내용1", "메뉴내용2", "메뉴내용3"];
 
 function ResponsiveAppBar() {
-  const [searchBar, setSearchBar] = useState<boolean>(false);
+  const [isSearchOpen, setIsSearchOpen] = React.useState<boolean>(false);
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [anchorElSearchr, setAnchorElSearch] = React.useState<null | HTMLElement>(null);
+  const router = useRouter();
+
   const handleSearchBar = () => {
-    setSearchBar(!searchBar);
-    // console.log(searchBar);
+    setIsSearchOpen(!isSearchOpen);
+    console.log(isSearchOpen);
   };
-  const [menuBar, setMenuBar] = useState<boolean>(false);
-  const handleMenuBar = () => {
-    setMenuBar(!menuBar);
-    console.log(menuBar);
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNav(event.currentTarget);
   };
 
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+  const handleCloseSearchBar = () => {
+    setAnchorElSearch(null);
+  };
   const Onclick = () => {
-    Router.push("/");
+    router.push("/");
   };
 
   return (
     <AppBar
       color="inherit"
-      className="float inset-x-0 mx-auto w-full h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] max-w-[390px] z-20"
+      className="absolute inset-x-0 mx-auto w-full h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] max-w-[390px]"
     >
-      {/* 검색 바 */}
-      <div
-        className={cls(
-          "fixed inset-0 mx-auto bg-white transition-all duration-500 transform z-30 max-w-[390px]",
-          searchBar
-            ? "translate-y-0 opacity-100"
-            : "-translate-y-full opacity-0 pointer-events-none"
-        )}
-      >
-        <div className="flex items-center justify-center h-full">
-          <div className="p-8 bg-gray-100 rounded-lg">
-            <p>Search Bar Content</p>
-            <button onClick={handleSearchBar}>Close</button>
-          </div>
+      {/* 검색창 */}
+      {isSearchOpen && (
+        <div className="absolute top-0 left-0 right-0 m-0 w-full h-screen bg-slate-600 z-30 inset-x-0 ">
+          <button onClick={handleSearchBar}>x</button>
+          111
         </div>
-      </div>
-      <Container className="pr-3 pl-3">
+      )}
+      <Container className="pr-1">
         <Toolbar
           disableGutters
           sx={{ justifyContent: "space-between" }}
@@ -80,12 +83,12 @@ function ResponsiveAppBar() {
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              // onClick={}
+              onClick={handleOpenNavMenu}
               color="inherit"
             >
               <MenuIcon />
             </IconButton>
-            {/* 메뉴 내용물
+            {/* 메뉴 내용물 */}
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -112,7 +115,7 @@ function ResponsiveAppBar() {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
-            </Menu> */}
+            </Menu>
           </Box>
         </Toolbar>
       </Container>
