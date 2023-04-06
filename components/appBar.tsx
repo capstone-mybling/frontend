@@ -34,13 +34,13 @@ function ResponsiveAppBar() {
   };
 
   const Onclick = () => {
-    Router.push("");
+    Router.push("/");
   };
 
   return (
     <AppBar
       color="inherit"
-      className="flex shrink-0 w-full"
+      className="absolute inset-x-0 mx-auto w-full h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] max-w-[390px]"
     >
       <Container>
         <Toolbar
