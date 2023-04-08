@@ -36,15 +36,13 @@ function ResponsiveAppBar() {
         className={cls(
           "fixed inset-0 mx-auto bg-white transition-all duration-500 transform z-30 max-w-[390px]",
           searchBar
-            ? "translate-y-0 opacity-100"
-            : "-translate-y-full opacity-0 pointer-events-none"
+            ? "translate-y-0 bg-opacity-70"
+            : "-translate-y-full bg-opacity-0 pointer-events-none"
         )}
       >
-        <div className="flex items-center justify-center h-full">
-          <div className="p-8 bg-gray-100 rounded-lg">
-            <p>Search Bar Content</p>
-            <button onClick={handleSearchBar}>Close</button>
-          </div>
+        <div className="flex-cols-1 items-center justify-center">
+          <div className="w-full bg-white h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)]">1</div>
+          <button onClick={handleSearchBar}>Close</button>
         </div>
       </div>
       <Container className="pr-3 pl-3">
