@@ -5,11 +5,11 @@ import Layout from "../../components/layout";
 import Image from "next/image";
 
 export default function Home({ data }: any) {
-  console.log(data);
+  // console.log(data);
   return (
     <Layout>
       <div>
-        <h1 className="w-full flex-none mb-2 text-2xl font-semibold text-blue-700">
+        <h1 className="w-full flex-none mb-2 text-2xl font-semibold text-blue-700 pt-12">
           임의로 만든 포스트.. 딱! 3개
         </h1>
         <ul className="">

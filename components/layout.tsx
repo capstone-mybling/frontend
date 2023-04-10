@@ -1,6 +1,7 @@
 import React from "react";
-import ResponsiveAppBar from "./appTopBar";
-import BottomNav from "./appBottomBar";
+import ResponsiveAppBar from "./appBar";
+import { useRouter } from "next/dist/client/router";
+import BottomNavBar from "./BottomNavBar";
 
 interface LayoutProps {
   title?: string;
@@ -15,8 +16,10 @@ export default function Layout({ children }: LayoutProps) {
     <>
       <ResponsiveAppBar />
       {/* 본문 */}
-      <div className={"pt-12"}>{children}</div>
-      <BottomNav />
+      <main className={"pt-16"}>{children}</main>
+      <footer className="sticky bottom-0 bg-white z-10 border-b">
+        <BottomNavBar />
+      </footer>
     </>
   );
 }

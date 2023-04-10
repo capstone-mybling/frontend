@@ -4,6 +4,7 @@
 @media (min-width: 390px) {
   html {
     overflow-x: hidden;
-    background-color:darkgrey;
+    overflow-y: auto;
+    background-color: darkgrey;
   }
 }
