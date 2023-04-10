@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import data from "../../data.json";
-import Layout from "../../components/layout";
+import Layout from "../layout";
 import Image from "next/image";
 import { AiOutlineHeart } from "react-icons/ai";
 
@@ -10,12 +10,13 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import HeartIcon from "@/components/icons/HeartIcons";
 
-interface TabPanelProps {
+type TabPanelProps = {
   children?: React.ReactNode;
   index: number;
   value: number;
-}
+};
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -45,13 +46,13 @@ function a11yProps(index: number) {
 }
 //
 
-interface Post {
+type Post = {
   userId: number;
   id: number;
   title: string;
   body: string;
   image: HTMLImageElement;
-}
+};
 
 const Post = () => {
   const router = useRouter();
@@ -103,7 +104,7 @@ const Post = () => {
               className="bg-white border-black border-2 rounded-full p-2 w-full flex"
               onClick={() => setLike((n) => n + 1)}
             >
-              <AiOutlineHeart className="mt-1" />
+              <HeartIcon />
               <span> {like}</span>
             </button>
           </div>
