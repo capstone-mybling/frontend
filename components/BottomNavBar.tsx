@@ -36,8 +36,9 @@ const menu = [
 export default function BottomNavBar() {
   const pathName = usePathname(); //현재 경로를 받아와줌 -> 3항연산자에 활용
   return (
+    // <div className="flex justify-between items-center px-6">
     <nav>
-      <ul className="flex gap-4 items-center p-4">
+      <ul className="flex gap-4 items-center p-4 justify-around">
         {menu.map((item) => (
           <li key={item.href}>
             <Link href={item.href}>
@@ -61,5 +62,6 @@ export default function BottomNavBar() {
         </li> */}
       </ul>
     </nav>
+    // </div>
   );
 }

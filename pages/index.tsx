@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Inter } from "next/font/google";
-import Layout from "@/pages/layout";
+import Layout from "../components/layout";
 import Link from "next/Link";
 import { useRouter } from "next/navigation";
 
@@ -19,7 +19,7 @@ const Home: NextPage = () => {
       {/* 드래그 테스트용 */}
       <section className={"border-y-2 mt-24"}>
         <h1 className={"text-3xl font-bold underline underline-offset-1"}>
-          캡스톤 하준 브랜치 입니당.
+          umm..
         </h1>
       </section>
       <>
@@ -29,7 +29,7 @@ const Home: NextPage = () => {
             router.push("/posts");
           }}
         >
-          post페이지 이동하기 (임시버전)
+          post상세페이지를 만들기 위한 메인post페이지 임의로 만듦
         </button>
       </>
       <section className={"border-y-2 mt-24"}>

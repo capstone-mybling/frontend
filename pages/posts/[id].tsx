@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import data from "../../data.json";
-import Layout from "../layout";
+import Layout from "../../components/layout";
 import Image from "next/image";
 import { AiOutlineHeart } from "react-icons/ai";
 
