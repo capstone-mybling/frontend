@@ -11,6 +11,8 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import HeartIcon from "@/components/icons/HeartIcons";
+import HeartFillIcon from "@/components/icons/HeartFillIcon";
+import ToggleButton from "@/components/ToggleButton";
 
 type TabPanelProps = {
   children?: React.ReactNode;
@@ -100,13 +102,21 @@ const Post = () => {
         {/* post info : 좋아요, 공유, 가격 */}
         <div className="flex px-2 py-4">
           <div className="pr-2">
-            <button
+            {/* <button
               className="bg-white border-black border-2 rounded-full p-2 w-full flex"
               onClick={() => setLike((n) => n + 1)}
             >
               <HeartIcon />
               <span> {like}</span>
-            </button>
+            </button> */}{" "}
+            <div className="flex justify-between my-2 px-4">
+              <ToggleButton
+                toggled={like}
+                onToggle={setLike}
+                onIcon={<HeartFillIcon />}
+                offIcon={<HeartIcon />}
+              />
+            </div>
           </div>
           <div className="mr-auto">
             <button className="bg-white border-black border-2 rounded-full p-2">
