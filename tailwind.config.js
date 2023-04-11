@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./pages/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./pages/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}",
+  ],
   theme: {
     extend: {
       colors: {
@@ -11,6 +14,7 @@ module.exports = {
         "pantone-dark": "#3D3F6F",
         "pantone-darker": "#2A2B4A",
         "pantone-darkest": "#1A1A2E",
+        "purchase-button": "#009ff6",
       },
     },
   },
