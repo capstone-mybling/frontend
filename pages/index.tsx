@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import Layout from "../components/layout";
 import { useRouter } from "next/navigation";
 
-const inter = Inter({ subsets: ["latin"] });
 const Home: NextPage = () => {
   const router = useRouter();
   return (
