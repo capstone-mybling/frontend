@@ -36,7 +36,7 @@ function ResponsiveAppBar() {
     <>
       <AppBar
         color="inherit"
-        className=" inset-x-0 mx-auto w-full h-14 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] z-20"
+        className="w-[500px] inset-x-0 mx-auto h-14 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] z-20"
       >
         <Container className="pr-3 pl-3">
           <Toolbar
@@ -95,7 +95,7 @@ function ResponsiveAppBar() {
       {/* 검색 박스 */}
       <div
         className={cls(
-          "fixed inset-0 top-14 mx-auto bg-white transition-all duration-500 transform z-10 ",
+          "fixed inset-0 top-14 mx-auto bg-white transition-all duration-500 transform z-10 w-[500px]",
           searchBar
             ? "translate-y-0 bg-opacity-70"
             : "-translate-y-full bg-opacity-0 pointer-events-none"
@@ -109,7 +109,7 @@ function ResponsiveAppBar() {
       {/* 메뉴 박스 */}
       <div
         className={cls(
-          "fixed inset-0 mx-auto top-14 bg-white transition-all duration-500 transform z-10 ",
+          "fixed inset-0 mx-auto top-14 bg-white transition-all duration-500 transform z-10 w-[500px]",
           menuBar
             ? "translate-y-0 bg-opacity-70"
             : "-translate-y-full bg-opacity-0 pointer-events-none"

@@ -3,8 +3,12 @@
 @import "tailwindcss/utilities";
 @media (min-width: 390px) {
   html {
+    background-color: #fff;
+    width: 500px;
+    margin: auto;
+    min-height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    background-color: darkgrey;
+    background-color: #c6cae3;
   }
 }
