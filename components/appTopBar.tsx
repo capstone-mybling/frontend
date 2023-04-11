@@ -46,7 +46,7 @@ function ResponsiveAppBar() {
             {/* 로고버튼 */}
             <Box>
               <Image
-                className="flex-none"
+                className="flex-none hover:cursor-pointer"
                 src={Logo}
                 alt="mybling"
                 width={50}
