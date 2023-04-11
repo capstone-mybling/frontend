@@ -36,25 +36,27 @@ function ResponsiveAppBar() {
     <>
       <AppBar
         color="inherit"
-        className="float inset-x-0 mx-auto w-full h-14 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] max-w-[390px] z-20"
+        className=" inset-x-0 mx-auto w-full h-14 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] z-20"
       >
         <Container className="pr-3 pl-3">
           <Toolbar
             disableGutters
-            sx={{ justifyContent: "space-between" }}
+            className="flex justify-between"
           >
             {/* 로고버튼 */}
             <Box>
               <Image
+                className="flex-none"
                 src={Logo}
                 alt="mybling"
                 width={50}
                 onClick={Onclick}
               />
             </Box>
+            {/* 검색 바 */}
             <input
               className={cls(
-                "transition inset-0 bg-slate-100 duration-500 rounded-3xl flex mx-0 h-10 justify-stretch px-2",
+                "transition glow inset-0 bg-slate-100 duration-500 rounded-3xl flex w-full mx-2 h-10 justify-stretch px-2",
                 searchBar
                   ? "translate-x-0 opacity-100"
                   : "opacity-0 -translate-y-full pointer-events-none"
@@ -63,7 +65,7 @@ function ResponsiveAppBar() {
               value={searchText}
             ></input>
             {/* 검색 버튼 */}
-            <Box>
+            <div className="flex items-center justify-between">
               <IconButton
                 size="large"
                 aria-label="search-bar"
@@ -86,14 +88,14 @@ function ResponsiveAppBar() {
               >
                 <MenuIcon />
               </IconButton>
-            </Box>
+            </div>
           </Toolbar>
         </Container>
       </AppBar>
-      {/* 검색 바 */}
+      {/* 검색 박스 */}
       <div
         className={cls(
-          "fixed inset-0 top-14 mx-auto bg-white transition-all duration-500 transform z-10 max-w-[390px]",
+          "fixed inset-0 top-14 mx-auto bg-white transition-all duration-500 transform z-10 ",
           searchBar
             ? "translate-y-0 bg-opacity-70"
             : "-translate-y-full bg-opacity-0 pointer-events-none"
@@ -104,10 +106,10 @@ function ResponsiveAppBar() {
           <button onClick={handleSearchBar}>Close</button>
         </div>
       </div>
-      {/* 메뉴 바 */}
+      {/* 메뉴 박스 */}
       <div
         className={cls(
-          "fixed inset-0 mx-auto top-14 bg-white transition-all duration-500 transform z-10 max-w-[390px]",
+          "fixed inset-0 mx-auto top-14 bg-white transition-all duration-500 transform z-10 ",
           menuBar
             ? "translate-y-0 bg-opacity-70"
             : "-translate-y-full bg-opacity-0 pointer-events-none"
