@@ -28,6 +28,12 @@ function ResponsiveAppBar() {
     setSearchText(e.target.value);
   };
 
+  const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      console.log(searchText);
+    }
+  };
+
   const Onclick = () => {
     Router.push("/");
   };
@@ -36,7 +42,7 @@ function ResponsiveAppBar() {
     <>
       <AppBar
         color="inherit"
-        className="w-[500px] inset-x-0 mx-auto h-14 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] z-20"
+        className="w-[500px] inset-x-0 mx-auto h-14 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] z-20 justify-center"
       >
         <Container className="pr-3 pl-3">
           <Toolbar
@@ -46,23 +52,24 @@ function ResponsiveAppBar() {
             {/* 로고버튼 */}
             <Box>
               <Image
-                className="flex-none hover:cursor-pointer"
+                className="flex-none hover:cursor-pointer mr-6 pr-3"
                 src={Logo}
                 alt="mybling"
-                width={50}
                 onClick={Onclick}
+                width={70}
               />
             </Box>
             {/* 검색 바 */}
             <input
               className={cls(
-                "transition glow inset-0 bg-slate-100 duration-500 rounded-3xl flex w-full mx-2 h-10 justify-stretch px-2",
+                "transition-all glow inset-0 bg-slate-100 duration-500 rounded-3xl flex w-full mx-2 h-10 justify-stretch px-2 outline-none focus:outline-[#333399] focus:outline-2",
                 searchBar
                   ? "translate-x-0 opacity-100"
                   : "opacity-0 -translate-y-full pointer-events-none"
               )}
               onChange={handleSearchText}
               value={searchText}
+              onKeyDown={handleInputKeyDown}
             ></input>
             {/* 검색 버튼 */}
             <div className="flex items-center justify-between">
