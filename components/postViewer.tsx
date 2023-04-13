@@ -1,6 +1,6 @@
 import React from "react";
 import ResponsiveAppBar from "./appTopBar";
-import { useRouter } from "next/dist/client/router";
+import { useRouter } from "next/router";
 import BottomNavBar from "./BottomNavBar";
 
 interface PostProps {
@@ -12,7 +12,7 @@ interface PostProps {
   likes?: number;
 }
 
-export default function Layout({
+export default function postViewer({
   thumbnail,
   address,
   content,
@@ -21,12 +21,8 @@ export default function Layout({
   likes,
   ...rest
 }: PostProps) {
-  const router = useRouter();
   return (
-    <div
-      className="mx-0 my-0 grid-cols-1 justify-center hover:cursor-pointer"
-      onClick={() => router.push(`/posts/${address}`)}
-    >
+    <div className="mx-0 my-0 grid-cols-1 justify-center hover:cursor-pointer">
       <div>thumnail</div>
       <div>content</div>
       <div>
