@@ -8,7 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import SearchIcon from "@mui/icons-material/Search";
-import Input from "@mui/material/Input";
 import Logo from "@public/logo.png";
 import { cls } from "@/libs/client/utils";
 
@@ -42,7 +41,7 @@ function ResponsiveAppBar() {
     <>
       <AppBar
         color="inherit"
-        className="w-[500px] inset-x-0 mx-auto h-14 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] z-20 justify-center"
+        className="w-[500px] inset-x-0 mx-auto shadow drop-shadow-[0_10px_3px_-2px_rgba(100,100,100,0.25)] h-16 z-20 justify-center"
       >
         <Container className="pr-3 pl-3">
           <Toolbar
