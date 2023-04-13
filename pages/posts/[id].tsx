@@ -1,8 +1,9 @@
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import data from "../../data.json";
 import Layout from "../../components/layout";
 import Image from "next/image";
-import * as React from "react";
+// import * as React from "react";
 import HeartIcon from "@/components/icons/HeartIcons";
 import HeartFillIcon from "@/components/icons/HeartFillIcon";
 import ToggleButton from "@/components/ToggleButton";
@@ -17,21 +18,46 @@ type Post = {
   image: HTMLImageElement;
 };
 
-const Post = () => {
+export default function Post() {
   const router = useRouter();
   const { id } = router.query;
   const [like, setLike] = React.useState(false);
   const [comment, setComment] = React.useState(false);
+  const isFooterVisible = false;
+
+  const [comments, setComments] = useState([
+    { id: 1, content: "빵댕이 ㅈㄴ크네" },
+    { id: 2, content: "바지랑 신발이랑 깔맞춤 한거보소" },
+    { id: 3, content: "ㅋㅋㅋㅋㅋㅋㅋㅋㅋ" },
+  ]);
+  const [newComment, setNewComment] = useState("");
+
+  // 댓글 추가
+  const handleAddComment = () => {
+    const newId = comments.length + 1;
+    const newCommentObj = { id: newId, content: newComment };
+    setComments([...comments, newCommentObj]);
+    setNewComment("test");
+    // console.log(comments);
+  };
+
+  // 댓글 삭제
+  const handleDeleteComment = (id: number) => {
+    const updatedComments = comments.filter((comment) => comment.id !== id);
+    setComments(updatedComments);
+  };
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
 
   // id에 해당하는 데이터를 찾아서 보여주는 로직
   const post = data.find((post: any) => post.id === Number(id));
-  console.log("post나오나? -> ", post);
+  // console.log("post나오나? -> ", post);
 
   if (!post) {
     return <div>post 데이터 읽어오지 못함</div>; // post가 undefined이면 로딩 메시지를 표시
   }
-
-  const isFooterVisible = false;
 
   return (
     <Layout hasTabBar isFooterVisible={isFooterVisible}>
@@ -95,21 +121,49 @@ const Post = () => {
           <h1 className="font-bold text-orange-500">{post.title}</h1>
           <p>{post.body}</p>
         </div>
-        <div>
+        <div className="border-t-2 my-4 py-4">
+          <ul>
+            {comments.map((comment) => (
+              <li key={comment.id} className="flex justify-between px-5">
+                {comment.content}
+                <div className="gap-0">
+                  <ToggleButton
+                    toggled={like}
+                    onToggle={setLike}
+                    onIcon={<HeartFillIcon />}
+                    offIcon={<HeartIcon />}
+                  />
+                  <button
+                    className="text-violet-200 ml-2 text-3xl"
+                    onClick={() => handleDeleteComment(comment.id)}
+                  >
+                    X
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
           <div className="sticky bottom-0 z-20">
-            <form className="flex border-t border-neutral-300 p-3">
+            <form
+              className="flex border-t border-neutral-300 p-3"
+              onSubmit={onSubmit}
+            >
               <input
                 className="w-full ml-2 border-none outline-none"
                 type="text"
                 placeholder="Add a comment..."
+                onChange={(e) => setNewComment(e.target.value)}
               />
-              <button className="font-bold text-sky-500 ml-2">Post</button>
+              <button
+                className="font-bold text-violet-500 ml-2"
+                onClick={handleAddComment}
+              >
+                Post
+              </button>
             </form>
           </div>
         </div>
       </div>
     </Layout>
   );
-};
-
-export default Post;
+}
