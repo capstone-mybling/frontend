@@ -12,7 +12,7 @@ interface PostProps {
   likes?: number;
 }
 
-export default function postViewer({
+export default function PostViewer({
   thumbnail,
   address,
   content,

@@ -9,6 +9,7 @@ import HeartFillIcon from "@/components/icons/HeartFillIcon";
 import ToggleButton from "@/components/ToggleButton";
 import CommentIcon from "@/components/icons/CommentIcon";
 import CommentFillIcon from "@/components/icons/CommentFillIcon";
+import UserAvatar from "@/components/UserAvatar";
 
 type Post = {
   userId: number;
@@ -64,10 +65,7 @@ export default function Post() {
       <div className="py-4 px-4 max-w-mx-auto shadow-sm space-y-2 flex flex-row items-start space-x-10 justify-between">
         {/* header info : 사용자 정보 & 작성시간 */}
         <div className="flex flex-1 items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 border border-solid bg-slate-400 border-black rounded-full"></div>
-            <h4>사용자 이름</h4>
-          </div>
+          <UserAvatar size="medium" />
           <p>5 minutes ago</p>
         </div>
       </div>
@@ -125,6 +123,7 @@ export default function Post() {
           <ul>
             {comments.map((comment) => (
               <li key={comment.id} className="flex justify-between px-5">
+                <UserAvatar size="small" />
                 {comment.content}
                 <div className="gap-0">
                   <ToggleButton
