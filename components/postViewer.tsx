@@ -1,35 +1,63 @@
 import React from "react";
-import ResponsiveAppBar from "./appTopBar";
 import { useRouter } from "next/router";
-import BottomNavBar from "./BottomNavBar";
+import Image, { StaticImageData } from "next/image";
+import HeartIcon from "@components/icons/HeartIcons";
+import HeartFillIcon from "@components/icons/HeartFillIcon";
 
 interface PostProps {
-  thumbnail?: string;
-  address?: string;
-  content?: string;
-  AuthorName?: string;
-  AuthorAvatar?: string;
-  likes?: number;
+  thumbnail: StaticImageData;
+  address: string;
+  content: string;
+  UserName: string;
+  UserAvatar: string;
+  likes: number;
 }
 
 export default function postViewer({
   thumbnail,
   address,
   content,
-  AuthorName,
-  AuthorAvatar,
+  UserName,
+  UserAvatar,
   likes,
   ...rest
 }: PostProps) {
   return (
-    <div className="mx-0 my-0 grid-cols-1 justify-center hover:cursor-pointer">
-      <div>thumnail</div>
-      <div>content</div>
-      <div>
-        meta Container
-        <div>Author info wraper</div>
-        <div>likes</div>
-      </div>
-    </div>
+    <>
+      {/* 게시글 */}
+      <section className="m-0 bg-white grid-cols-1 justify-center items-center space-y-3">
+        {/* top */}
+        <div className="flex justify-between pr-3">
+          {/* 프로필 */}
+          <div className="flex items-center space-x-3">
+            <Image
+              className="inline-block rounded-full ring-2 ring-gray-200"
+              src={UserAvatar}
+              alt=""
+              width={48}
+              height={48}
+              unoptimized={true}
+            />
+            <span className=" text-xl">{UserName}</span>
+          </div>
+          {/* 좋아요 수*/}
+          <div className="flex items-center space-x-1">
+            <HeartIcon />
+            <span>{likes}</span>
+          </div>
+        </div>
+        {/* 썸네일 */}
+        <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-3xl hover:cursor-pointer">
+          <Image
+            src={thumbnail}
+            alt={address}
+          ></Image>
+        </div>
+        {/* 게시글 내용(bottom) */}
+        <div>
+          <p className="text-sm">{content}</p>
+        </div>
+      </section>
+    </>
   );
 }

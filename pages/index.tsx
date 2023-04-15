@@ -1,12 +1,12 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import Head from "next/head";
-import { Inter } from "next/font/google";
-import Layout from "../components/layout";
+import Layout from "@components/Layout";
 import { useRouter } from "next/navigation";
 import src from "@public/exam2.png";
 import HeartIcon from "@components/icons/HeartIcons";
 import HeartFillIcon from "@components/icons/HeartFillIcon";
+import PostViewer from "@components/PostViewer";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -28,80 +28,18 @@ const Home: NextPage = () => {
         />
       </Head>
       <div className=" grid-cols-1 space-y-7 p-5">
-        {/* 게시글 */}
-        <section className="m-0 bg-white grid-cols-1 justify-center items-center space-y-3">
-          {/* top */}
-          <div className="flex justify-between pr-3">
-            {/* 프로필 */}
-            <div className="flex items-center space-x-3">
-              <Image
-                className="inline-block rounded-full ring-2 ring-gray-200"
-                src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt=""
-                width={48}
-                height={48}
-                unoptimized={true}
-              />
-              <span className=" text-xl">userName</span>
-            </div>
-            {/* 좋아요 수*/}
-            <div className="flex items-center space-x-1">
-              <HeartIcon />
-              <span>999+</span>
-            </div>
-          </div>
-          {/* 썸네일 */}
-          <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-3xl">
-            <Image
-              src={src}
-              alt="post"
-            ></Image>
-          </div>
-          {/* 게시글 내용(bottom) */}
-          <div>
-            <p className="text-sm">
-              마지심슨이 책을 읽고 있습니다. 이 책은 마지심슨이 읽고 있는 책은 &apos;모든 것에 대한
-              해답&apos;이라는 제목의 자기계발..
-            </p>
-          </div>
-        </section>
-        {/* 게시글 */}
-        <section className="m-0 bg-white grid-cols-1 justify-center items-center space-y-3">
-          {/* top */}
-          <div className="flex justify-between pr-3">
-            {/* 프로필 */}
-            <div className="flex items-center space-x-3">
-              <Image
-                className="inline-block rounded-full ring-2 ring-gray-200"
-                src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt=""
-                width={48}
-                height={48}
-                unoptimized={true}
-              />
-              <span className=" text-xl">userName</span>
-            </div>
-            {/* 좋아요 수*/}
-            <div className="flex items-center space-x-1">
-              <HeartIcon />
-              <span>999+</span>
-            </div>
-          </div>
-          {/* 썸네일 */}
-          <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-3xl">
-            <Image
-              src={src}
-              alt="post"
-            ></Image>
-          </div>
-          {/* 게시글 내용(bottom) */}
-          <div>
-            <p className="text-sm">
-              마지심슨이 책을 읽고 있습니다. 이 책은 마지심슨이 읽고 있는 책은 &apos;모든 것에 대한
-              해답&apos;이라는 제목의 자기계발..
-            </p>
-          </div>
-        </section>
+        <PostViewer
+          thumbnail={src}
+          address={`posts/${2}`}
+          content={
+            "책읽는 심슨이 있습니다. 그러나, 책을 읽는 것은 심슨 가족 중에서는 극적으로 드문 일이며, 그들은 대부분 이상한 모험을 즐기며 시간을 보냅니다."
+          }
+          UserName={"userName"}
+          UserAvatar={
+            "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          }
+          likes={999}
+        ></PostViewer>
       </div>
     </Layout>
   );
