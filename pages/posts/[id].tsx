@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import data from "../../data.json";
-import Layout from "../../components/layout";
+import Layout from "@components/Layout";
 import Image from "next/image";
 import { AiOutlineHeart } from "react-icons/ai";
 
@@ -119,9 +119,7 @@ const Post = () => {
             </div>
           </div>
           <div className="mr-auto">
-            <button className="bg-white border-black border-2 rounded-full p-2">
-              공유하기
-            </button>
+            <button className="bg-white border-black border-2 rounded-full p-2">공유하기</button>
           </div>
           <div>
             <button className="bg-white border-black border-2 rounded-full p-2">
@@ -143,18 +141,36 @@ const Post = () => {
                 onChange={handleChange}
                 aria-label="basic tabs example"
               >
-                <Tab label="댓글" {...a11yProps(0)} />
-                <Tab label="좋아요" {...a11yProps(1)} />
-                <Tab label="뭐넣지 .." {...a11yProps(2)} />
+                <Tab
+                  label="댓글"
+                  {...a11yProps(0)}
+                />
+                <Tab
+                  label="좋아요"
+                  {...a11yProps(1)}
+                />
+                <Tab
+                  label="뭐넣지 .."
+                  {...a11yProps(2)}
+                />
               </Tabs>
             </Box>
-            <TabPanel value={value} index={0}>
+            <TabPanel
+              value={value}
+              index={0}
+            >
               댓글달면 자동으로 올라가는 칸
             </TabPanel>
-            <TabPanel value={value} index={1}>
+            <TabPanel
+              value={value}
+              index={1}
+            >
               좋아요 누른사람들 뜨는 칸
             </TabPanel>
-            <TabPanel value={value} index={2}>
+            <TabPanel
+              value={value}
+              index={2}
+            >
               뭐 넣을지 모르는 칸
             </TabPanel>
           </Box>

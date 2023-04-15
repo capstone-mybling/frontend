@@ -1,5 +1,5 @@
 import React from "react";
-import ResponsiveAppBar from "./appTopBar";
+import ResponsiveAppBar from "./AppTopBar";
 import { useRouter } from "next/dist/client/router";
 import BottomNavBar from "./BottomNavBar";
 
