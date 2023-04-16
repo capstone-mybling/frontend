@@ -4,13 +4,14 @@ import Image, { StaticImageData } from "next/image";
 import HeartIcon from "@components/icons/HeartIcons";
 import HeartFillIcon from "@components/icons/HeartFillIcon";
 import { cls } from "@libs/client/utils";
+import UserAvatar from "@components/UserAvatar";
 
 interface PostProps {
   thumbnail: StaticImageData;
   address: string;
   content: string;
   UserName: string;
-  UserAvatar: string;
+  UserImage: string;
   likes: number;
 }
 
@@ -19,7 +20,7 @@ export default function PostViewer({
   address,
   content,
   UserName,
-  UserAvatar,
+  UserImage,
   likes,
   ...rest
 }: PostProps) {
@@ -44,15 +45,11 @@ export default function PostViewer({
         <div className="flex justify-between pr-3">
           {/* 프로필 */}
           <div className="flex items-center space-x-3">
-            <Image
-              className="inline-block rounded-full ring-2 ring-gray-200"
-              src={UserAvatar}
-              alt=""
-              width={48}
-              height={48}
-              unoptimized={true}
+            <UserAvatar
+              size="large"
+              UserName={UserName}
+              UserImage={UserImage}
             />
-            <span className=" text-xl">{UserName}</span>
           </div>
           {/* 좋아요 수*/}
           <div className="flex items-center space-x-1">
