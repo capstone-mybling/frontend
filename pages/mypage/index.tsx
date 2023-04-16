@@ -1,11 +1,15 @@
-import Layout from "@components/Layout";
+import Layout from "@/components/Layout";
 import UserAvatar from "@components/UserAvatar";
 
 export default function MyPage() {
   return (
     <Layout>
       <section className="flex flex-col justify-center items-center py-12 border-b border-neutral-300">
-        <UserAvatar size="Xlarge" />
+        <UserAvatar
+          size="Xlarge"
+          UserImage="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          UserName="myprofile"
+        />
         <div>
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
             <button>

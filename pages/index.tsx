@@ -3,7 +3,7 @@ import Head from "next/head";
 import Layout from "@/components/Layout";
 import { useRouter } from "next/navigation";
 import src from "@public/exam2.png";
-import PostViewer from "@components/PostViewer";
+import PostViewer from "@/components/PostViewer";
 
 const Home: NextPage = () => {
   const router = useRouter();
