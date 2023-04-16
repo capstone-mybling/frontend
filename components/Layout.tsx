@@ -12,10 +12,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default function Layout({
-  children,
-  isFooterVisible = true,
-}: LayoutProps) {
+export default function Layout({ children, isFooterVisible = true }: LayoutProps) {
   return (
     <>
       <ResponsiveAppBar />

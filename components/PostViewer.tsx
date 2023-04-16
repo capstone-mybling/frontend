@@ -25,17 +25,14 @@ export default function PostViewer({
 }: PostProps) {
   const postContentRef = useRef<HTMLDivElement>(null);
   const [shouldSummarize, setShouldSummarize] = useState<boolean>(false);
-  if (postContentRef.current) {
-    console.log(postContentRef.current.clientHeight);
-    const lineCount =
-      postContentRef.current.clientHeight /
-      parseInt(getComputedStyle(postContentRef.current).lineHeight);
-    if (lineCount > 2) {
-      setShouldSummarize(true);
-    } else {
-      setShouldSummarize(false);
+  useEffect(() => {
+    if (postContentRef.current) {
+      const lineCount =
+        postContentRef.current.clientHeight /
+        parseInt(getComputedStyle(postContentRef.current).lineHeight);
+      setShouldSummarize(lineCount > 2);
     }
-  }
+  }, [content]);
   return (
     <>
       {/* 게시글 */}
@@ -45,7 +42,7 @@ export default function PostViewer({
           {/* 프로필 */}
           <div className="flex items-center space-x-3">
             <UserAvatar
-              size="large"
+              size="medium"
               UserName={UserName}
               UserImage={UserImage}
             />
@@ -66,6 +63,7 @@ export default function PostViewer({
         {/* 게시글 내용(bottom) */}
         <div className="px-1">
           <div
+            ref={postContentRef}
             className={cls(
               "text-sm transition-all duration-300",
               shouldSummarize ? "line-clamp-2" : "line-clamp-none"
