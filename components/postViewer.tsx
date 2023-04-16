@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/router";
 import Image, { StaticImageData } from "next/image";
 import HeartIcon from "@components/icons/HeartIcons";
 import HeartFillIcon from "@components/icons/HeartFillIcon";

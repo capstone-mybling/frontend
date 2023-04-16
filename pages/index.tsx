@@ -1,13 +1,8 @@
 import type { NextPage } from "next";
-import Image from "next/image";
 import Head from "next/head";
 import Layout from "@/components/Layout";
 import { useRouter } from "next/navigation";
 import src from "@public/exam2.png";
-import HeartIcon from "@components/icons/HeartIcons";
-import HeartFillIcon from "@components/icons/HeartFillIcon";
-import Link from "next/link";
-import UserAvatar from "@/components/UserAvatar";
 import PostViewer from "@components/PostViewer";
 
 const Home: NextPage = () => {
