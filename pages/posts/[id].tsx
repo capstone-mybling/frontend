@@ -65,52 +65,51 @@ export default function Post() {
   }
 
   return (
-    <>
-      <Layout
-        hasTabBar
-        isFooterVisible={isFooterVisible}
-      >
-        <div className="py-4 px-4 max-w-mx-auto shadow-sm space-y-2 flex flex-row items-start space-x-10 justify-between">
-          {/* header info : 사용자 정보 & 작성시간 */}
-          <div className="flex flex-1 items-center justify-between">
-            <UserAvatar size="medium" />
-            <p>5 minutes ago</p>
-          </div>
+    <Layout
+      hasTabBar
+      isFooterVisible={isFooterVisible}
+    >
+      <div className="py-4 px-4 max-w-mx-auto shadow-sm space-y-2 flex flex-row items-start space-x-10 justify-between">
+        {/* header info : 사용자 정보 & 작성시간 */}
+        <div className="flex flex-1 items-center justify-between">
+          <UserAvatar size="medium" />
+          <p>5 minutes ago</p>
         </div>
-        <div className="relative">
-          <div className="flex justify-center align-middle py-6 bg-gray-200">
-            <Image
-              src={`/${post.image}`}
-              alt={post.title}
-              width="400"
-              height="400"
-            />
-          </div>
-          <div className="absolute bottom-2 right-2">
-            <button className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70">
-              <a href="https://opensea.io/">구매하기</a>
-            </button>
-          </div>
+      </div>
+      <div className="relative">
+        <div className="flex justify-center align-middle py-6 bg-gray-200">
+          <Image
+            src={`/${post.image}`}
+            alt={post.title}
+            width="400"
+            height="400"
+          />
         </div>
-        {/* post info : 좋아요, 공유, 가격 */}
-        <div className="flex px-2 py-4 justify-center gap-[150px]">
-          <div className="">
-            <ToggleButton
-              toggled={like}
-              onToggle={setLike}
-              onIcon={<HeartFillIcon />}
-              offIcon={<HeartIcon />}
-            />
-          </div>
-          <div>
-            <ToggleButton
-              toggled={comment}
-              onToggle={setComment}
-              onIcon={<CommentFillIcon />}
-              offIcon={<CommentIcon />}
-            />
-          </div>
-          {/* <div className="mr-auto">
+        <div className="absolute bottom-2 right-2">
+          <button className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70">
+            <a href="https://opensea.io/">구매하기</a>
+          </button>
+        </div>
+      </div>
+      {/* post info : 좋아요, 공유, 가격 */}
+      <div className="flex px-2 py-4 justify-center gap-[150px]">
+        <div className="">
+          <ToggleButton
+            toggled={like}
+            onToggle={setLike}
+            onIcon={<HeartFillIcon />}
+            offIcon={<HeartIcon />}
+          />
+        </div>
+        <div>
+          <ToggleButton
+            toggled={comment}
+            onToggle={setComment}
+            onIcon={<CommentFillIcon />}
+            offIcon={<CommentIcon />}
+          />
+        </div>
+        {/* <div className="mr-auto">
             <button className="bg-white border-black border-2 rounded-full p-2">공유하기</button>
           </div>
           <div>
@@ -127,7 +126,10 @@ export default function Post() {
         <div className="border-t-2 my-4 py-4">
           <ul>
             {comments.map((comment) => (
-              <li key={comment.id} className="flex justify-between px-5">
+              <li
+                key={comment.id}
+                className="flex justify-between px-5"
+              >
                 <UserAvatar size="small" />
                 {comment.content}
                 <div className="gap-0">
