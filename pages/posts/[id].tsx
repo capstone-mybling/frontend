@@ -3,7 +3,11 @@ import { useRouter } from "next/router";
 import data from "../../data.json";
 import Layout from "@/components/Layout";
 import Image from "next/image";
-// import * as React from "react";
+import { AiOutlineHeart } from "react-icons/ai";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import HeartIcon from "@/components/icons/HeartIcons";
 import HeartFillIcon from "@/components/icons/HeartFillIcon";
 import ToggleButton from "@/components/ToggleButton";
@@ -87,35 +91,32 @@ export default function Post() {
           </button>
         </div>
       </div>
-      <div className="flex flex-col">
-        {/* post info : 좋아요, 공유, 가격 */}
-        <div className="flex px-2 py-4 justify-center gap-[150px]">
-          <div className="">
-            <ToggleButton
-              toggled={like}
-              onToggle={setLike}
-              onIcon={<HeartFillIcon />}
-              offIcon={<HeartIcon />}
-            />
-          </div>
-          <div>
-            <ToggleButton
-              toggled={comment}
-              onToggle={setComment}
-              onIcon={<CommentFillIcon />}
-              offIcon={<CommentIcon />}
-            />
-          </div>
-          {/* <div className="mr-auto">
-            <button className="bg-white border-black border-2 rounded-full p-2">
-              공유하기
-            </button>
+      {/* post info : 좋아요, 공유, 가격 */}
+      <div className="flex px-2 py-4 justify-center gap-[150px]">
+        <div className="">
+          <ToggleButton
+            toggled={like}
+            onToggle={setLike}
+            onIcon={<HeartFillIcon />}
+            offIcon={<HeartIcon />}
+          />
+        </div>
+        <div>
+          <ToggleButton
+            toggled={comment}
+            onToggle={setComment}
+            onIcon={<CommentFillIcon />}
+            offIcon={<CommentIcon />}
+          />
+        </div>
+        {/* <div className="mr-auto">
+            <button className="bg-white border-black border-2 rounded-full p-2">공유하기</button>
           </div>
           <div>
             <button className="bg-white border-black border-2 rounded-full p-2">
               가격 : 0.05ETH
             </button>
-          </div> */}
+          </div>
         </div>
         {/* post detail : 게시글 상세정보 */}
         <div className="py-4 px-4 ">
