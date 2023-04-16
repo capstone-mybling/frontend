@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Image, { StaticImageData } from "next/image";
 import HeartIcon from "@components/icons/HeartIcons";
 import HeartFillIcon from "@components/icons/HeartFillIcon";
+import { cls } from "@libs/client/utils";
 
 interface PostProps {
   thumbnail: StaticImageData;
@@ -13,7 +14,7 @@ interface PostProps {
   likes: number;
 }
 
-export default function postViewer({
+export default function PostViewer({
   thumbnail,
   address,
   content,
@@ -22,6 +23,19 @@ export default function postViewer({
   likes,
   ...rest
 }: PostProps) {
+  const postContentRef = useRef<HTMLDivElement>(null);
+  const [shouldSummarize, setShouldSummarize] = useState<boolean>(false);
+  if (postContentRef.current) {
+    console.log(postContentRef.current.clientHeight);
+    const lineCount =
+      postContentRef.current.clientHeight /
+      parseInt(getComputedStyle(postContentRef.current).lineHeight);
+    if (lineCount > 2) {
+      setShouldSummarize(true);
+    } else {
+      setShouldSummarize(false);
+    }
+  }
   return (
     <>
       {/* 게시글 */}
@@ -54,8 +68,23 @@ export default function postViewer({
           ></Image>
         </div>
         {/* 게시글 내용(bottom) */}
-        <div>
-          <p className="text-sm">{content}</p>
+        <div className="px-1">
+          <div
+            className={cls(
+              "text-sm transition-all duration-300",
+              shouldSummarize ? "line-clamp-2" : "line-clamp-none"
+            )}
+          >
+            {content}
+          </div>
+          <button
+            className={cls("text-xs", shouldSummarize ? "" : "hidden")}
+            onClick={() => {
+              setShouldSummarize(false);
+            }}
+          >
+            더보기
+          </button>
         </div>
       </section>
     </>
