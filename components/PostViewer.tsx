@@ -55,10 +55,7 @@ export default function PostViewer({
         </div>
         {/* 썸네일 */}
         <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-3xl hover:cursor-pointer">
-          <Image
-            src={thumbnail}
-            alt={address}
-          ></Image>
+          <Image src={thumbnail} alt={address}></Image>
         </div>
         {/* 게시글 내용(bottom) */}
         <div className="px-1">
