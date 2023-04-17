@@ -65,10 +65,7 @@ export default function Post() {
   }
 
   return (
-    <Layout
-      hasTabBar
-      isFooterVisible={isFooterVisible}
-    >
+    <Layout hasTabBar isFooterVisible={isFooterVisible}>
       <div className="py-4 px-4 max-w-mx-auto shadow-sm space-y-2 flex flex-row items-start space-x-10 justify-between">
         {/* header info : 사용자 정보 & 작성시간 */}
         <div className="flex flex-1 items-center justify-between">
@@ -92,7 +89,7 @@ export default function Post() {
         </div>
       </div>
       {/* post info : 좋아요, 공유, 가격 */}
-      <div className="flex px-2 py-4 justify-center gap-[150px]">
+      <div className="flex flex-col px-2 py-4 justify-center">
         <div className="">
           <ToggleButton
             toggled={like}
@@ -126,10 +123,7 @@ export default function Post() {
         <div className="border-t-2 my-4 py-4">
           <ul>
             {comments.map((comment) => (
-              <li
-                key={comment.id}
-                className="flex justify-between px-5"
-              >
+              <li key={comment.id} className="flex justify-between px-5">
                 <UserAvatar size="small" />
                 {comment.content}
                 <div className="gap-0">
