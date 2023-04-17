@@ -1,19 +1,15 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import data from "../../data.json";
 import Layout from "@/components/Layout";
 import Image from "next/image";
-import { AiOutlineHeart } from "react-icons/ai";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 import HeartIcon from "@/components/icons/HeartIcons";
 import HeartFillIcon from "@/components/icons/HeartFillIcon";
 import ToggleButton from "@/components/ToggleButton";
 import CommentIcon from "@/components/icons/CommentIcon";
 import CommentFillIcon from "@/components/icons/CommentFillIcon";
 import UserAvatar from "@/components/UserAvatar";
+import { useEffect } from "react";
 
 type Post = {
   userId: number;
@@ -30,6 +26,11 @@ export default function Post() {
   const [comment, setComment] = useState<boolean>(false);
   const [commentLike, setCommentLike] = useState<boolean>(false);
   let [likeCount, setLikeCount] = useState<number>(5);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [comment]);
 
   const isFooterVisible = false;
 
@@ -115,7 +116,6 @@ export default function Post() {
               <span>{likeCount}</span>
             </div>
             <div>
-              {/* Todo : 댓글 icon 누르면 하단의 'Add a comment'에 커서 뜨게끔?? */}
               <ToggleButton
                 toggled={comment}
                 onToggle={setComment}
@@ -124,7 +124,6 @@ export default function Post() {
               />
             </div>
           </div>
-          {/* </div> */}
           {/* post detail : 게시글 상세정보 */}
           <div className="py-4 px-4 ">
             <h1 className="font-bold text-orange-500">{post.title}</h1>
@@ -143,7 +142,6 @@ export default function Post() {
                   />
                   {comment.content}
                   <div className="gap-0">
-                    {/* Todo : 좋아요 버튼 개별적으로 동작하게끔 */}
                     <ToggleButton
                       toggled={commentLike}
                       onToggle={setCommentLike}
@@ -174,6 +172,7 @@ export default function Post() {
               type="text"
               placeholder="Add a comment..."
               onChange={(e) => setNewComment(e.target.value)}
+              ref={inputRef}
             />
             <button
               className="font-bold text-violet-500 ml-2"
@@ -186,4 +185,12 @@ export default function Post() {
       </footer>
     </>
   );
+}
+
+{
+  /* Todo
+- 좋아요 버튼 개별적으로 동작하게끔 
+- input 태그에 아무것도 입력하지 않고 Post 누르면 댓글이 게시되지 않고 input에 포커싱 하게끔
+- 음..
+*/
 }
