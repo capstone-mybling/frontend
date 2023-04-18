@@ -7,10 +7,7 @@ import PostViewer from "@/components/PostViewer";
 const Explore: NextPage = () => {
   return (
     <Layout>
-      <div
-        className="grid grid-cols-2 mx-auto p-3
-      "
-      >
+      <div className="grid grid-cols-2 mx-auto p-1">
         <PostViewer
           small
           thumbnail={src}
