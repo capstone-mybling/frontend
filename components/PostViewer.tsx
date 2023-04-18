@@ -12,6 +12,8 @@ interface PostProps {
   UserName: string;
   UserImage: string;
   likes: number;
+  className?: string;
+  small?: boolean;
 }
 
 export default function PostViewer({
@@ -21,6 +23,8 @@ export default function PostViewer({
   UserName,
   UserImage,
   likes,
+  small,
+  className,
   ...rest
 }: PostProps) {
   const postContentRef = useRef<HTMLDivElement>(null);
@@ -36,21 +40,26 @@ export default function PostViewer({
   return (
     <>
       {/* 게시글 */}
-      <section className="m-0 bg-white grid-cols-1 justify-center items-center space-y-3">
+      <section
+        className={cls(
+          "m-1 bg-white grid-cols-1 justify-center items-center space-y-3",
+          className ? className : ""
+        )}
+      >
         {/* top */}
         <div className="flex justify-between pr-3">
           {/* 프로필 */}
           <div className="flex items-center space-x-3">
             <UserAvatar
-              size="medium"
+              size={small ? "small" : "medium"}
               UserName={UserName}
               UserImage={UserImage}
             />
           </div>
           {/* 좋아요 수*/}
-          <div className="flex items-center space-x-1">
+          <div className={cls("flex items-center space-x-1", small ? " w-10" : "")}>
             <HeartIcon />
-            <span>{likes}</span>
+            <span className={cls(small ? "text-xs" : "")}>{likes}</span>
           </div>
         </div>
         {/* 썸네일 */}
@@ -62,8 +71,9 @@ export default function PostViewer({
           <div
             ref={postContentRef}
             className={cls(
-              "text-sm transition-all duration-300",
-              shouldSummarize ? "line-clamp-2" : "line-clamp-none"
+              "transition-all duration-300",
+              shouldSummarize ? "line-clamp-2" : "line-clamp-none",
+              small ? "text-xs" : "text-sm"
             )}
           >
             {content}
