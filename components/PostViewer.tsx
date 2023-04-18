@@ -12,6 +12,7 @@ interface PostProps {
   UserName: string;
   UserImage: string;
   likes: number;
+  className?: string;
   small?: boolean;
 }
 
@@ -23,6 +24,7 @@ export default function PostViewer({
   UserImage,
   likes,
   small,
+  className,
   ...rest
 }: PostProps) {
   const postContentRef = useRef<HTMLDivElement>(null);
@@ -38,7 +40,12 @@ export default function PostViewer({
   return (
     <>
       {/* 게시글 */}
-      <section className="m-1 bg-white grid-cols-1 justify-center items-center space-y-3">
+      <section
+        className={cls(
+          "m-1 bg-white grid-cols-1 justify-center items-center space-y-3",
+          className ? className : ""
+        )}
+      >
         {/* top */}
         <div className="flex justify-between pr-3">
           {/* 프로필 */}
