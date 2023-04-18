@@ -12,6 +12,7 @@ interface PostProps {
   UserName: string;
   UserImage: string;
   likes: number;
+  small?: boolean;
 }
 
 export default function PostViewer({
@@ -21,6 +22,7 @@ export default function PostViewer({
   UserName,
   UserImage,
   likes,
+  small,
   ...rest
 }: PostProps) {
   const postContentRef = useRef<HTMLDivElement>(null);
@@ -42,15 +44,15 @@ export default function PostViewer({
           {/* 프로필 */}
           <div className="flex items-center space-x-3">
             <UserAvatar
-              size="medium"
+              size={small ? "small" : "medium"}
               UserName={UserName}
               UserImage={UserImage}
             />
           </div>
           {/* 좋아요 수*/}
-          <div className="flex items-center space-x-1">
+          <div className={cls("flex items-center space-x-1", small ? " w-10" : "")}>
             <HeartIcon />
-            <span>{likes}</span>
+            <span className={cls(small ? "text-xs" : "")}>{likes}</span>
           </div>
         </div>
         {/* 썸네일 */}
@@ -65,8 +67,9 @@ export default function PostViewer({
           <div
             ref={postContentRef}
             className={cls(
-              "text-sm transition-all duration-300",
-              shouldSummarize ? "line-clamp-2" : "line-clamp-none"
+              "transition-all duration-300",
+              shouldSummarize ? "line-clamp-2" : "line-clamp-none",
+              small ? "text-xs" : "text-sm"
             )}
           >
             {content}

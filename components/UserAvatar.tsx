@@ -36,7 +36,7 @@ function getAvatarSize(size: ProfileSize) {
       return {
         width: "32",
         height: "32",
-        textSize: "text-[14px]",
+        textSize: "text-[15px]",
       };
     case "medium":
       return {

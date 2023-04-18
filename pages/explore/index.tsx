@@ -12,6 +12,7 @@ const Explore: NextPage = () => {
       "
       >
         <PostViewer
+          small
           thumbnail={src}
           address={`posts/${2}`}
           content={
@@ -24,6 +25,7 @@ const Explore: NextPage = () => {
           likes={999}
         ></PostViewer>
         <PostViewer
+          small
           thumbnail={src}
           address={`posts/${2}`}
           content={
@@ -36,6 +38,7 @@ const Explore: NextPage = () => {
           likes={999}
         ></PostViewer>
         <PostViewer
+          small
           thumbnail={src}
           address={`posts/${2}`}
           content={
@@ -48,6 +51,7 @@ const Explore: NextPage = () => {
           likes={999}
         ></PostViewer>
         <PostViewer
+          small
           thumbnail={src}
           address={`posts/${2}`}
           content={
