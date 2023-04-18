@@ -27,7 +27,7 @@ const menu = [
     clickedIcon: <UploadFillIcon />,
   },
   {
-    href: "/mypage",
+    href: "/profile",
     icon: <UserIcon />,
     clickedIcon: <UserFillIcon />,
   },
@@ -40,7 +40,9 @@ export default function BottomNavBar() {
       <ul className="flex gap-4 items-center p-4 justify-around">
         {menu.map((item) => (
           <li key={item.href}>
-            <Link href={item.href}>{pathName === item.href ? item.clickedIcon : item.icon}</Link>
+            <Link href={item.href}>
+              {pathName === item.href ? item.clickedIcon : item.icon}
+            </Link>
           </li>
         ))}
       </ul>

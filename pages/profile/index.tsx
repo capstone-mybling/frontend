@@ -1,5 +1,7 @@
 import Layout from "@/components/Layout";
+import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
+import src from "@public/exam2.png";
 
 export default function MyPage() {
   return (
@@ -32,9 +34,11 @@ export default function MyPage() {
           </div>
           <div className="my-10">{`Posts / NFTS   <--   tab 들어가야되나?`}</div>
           <div className="grid grid-cols-3 gap-4">
-            <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-              test
-            </div>
+            <Thumbnail
+              thumbnail={src}
+              address={`posts/${2}`}
+              option="Thumnail"
+            />
             <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
               test
             </div>

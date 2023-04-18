@@ -4,6 +4,7 @@ import HeartIcon from "@components/icons/HeartIcons";
 import HeartFillIcon from "@components/icons/HeartFillIcon";
 import { cls } from "@libs/client/utils";
 import UserAvatar from "@components/UserAvatar";
+import Thumbnail from "./Thumbnail";
 
 interface PostProps {
   thumbnail: StaticImageData;
@@ -57,15 +58,15 @@ export default function PostViewer({
             />
           </div>
           {/* 좋아요 수*/}
-          <div className={cls("flex items-center space-x-1", small ? " w-10" : "")}>
+          <div
+            className={cls("flex items-center space-x-1", small ? " w-10" : "")}
+          >
             <HeartIcon />
             <span className={cls(small ? "text-xs" : "")}>{likes}</span>
           </div>
         </div>
         {/* 썸네일 */}
-        <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-3xl hover:cursor-pointer">
-          <Image src={thumbnail} alt={address}></Image>
-        </div>
+        <Thumbnail thumbnail={thumbnail} address={address} />
         {/* 게시글 내용(bottom) */}
         <div className="px-1">
           <div
