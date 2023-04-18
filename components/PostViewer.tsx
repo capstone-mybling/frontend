@@ -36,7 +36,7 @@ export default function PostViewer({
   return (
     <>
       {/* 게시글 */}
-      <section className="m-0 bg-white grid-cols-1 justify-center items-center space-y-3">
+      <section className="m-1 bg-white grid-cols-1 justify-center items-center space-y-3">
         {/* top */}
         <div className="flex justify-between pr-3">
           {/* 프로필 */}
