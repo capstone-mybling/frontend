@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Router from "next/router";
 import AppBar from "@mui/material/AppBar";
@@ -9,7 +9,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import SearchIcon from "@mui/icons-material/Search";
 import Logo from "@public/logo.png";
+import MetaMask from "@public/metamask.svg";
 import { cls } from "@/libs/client/utils";
+import detectEthereumProvider from "@metamask/detect-provider";
 
 function ResponsiveAppBar() {
   const [searchBar, setSearchBar] = useState<boolean>(false);
@@ -36,6 +38,25 @@ function ResponsiveAppBar() {
   const Onclick = () => {
     Router.push("/");
   };
+
+  const [provider, setProvider] = useState<any>(null);
+
+  useEffect(() => {
+    async function detectProvider() {
+      const provider = await detectEthereumProvider();
+      if (provider) {
+        setProvider(provider);
+      } else {
+        console.error("브라우저 확장 어플리케이션에 메타마스크를 추가해주시기 바랍니다.");
+      }
+    }
+    detectProvider();
+  }, []);
+
+  async function getAccount() {
+    const accounts = await provider.request({ method: "eth_requestAccounts" });
+    console.log(accounts);
+  }
 
   return (
     <>
@@ -115,17 +136,27 @@ function ResponsiveAppBar() {
       {/* 메뉴 박스 */}
       <div
         className={cls(
-          "fixed inset-0 mx-auto top-14 bg-white transition-all duration-500 transform z-10 w-[500px]",
+          "fixed inset-0 mx-auto top-16 bg-white transition-all duration-500 transform z-10 w-[500px]",
           menuBar
             ? "translate-y-0 bg-opacity-70"
-            : "-translate-y-full bg-opacity-0 pointer-events-none"
+            : " -translate-y-1/3 bg-opacity-0 pointer-events-none"
         )}
       >
-        <div className="flex-cols-1 items-center justify-center">
-          <div className="w-full my-auto bg-white h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)]">
-            menu contents
+        <div className="flex-cols-1 items-center justify-center mx-auto">
+          <div className="w-full bg-white h-16 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] grid grid-cols-1">
+            {/* 지갑 연결 버튼  : 연결 성공시, 콘솔창에 자신의 지갑 Address가 출력 됨.*/}
+            {/* TODO: 연결된 지갑의 정보 보여주기 */}
+            <div
+              className="flex bg-sky-400 w-auto h-14 items-center mx-auto my-3 px-10 space-x-7 rounded-full hover:cursor-pointer"
+              onClick={getAccount}
+            >
+              <MetaMask></MetaMask>
+              <button className=" text-center text-xl font-semibold text-amber-600">
+                Connect wallet
+              </button>
+            </div>
+            <button onClick={handleMenuBar}>Close</button>
           </div>
-          <button onClick={handleMenuBar}>Close</button>
         </div>
       </div>
     </>
