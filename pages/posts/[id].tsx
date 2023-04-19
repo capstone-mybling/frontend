@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import data from "../../data.json";
 import Layout from "@/components/Layout";
@@ -9,7 +9,11 @@ import ToggleButton from "@/components/ToggleButton";
 import CommentIcon from "@/components/icons/CommentIcon";
 import CommentFillIcon from "@/components/icons/CommentFillIcon";
 import UserAvatar from "@/components/UserAvatar";
-import { useEffect } from "react";
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import Tabs from "@mui/material/Tabs";
+import TabPanel from "@mui/lab/TabPanel";
 
 type Post = {
   userId: number;
@@ -38,10 +42,17 @@ export default function Post() {
     setLikeCount(likeCount === 5 ? ++likeCount : --likeCount);
   };
 
+  // MUI tabs
+  const [value, setValue] = useState("1");
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
+
   const [comments, setComments] = useState([
-    { id: 1, content: "기여미~" },
-    { id: 2, content: "바지랑 신발이랑 깔맞춤 한거보소" },
-    { id: 3, content: "ㅋㅋㅋㅋㅋㅋㅋㅋㅋ" },
+    { id: 1, content: "노하준 폼 미쳤다" },
+    { id: 2, content: "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ" },
+    { id: 3, content: "왜 다들 내 사진을보고 화장실을 가는거야??;;" },
   ]);
   const [newComment, setNewComment] = useState("");
 
@@ -50,8 +61,13 @@ export default function Post() {
     const newId = comments.length + 1;
     const newCommentObj = { id: newId, content: newComment };
     setComments([...comments, newCommentObj]);
-    setNewComment("test");
+    setNewComment("");
     // console.log(comments);
+  };
+  const handleBlockComment = () => {
+    console.log("block!");
+    // e.preventDefault();
+    inputRef.current?.focus();
   };
 
   // 댓글 삭제
@@ -129,36 +145,67 @@ export default function Post() {
             <h1 className="font-bold text-orange-500">{post.title}</h1>
             <p>{post.body}</p>
           </div>
-          <div className="border-t-2 my-4 py-4">
-            <ul>
-              {comments.map((comment) => (
-                <li key={comment.id} className="flex justify-between px-5">
-                  <UserAvatar
-                    size="small"
-                    UserName={"userName"}
-                    UserImage={
-                      "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    }
-                  />
-                  {comment.content}
-                  <div className="gap-0">
-                    <ToggleButton
-                      toggled={commentLike}
-                      onToggle={setCommentLike}
-                      onIcon={<HeartFillIcon />}
-                      offIcon={<HeartIcon />}
-                    />
-                    <button
-                      className="text-violet-200 ml-2 text-3xl"
-                      onClick={() => handleDeleteComment(comment.id)}
-                    >
-                      X
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Box sx={{ width: "100%", typography: "body1" }}>
+            <TabContext value={value}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  textColor="secondary"
+                  indicatorColor="secondary"
+                  aria-label="secondary tabs example"
+                >
+                  <Tab label="댓글" value="1" />
+                  <Tab label="거래정보?" value="2" />
+                  <Tab label="NFT 정보?" value="3" />
+                </Tabs>
+              </Box>
+              <TabPanel value="1" sx={{ padding: 0 }}>
+                <div className="mt-4 pt-4">
+                  <ul>
+                    {comments.map((comment) => (
+                      <li
+                        key={comment.id}
+                        className="flex justify-between px-5 flex-col pb-4"
+                      >
+                        <UserAvatar
+                          size="small"
+                          UserName={"userName"}
+                          UserImage={
+                            "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                          }
+                        />
+                        <div className="ml-11">{comment.content}</div>
+                        <div className="flex justify-between items-center">
+                          <div className="text-gray-500 text-sm ml-11">
+                            5 minutes ago
+                          </div>
+                          <div className="flex items-center">
+                            <p>10</p>
+                            <ToggleButton
+                              toggled={commentLike}
+                              onToggle={setCommentLike}
+                              onIcon={<HeartFillIcon />}
+                              offIcon={<HeartIcon />}
+                            />
+                            <button
+                              className="text-violet-200 ml-2 text-2xl"
+                              onClick={() => handleDeleteComment(comment.id)}
+                            >
+                              X
+                            </button>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </TabPanel>
+              <TabPanel value="2">앙냥냥</TabPanel>
+              <TabPanel value="3">띵띵땅땅띵~</TabPanel>
+            </TabContext>
+          </Box>
+          {/* 댓글 리스트 */}
         </div>
       </Layout>
       <footer className="sticky bottom-0 bg-white z-10 border-b">
@@ -173,10 +220,13 @@ export default function Post() {
               placeholder="Add a comment..."
               onChange={(e) => setNewComment(e.target.value)}
               ref={inputRef}
+              value={newComment}
             />
             <button
               className="font-bold text-violet-500 ml-2"
-              onClick={handleAddComment}
+              onClick={() => {
+                newComment === "" ? handleBlockComment() : handleAddComment();
+              }}
             >
               Post
             </button>

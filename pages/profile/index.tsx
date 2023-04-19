@@ -1,9 +1,22 @@
 import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
+import { useState } from "react";
 import src from "@public/exam2.png";
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import Tabs from "@mui/material/Tabs";
+import TabPanel from "@mui/lab/TabPanel";
 
 export default function MyPage() {
+  // MUI tabs
+  const [value, setValue] = useState("1");
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
+
   return (
     <Layout>
       <section className="flex flex-col justify-center items-center py-12 border-b border-neutral-300 px-10">
@@ -32,32 +45,75 @@ export default function MyPage() {
               나는 이제 Español 사람 아니면 가르쳐준다 나는. 너의 Mamá에게 Sexo.
             </p>
           </div>
-          <div className="my-10">{`Posts / NFTS   <--   tab 들어가야되나?`}</div>
-          <div className="grid grid-cols-3 gap-4">
-            <Thumbnail
-              thumbnail={src}
-              address={`posts/${2}`}
-              option="Thumnail"
-            />
-            <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-              test
-            </div>
-            <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-              test
-            </div>
-            <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-              test
-            </div>
-            <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-              test
-            </div>
-            <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-              test
-            </div>
-            <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-              test
-            </div>
-          </div>
+          <Box sx={{ width: "100%", typography: "body1", marginTop: 2 }}>
+            <TabContext value={value}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  textColor="secondary"
+                  indicatorColor="secondary"
+                  aria-label="secondary tabs example"
+                >
+                  <Tab label="내가만든NFT" value="1" />
+                  <Tab label="구매한NFT" value="2" />
+                </Tabs>
+              </Box>
+              <TabPanel value="1" sx={{ paddingTop: 3, paddingX: 0 }}>
+                <div className="grid grid-cols-3 gap-4">
+                  <Thumbnail
+                    thumbnail={src}
+                    address={`posts/${2}`}
+                    option="Thumnail"
+                  />
+                  <Thumbnail
+                    thumbnail={src}
+                    address={`posts/${2}`}
+                    option="Thumnail"
+                  />
+                  <Thumbnail
+                    thumbnail={src}
+                    address={`posts/${2}`}
+                    option="Thumnail"
+                  />
+                  <Thumbnail
+                    thumbnail={src}
+                    address={`posts/${2}`}
+                    option="Thumnail"
+                  />
+                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                    test
+                  </div>
+                  <Thumbnail
+                    thumbnail={src}
+                    address={`posts/${2}`}
+                    option="Thumnail"
+                  />
+                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                    test
+                  </div>
+                </div>
+              </TabPanel>
+              <TabPanel value="2" sx={{ paddingTop: 3, paddingX: 0 }}>
+                <div className="grid grid-cols-3 gap-4">
+                  <Thumbnail
+                    thumbnail={src}
+                    address={`posts/${2}`}
+                    option="Thumnail"
+                  />
+                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                    test
+                  </div>
+                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                    test
+                  </div>
+                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                    test
+                  </div>
+                </div>
+              </TabPanel>
+            </TabContext>
+          </Box>
         </div>
       </section>
     </Layout>

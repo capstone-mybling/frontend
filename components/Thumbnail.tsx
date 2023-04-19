@@ -15,7 +15,11 @@ export default function Thumbnail({
 }: Props) {
   return (
     <div className={`${getOptionStyle(option).style}`}>
-      <Image src={thumbnail} alt={address}></Image>
+      <Image
+        src={thumbnail}
+        alt={address}
+        className={`${getOptionStyle(option)}`}
+      ></Image>
     </div>
   );
 }
