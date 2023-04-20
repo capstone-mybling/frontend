@@ -16,13 +16,14 @@ import detectEthereumProvider from "@metamask/detect-provider";
 function ResponsiveAppBar() {
   const [searchBar, setSearchBar] = useState<boolean>(false);
   const handleSearchBar = () => {
+    setMenuBar(false);
     setSearchBar(!searchBar);
     if (!searchBar) setSearchText("");
   };
   const [menuBar, setMenuBar] = useState<boolean>(false);
   const handleMenuBar = () => {
+    setSearchBar(false);
     setMenuBar(!menuBar);
-    console.log(menuBar);
   };
   const [searchText, setSearchText] = useState<string>("");
   const handleSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
