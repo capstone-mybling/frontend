@@ -144,15 +144,15 @@ function ResponsiveAppBar() {
         )}
       >
         <div className="flex-cols-1 items-center justify-center mx-auto">
-          <div className="w-full bg-white h-16 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] grid grid-cols-1">
+          <div className="w-full bg-white h-full shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] grid grid-cols-1">
             {/* 지갑 연결 버튼  : 연결 성공시, 콘솔창에 자신의 지갑 Address가 출력 됨.*/}
             {/* TODO: 연결된 지갑의 정보 보여주기 */}
             <div
-              className="flex bg-sky-400 w-auto h-14 items-center mx-auto my-3 px-10 space-x-7 rounded-full hover:cursor-pointer"
+              className="flex bg-sky-400 w-auto h-14 items-center mx-auto my-3 px-10 space-x-7 rounded-full hover:cursor-pointer text-amber-600 transition-colors hover:text-amber-50 hover:bg-sky-600 shadow-md"
               onClick={getAccount}
             >
               <MetaMask></MetaMask>
-              <button className=" text-center text-xl font-semibold text-amber-600">
+              <button className=" text-center text-xl font-semibold ">
                 Connect wallet
               </button>
             </div>
