@@ -277,8 +277,7 @@ export default function Post() {
 
 {
   /* Todo
-- 좋아요 버튼 개별적으로 동작하게끔 
-- input 태그에 아무것도 입력하지 않고 Post 누르면 댓글이 게시되지 않고 input에 포커싱 하게끔
+- 댓글 좋아요 버튼 개별적으로 동작하게끔 
 - 음..
 */
 }
