@@ -13,13 +13,19 @@ export default function UserPage() {
   // MUI tabs
   const [value, setValue] = useState("1");
   const [follow, setFollow] = useState("FOLLOW");
+  let [followers, setFollowers] = useState<number>(999);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
   const handleFollowBtn = () => {
-    if (follow === "FOLLOW") setFollow("UNFOLLOW");
-    else setFollow("FOLLOW");
+    if (follow === "FOLLOW") {
+      setFollow("UNFOLLOW");
+      setFollowers(++followers);
+    } else {
+      setFollow("FOLLOW");
+      setFollowers(--followers);
+    }
   };
 
   return (
@@ -41,7 +47,7 @@ export default function UserPage() {
         <div>
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
             <button>
-              <span className="mr-2 font-bold">12</span>
+              <span className="mr-2 font-bold">{followers}</span>
               <span className="font-semibold text-gray-400">Followers</span>
             </button>
             <button>
@@ -57,7 +63,8 @@ export default function UserPage() {
               <br />
               Ah, 파이팅 해야지 <br />
               Ah, 파이팅 해야지 <br />
-              Don't give it up, never give it up, yeah <br />
+              {`Don't give it up, never give it up, yeah `}
+              <br />
               파이팅 해야지 <br />
               Ah, 파이팅 해야지 <br />
               우린 부석순 <br />
