@@ -86,6 +86,7 @@ export default function Post() {
       {!post ? (
         <h2>Loading...</h2>
       ) : (
+        // Fragment태그는 <>(빈 태그)와 같은 기능을 가진 태그라고 함 - by 준수형
         <Fragment>
           <div className="py-4 px-4 mx-auto shadow-sm space-y-2 flex flex-row items-start space-x-10 justify-between">
             {/* header info : 사용자 정보 & 작성시간 */}
@@ -209,6 +210,32 @@ export default function Post() {
                       ))}
                     </ul>
                   </div>
+                  {/* footer의 위치는 어차피 고정이기 때문에 어디 있어도 똑같아서 댓글 탭 안에 포함 시킴 */}
+                  <footer className="sticky bottom-0 bg-white z-10 border-b">
+                    <div>
+                      <form
+                        className="flex border-t border-neutral-300 p-3"
+                        onSubmit={onSubmit}
+                      >
+                        <input
+                          className="w-full ml-2 border-none outline-none"
+                          type="text"
+                          placeholder="Add a comment..."
+                          onChange={(e) => setNewComment(e.target.value)}
+                          ref={inputRef}
+                          value={newComment}
+                        />
+                        <button
+                          className="font-bold text-violet-500 ml-2"
+                          onClick={() => {
+                            newComment === "" ? handleBlockComment() : handleAddComment();
+                          }}
+                        >
+                          Post
+                        </button>
+                      </form>
+                    </div>
+                  </footer>
                 </TabPanel>
                 <TabPanel value="2">앙냥냥</TabPanel>
                 <TabPanel value="3">띵띵땅땅띵~</TabPanel>
@@ -218,31 +245,6 @@ export default function Post() {
           </div>
         </Fragment>
       )}
-      <footer className="sticky bottom-0 bg-white z-10 border-b">
-        <div>
-          <form
-            className="flex border-t border-neutral-300 p-3"
-            onSubmit={onSubmit}
-          >
-            <input
-              className="w-full ml-2 border-none outline-none"
-              type="text"
-              placeholder="Add a comment..."
-              onChange={(e) => setNewComment(e.target.value)}
-              ref={inputRef}
-              value={newComment}
-            />
-            <button
-              className="font-bold text-violet-500 ml-2"
-              onClick={() => {
-                newComment === "" ? handleBlockComment() : handleAddComment();
-              }}
-            >
-              Post
-            </button>
-          </form>
-        </div>
-      </footer>
     </Layout>
   );
 }
