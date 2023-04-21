@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import SearchIcon from "@mui/icons-material/Search";
 import Logo from "@public/logo.png";
 import MetaMask from "@public/metamask.svg";
+import Copyright from "@public/copyright.svg";
 import { cls } from "@/libs/client/utils";
 import detectEthereumProvider from "@metamask/detect-provider";
 
@@ -144,15 +145,18 @@ function ResponsiveAppBar() {
         )}
       >
         <div className="flex-cols-1 items-center justify-center mx-auto">
-          <div className="w-full bg-white h-full shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] grid grid-cols-1 pb-3">
+          <div className="w-full bg-white h-full shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] grid grid-cols-1">
             {/* 지갑 연결 버튼  : 연결 성공시, 콘솔창에 자신의 지갑 Address가 출력 됨.*/}
             {/* TODO: 연결된 지갑의 정보 보여주기 */}
             <div
-              className="flex bg-sky-400 w-auto h-14 items-center mx-auto my-3 px-10 space-x-7 rounded-full hover:cursor-pointer text-amber-600 transition-colors hover:text-amber-50 hover:bg-sky-600 shadow-md duration-500"
+              className="flex bg-sky-400 w-auto h-14 items-center mx-auto my-8 mt-10 px-10 space-x-7 rounded-full hover:cursor-pointer text-amber-600 transition-colors hover:text-amber-50 hover:bg-sky-600 shadow-md duration-500"
               onClick={getAccount}
             >
               <MetaMask></MetaMask>
               <button className=" text-center text-xl font-semibold ">Connect wallet</button>
+            </div>
+            <div className="flex justify-center py-4 bg-slate-200 border-t-[1px] border-gray-300 shadow-md">
+              <Copyright />
             </div>
           </div>
         </div>
