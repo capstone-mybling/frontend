@@ -113,38 +113,47 @@ export default function Post() {
           </div>
           {/* post info : 좋아요, 댓글 */}
           <div className="flex flex-col px-2 py-4 justify-center">
-            {/* <div className="flex flex-row justify-evenly"> */}
-            <div
-              className="flex items-center justify-end my-3"
-              onClick={likeUp}
-            >
-              <span>{likeCount}</span>
-              <ToggleButton
-                toggled={like}
-                onToggle={setLike}
-                onIcon={<HeartFillIcon />}
-                offIcon={<HeartIcon />}
-              />
-            </div>
-            {/* <div>
+            <section className="flex justify-between mb-4">
+              <div className="px-1 flex space-x-2 items-center">
+                <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
+                <span className="text-sm font-extrabold text-gray-500">
+                  Current Owner
+                </span>
+                <span className="text-sm font-extrabold">hazzun</span>
+              </div>
+              <div
+                className="flex items-center justify-end my-3"
+                onClick={likeUp}
+              >
+                <span>{likeCount}</span>
                 <ToggleButton
-                  toggled={comment}
-                  onToggle={setComment}
-                  onIcon={<CommentFillIcon />}
-                  offIcon={<CommentIcon />}
+                  toggled={like}
+                  onToggle={setLike}
+                  onIcon={<HeartFillIcon />}
+                  offIcon={<HeartIcon />}
                 />
               </div>
-            </div> */}
+            </section>
             {/* post detail : 게시글 상세정보 */}
-            <div className="flex justify-between items-center">
-              <div>
-                <h1 className="font-bold text-2xl">{post.title}</h1>
+            <section className="px-2">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h1 className="font-bold text-2xl">title????</h1>
+                </div>
+                <div>
+                  <p className="text-gray-500">5 minutes ago</p>
+                </div>
               </div>
-              <div>
-                <p className="text-gray-500">5 minutes ago</p>
-              </div>
-            </div>
-            <p>{post.body}</p>
+              <p className="my-4">
+                책읽는 심슨이 있습니다. 그러나, 책을 읽는 것은 심슨 가족
+                중에서는 극적으로 드문 일이며, 그들은 대부분 이상한 모험을
+                즐기며 시간을 보냅니다.책읽는 심슨이 있습니다. 그러나, 책을 읽는
+                것은 심슨 가족 중에서는 극적으로 드문 일이며, 그들은 대부분
+                이상한 모험을 즐기며 시간을 보냅니다.책읽는 심슨이 있습니다.
+                그러나, 책을 읽는 것은 심슨 가족 중에서는 극적으로 드문 일이며,
+                그들은 대부분 이상한 모험을 즐기며 시간을 보냅니다.
+              </p>
+            </section>
             <Box sx={{ width: "100%", typography: "body1" }}>
               <TabContext value={value}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -230,9 +239,32 @@ export default function Post() {
                     </div>
                   </footer>
                 </TabPanel>
-                <TabPanel value="2">앙냥냥</TabPanel>
-                <TabPanel value="3">띵띵땅땅띵~</TabPanel>
-                <TabPanel value="4">d~</TabPanel>
+                <TabPanel value="2" sx={{ padding: 0 }}>
+                  앙냥냥
+                </TabPanel>
+                <TabPanel value="3" sx={{ padding: 0 }}>
+                  띵띵땅땅띵~
+                </TabPanel>
+                <TabPanel value="4" sx={{ padding: 0 }}>
+                  <section className="p-2 mt-4">
+                    <div className="flex justify-between">
+                      <p>1</p>
+                      <p>test</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p>fsdlndlsnf</p>
+                      <p>oprqwekopqjwel;kmads</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p>fsdlndlsnf</p>
+                      <p>oprqwekopqjwel;kmads</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p>fsdlndlsnf</p>
+                      <p>oprqwekopqjwel;kmads</p>
+                    </div>
+                  </section>
+                </TabPanel>
               </TabContext>
             </Box>
             {/* 댓글 리스트 */}
