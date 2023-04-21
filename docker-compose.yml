@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  #  spring:
+  #    build:
+  #      context: .
+  #      dockerfile: Dockerfile
+  #    ports:
+  #      - "8080:8080"
+  #    depends_on:
+  #      - ipfs
+  #      - redis
+  #    environment:
+  #      SPRING_REDIS_HOST: redis
+  #      SPRING_IPFS_HOST: ipfs
+  #    networks:
+  #      - app-network
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  ipfs:
+    image: ipfs/go-ipfs
+    command: ["daemon", "--migrate=true"]
+    ports:
+      - "5001:5001"
+      - "8080:8080"
+      - "4001:4001"
+    volumes:
+      - ipfs-data:/data/ipfs
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+
+volumes:
+  ipfs-data:
+  redis-data:
+  db-data:
+
+networks:
+  app-network:
