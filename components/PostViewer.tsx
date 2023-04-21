@@ -58,8 +58,8 @@ export default function PostViewer({
             <div className="flex items-center space-x-3">
               <UserAvatar
                 size={"medium"}
-                UserName={UserName}
-                UserImage={UserImage}
+                UserName={UserName!}
+                UserImage={UserImage!}
               />
             </div>
             {/* 좋아요 수 */}
