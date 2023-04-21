@@ -1,27 +1,21 @@
 import React from "react";
 import ResponsiveAppBar from "./AppTopBar";
-import { useRouter } from "next/dist/client/router";
 import BottomNavBar from "./BottomNavBar";
 
 interface LayoutProps {
   title?: string;
   canGoBack?: boolean;
-  hasTabBar?: boolean;
-  alarmBtnDisable?: boolean;
-  isFooterVisible?: boolean;
+  disableFooter?: boolean;
   children: React.ReactNode;
 }
 
-export default function Layout({
-  children,
-  isFooterVisible = true,
-}: LayoutProps) {
+export default function Layout({ children, disableFooter }: LayoutProps) {
   return (
     <>
       <ResponsiveAppBar />
       {/* 본문 */}
       <main className={"pt-16"}>{children}</main>
-      {isFooterVisible && (
+      {!disableFooter && (
         <footer className="sticky bottom-0 bg-white z-10 border-b">
           <BottomNavBar />
         </footer>
