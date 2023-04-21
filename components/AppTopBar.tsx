@@ -152,11 +152,14 @@ function ResponsiveAppBar() {
               onClick={getAccount}
             >
               <MetaMask></MetaMask>
-              <button className=" text-center text-xl font-semibold ">
-                Connect wallet
-              </button>
+              <button className=" text-center text-xl font-semibold ">Connect wallet</button>
             </div>
-            <button onClick={handleMenuBar} className="mx-auto bg-slate-500 px-3 rounded-full text-white font-bold transition-colors hover:bg-black duration-700">Close</button>
+            <button
+              onClick={handleMenuBar}
+              className="mx-auto bg-slate-500 px-3 rounded-full text-white font-bold transition-colors hover:bg-black duration-700"
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
