@@ -15,6 +15,8 @@ interface PostProps {
   likes: number;
   className?: string;
   small?: boolean;
+  ownerName: string;
+  ownerImage: string;
 }
 
 export default function PostViewer({
@@ -26,6 +28,8 @@ export default function PostViewer({
   likes,
   small,
   className,
+  ownerName,
+  ownerImage,
   ...rest
 }: PostProps) {
   const postContentRef = useRef<HTMLDivElement>(null);
@@ -58,15 +62,16 @@ export default function PostViewer({
             />
           </div>
           {/* 좋아요 수*/}
-          <div
-            className={cls("flex items-center space-x-1", small ? " w-10" : "")}
-          >
+          <div className={cls("flex items-center space-x-1", small ? " w-10" : "")}>
             <HeartIcon />
             <span className={cls(small ? "text-xs" : "")}>{likes}</span>
           </div>
         </div>
         {/* 썸네일 */}
-        <Thumbnail thumbnail={thumbnail} address={address} />
+        <Thumbnail
+          thumbnail={thumbnail}
+          address={address}
+        />
         {/* 게시글 내용(bottom) */}
         <div className="px-1">
           <div
@@ -87,6 +92,12 @@ export default function PostViewer({
           >
             더보기
           </button>
+        </div>
+        {/* current owner */}
+        <div className="px-1 flex space-x-2 items-center">
+          <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
+          <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
+          <span className="text-sm font-extrabold">{ownerName}</span>
         </div>
       </section>
     </>
