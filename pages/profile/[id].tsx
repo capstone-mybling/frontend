@@ -12,14 +12,27 @@ import TabPanel from "@mui/lab/TabPanel";
 export default function UserPage() {
   // MUI tabs
   const [value, setValue] = useState("1");
+  const [follow, setFollow] = useState("FOLLOW");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+  const handleFollowBtn = () => {
+    if (follow === "FOLLOW") setFollow("UNFOLLOW");
+    else setFollow("FOLLOW");
+  };
+
   return (
     <Layout>
       <section className="flex flex-col justify-center items-center pb-12 border-b border-neutral-300 px-10">
-        <div className="flex flex-row justify-end w-[115%] pt-2 pb-10"></div>
+        <div className="flex flex-row justify-end w-[115%] pt-2 pb-10">
+          <button
+            onClick={handleFollowBtn}
+            className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70"
+          >
+            {follow}
+          </button>
+        </div>
         <UserAvatar
           size="Xlarge"
           UserImage="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
