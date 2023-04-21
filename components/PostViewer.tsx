@@ -9,14 +9,14 @@ import Thumbnail from "./Thumbnail";
 interface PostProps {
   thumbnail: StaticImageData;
   address: string;
-  content: string;
-  UserName: string;
-  UserImage: string;
-  likes: number;
+  content?: string;
+  UserName?: string;
+  UserImage?: string;
+  likes?: number;
   className?: string;
   small?: boolean;
-  ownerName: string;
-  ownerImage: string;
+  ownerName?: string;
+  ownerImage?: string;
 }
 
 export default function PostViewer({
@@ -51,54 +51,60 @@ export default function PostViewer({
           className ? className : ""
         )}
       >
-        {/* top */}
-        <div className="flex justify-between pr-3">
-          {/* 프로필 */}
-          <div className="flex items-center space-x-3">
-            <UserAvatar
-              size={small ? "small" : "medium"}
-              UserName={UserName}
-              UserImage={UserImage}
-            />
+        {small ? null : (
+          // {/* top */}
+          <div className="flex justify-between pr-3">
+            {/* 프로필 */}
+            <div className="flex items-center space-x-3">
+              <UserAvatar
+                size={"medium"}
+                UserName={UserName}
+                UserImage={UserImage}
+              />
+            </div>
+            {/* 좋아요 수 */}
+            <div className={cls("flex items-center space-x-1", small ? " w-10" : "")}>
+              <HeartIcon />
+              <span className={cls(small ? "text-xs" : "")}>{likes}</span>
+            </div>
           </div>
-          {/* 좋아요 수*/}
-          <div className={cls("flex items-center space-x-1", small ? " w-10" : "")}>
-            <HeartIcon />
-            <span className={cls(small ? "text-xs" : "")}>{likes}</span>
-          </div>
-        </div>
+        )}
         {/* 썸네일 */}
         <Thumbnail
           thumbnail={thumbnail}
           address={address}
         />
-        {/* 게시글 내용(bottom) */}
-        <div className="px-1">
-          <div
-            ref={postContentRef}
-            className={cls(
-              "transition-all duration-300",
-              shouldSummarize ? "line-clamp-2" : "line-clamp-none",
-              small ? "text-xs" : "text-sm"
-            )}
-          >
-            {content}
-          </div>
-          <button
-            className={cls("text-xs", shouldSummarize ? "" : "hidden")}
-            onClick={() => {
-              setShouldSummarize(false);
-            }}
-          >
-            더보기
-          </button>
-        </div>
-        {/* current owner */}
-        <div className="px-1 flex space-x-2 items-center">
-          <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
-          <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
-          <span className="text-sm font-extrabold">{ownerName}</span>
-        </div>
+        {small ? null : (
+          <>
+            {/* 게시글 내용(bottom) */}
+            <div className="px-1">
+              <div
+                ref={postContentRef}
+                className={cls(
+                  "transition-all duration-300",
+                  shouldSummarize ? "line-clamp-2" : "line-clamp-none",
+                  small ? "text-xs" : "text-sm"
+                )}
+              >
+                {content}
+              </div>
+              <button
+                className={cls("text-xs", shouldSummarize ? "" : "hidden")}
+                onClick={() => {
+                  setShouldSummarize(false);
+                }}
+              >
+                더보기
+              </button>
+            </div>
+            {/* current owner */}
+            <div className="px-1 flex space-x-2 items-center">
+              <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
+              <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
+              <span className="text-sm font-extrabold">{ownerName}</span>
+            </div>
+          </>
+        )}
       </section>
     </>
   );
