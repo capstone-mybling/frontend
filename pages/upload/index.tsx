@@ -6,7 +6,7 @@
  * 4. required 필드를 채우지 않았을 시, 제출 form 비활성화
  * 5. 이미지 업로드하면 파일 받아옴 그런데 제출하면....???
  *
- * To-do
+ * To-do --> 2023-04-26 18:10 완료 BY김서권
  * 1. 이미지 업로드 시 화면에 띄워지지만 비율이 짤리는 경우가 발생
  * 2. required 필드를 채우지 않았을 시, 제출 form 비활성화 효과를 주고싶음 (제출버튼 hover시 디자인과 마우스커서가 pointer로 변경되지 않게)
  * 3. Add file 하는 즉시 파일을 받아옴(콘솔확인) 그러나 전체 Form 제출 시 업로드 된 이미지에 대한 정보가 사라짐 -> 아마도 line 68, 74의 순서 때문인 것 같은데 .. 바꾸면 코드가 안돌아감 ㅋ
@@ -91,13 +91,12 @@ export default function Upload() {
           </div>
         ) : (
           // 불러온 이미지가 있을 경우
-          <div className="relative w-full aspect-square">
+          <div className="relative w-full aspect-square bg-gray-200">
             <Image
-              className="object-cover"
               src={URL.createObjectURL(uploadImg)}
               alt="local file"
               fill
-              sizes="650px"
+              objectFit="contain"
             />
           </div>
         )}
