@@ -50,7 +50,7 @@ export default function Post() {
   const [comments, setComments] = useState([
     { id: 1, content: "노하준 폼 미쳤다" },
     { id: 2, content: "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ" },
-    { id: 3, content: "왜 다들 내 사진을보고 화장실을 가는거야??;;" },
+    { id: 3, content: "인절미슈페너에 샷추가" },
   ]);
   const [newComment, setNewComment] = useState("");
 

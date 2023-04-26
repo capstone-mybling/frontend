@@ -81,8 +81,8 @@ export default function UserPage() {
                   indicatorColor="secondary"
                   aria-label="secondary tabs example"
                 >
-                  <Tab label="내가만든NFT" value="1" />
-                  <Tab label="구매한NFT" value="2" />
+                  <Tab label="User-Created NFT" value="1" />
+                  <Tab label="User-Owned NFT" value="2" />
                 </Tabs>
               </Box>
               <TabPanel value="1" sx={{ paddingTop: 3, paddingX: 0 }}>

@@ -160,7 +160,7 @@ export default function Upload() {
             {...register("price", { required: true })}
             className="border-2 border-gray-300 rounded-xl w-full"
             id="input-price"
-            type="text"
+            type="number"
             placeholder="Enter price for one piece"
           />
         </div>
