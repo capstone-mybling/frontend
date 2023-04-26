@@ -16,6 +16,7 @@ import { useForm, FieldErrors } from "react-hook-form";
 import Layout from "@/components/Layout";
 import { ChangeEvent, useState } from "react";
 import Image from "next/image";
+import { cls } from "@/libs/client/utils";
 
 enum FileType {
   IMAGE = "image",
@@ -38,14 +39,14 @@ interface UploadForm {
 
 export default function Upload() {
   const [uploadImg, setUploadImg] = useState<File>();
-  const { register, handleSubmit, reset } = useForm<UploadForm>();
+  const { register, handleSubmit, reset, formState: {errors, isValid} } = useForm<UploadForm>({mode: "onChange"});
 
   // handlesubmit 시 작동하는 함수 두가지
   const onValid = (data: UploadForm) => {
     console.log(data);
     reset();
   };
-  const onNotValid = (errors: FieldErrors) => console.log(errors);
+  const onNotValid = () => console.log(errors);
 
   // image 업로드 시 동작하는 함수
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -59,8 +60,8 @@ export default function Upload() {
 
   return (
     <Layout>
-      <form onSubmit={handleSubmit(onValid, onNotValid)} className="px-5">
-        <h1 className="text-4xl font-bold my-8">Create New Item</h1>
+      <form onSubmit={handleSubmit(onValid, onNotValid)} className="px-5 grid-cols-1 grid w-full mx-auto space-y-8 my-8">
+        <h1 className="text-4xl font-bold">Create New Item</h1>
         {/* 아직 불러온 이미지가 없을 경우 */}
         {!uploadImg ? (
           <div>
@@ -100,7 +101,7 @@ export default function Upload() {
             />
           </div>
         )}
-        <div className="my-8">
+        <div>
           <label
             htmlFor="input-name"
             className="font-bold hover:cursor-pointer text-lg"
@@ -115,7 +116,7 @@ export default function Upload() {
             placeholder="Item Name"
           />
         </div>
-        <div className="my-8">
+        <div>
           <label
             htmlFor="input-desc"
             className="font-bold hover:cursor-pointer text-lg"
@@ -134,7 +135,7 @@ export default function Upload() {
             placeholder="Provide a detailed description of your item."
           />
         </div>
-        <div className="my-8">
+        <div>
           <label
             htmlFor="input-price"
             className="font-bold hover:cursor-pointer text-lg"
@@ -149,7 +150,7 @@ export default function Upload() {
             placeholder="Enter number of copies you want to create"
           />
         </div>
-        <div className="my-8">
+        <div>
           <label
             htmlFor="input-price"
             className="font-bold hover:cursor-pointer text-lg"
@@ -165,7 +166,8 @@ export default function Upload() {
           />
         </div>
         <input
-          className="mx-auto bg-gray-500 opacity-50 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer hover:opacity-70"
+          className={cls("px-6 py-1 rounded-full text-white transition-colors duration-500 w-2/3 mx-auto h-10",
+          (isValid) ? "bg-violet-600 cursor-pointer opacity-70" : "pointer-events-none bg-gray-500 opacity-50")}
           type="submit"
         />
       </form>
