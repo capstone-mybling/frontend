@@ -39,10 +39,14 @@ export default function MyPage() {
           <div className="text-gray-500">
             <div className="py-4 font-extrabold">About</div>
             <p>
-              Mamá없는 Corea 축구 잘 봤다 사실 나는 오래전에 Naturalización했다.
-              Español으로 한국과 상관 없어요 나 Gracias 그 동안의 관심.
-              Bastardo들아 자꾸 엮는다 나랑 Corea?? 하지마라 다시 한번 말합니다.
-              나는 이제 Español 사람 아니면 가르쳐준다 나는. 너의 Mamá에게 Sexo.
+              세상에 70억명의 손흥민 팬이 있다면, 나는 그들 중 한 명일 것이다.
+              세상에 1억명의 손흥민 팬이 있다면., 나 또한 그들 중 한 명일
+              것이다. 세상에 천만 명의 손흥민 팬이 있다면, 나는 여전히 그들 중
+              한 명일 것이다. 세상에 백 명의 손흥민 팬이 있다면, 나는 아직도
+              그들 중 한 명일 것이다. 세상에 한 명의 손흥민 팬이 있다면, 그
+              사람은 아마도 나일 것이다. 세상에 단 한 명의 손흥민 팬도 없다면,
+              나는 그제서야 이 세상에 없는 것이다. 손흥민, 나의 사랑. 손흥민,
+              나의 빛. 손흥민, 나의 어둠. 손흥민, 나의 삶.손흥민, 나의 기쁨.
             </p>
           </div>
           <Box sx={{ width: "100%", typography: "body1", marginTop: 2 }}>
