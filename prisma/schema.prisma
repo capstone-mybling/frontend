@@ -13,6 +13,7 @@ model User {
   address     String  @unique
   username    String?
   avatar      String?
+  description String?
   lastLoginIP String  @default("127.0.0.1")
 
   following    UserFollow[]      @relation("follows")

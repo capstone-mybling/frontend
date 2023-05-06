@@ -3,6 +3,7 @@ import {withApiSession} from "@libs/server/withSession";
 import withHandler from "@libs/server/withHandler";
 import client from "@libs/server/client";
 import baseResponse from "@libs/server/response";
+import ErrorCode from "@libs/server/error_code";
 
 
 const handler = async (
@@ -12,7 +13,7 @@ const handler = async (
     const {id} = request.query;
     const {user} = request.session;
 
-    const existLike = await client.postLike.count({
+    const existLike: boolean = await client.postLike.count({
         where: {
             postId: +id,
             userId: user.id
@@ -22,9 +23,12 @@ const handler = async (
     if (request.method === "POST") {
         if (existLike) {
             baseResponse(response, {
+                statusCode: 400,
                 success: false,
-                message: "좋아요가 이미 존재합니다. 다시 확인해주세요.",
-                error: "already liked"
+                error: {
+                    errorMessage: "좋아요가 이미 존재합니다. 다시 확인해주세요.",
+                    errorCode: ErrorCode.RELATIONSHIP_ALREADY_EXISTS
+                }
             })
         }
 
@@ -34,19 +38,21 @@ const handler = async (
                 postId: +id,
                 userId: user.id
             }
-        })
+        });
 
         baseResponse(response, {
             success: true,
-            message: "success",
-            data: null
+            data: null,
         })
     } else if (request.method === "DELETE") {
         if (!existLike) {
             baseResponse(response, {
+                statusCode: 400,
                 success: false,
-                message: "좋아요가 존재하지 않습니다. 다시 확인해주세요.",
-                error: "not found like"
+                error: {
+                    errorMessage: "좋아요가 존재하지 않습니다. 다시 확인해주세요.",
+                    errorCode: ErrorCode.RELATIONSHIP_NOT_FOUND
+                }
             })
         }
 
@@ -62,7 +68,6 @@ const handler = async (
 
         baseResponse(response, {
             success: true,
-            message: "success",
             data: null
         })
     }
@@ -70,8 +75,8 @@ const handler = async (
 
 export default withApiSession(
     withHandler({
-        methods: ["POST"],
+        methods: ["POST", "DELETE"],
         handler,
-        isPrivate: false,
+        isPrivate: true,
     })
 );
