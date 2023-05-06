@@ -1,5 +1,5 @@
 import formidable from "formidable";
-import type { NextApiRequest } from "next";
+import type {NextApiRequest} from "next";
 
 interface ParsedFormData<T> {
     fields: T;
@@ -12,9 +12,9 @@ const parsedFormData = async <T>(request: NextApiRequest) => await new Promise<P
     const form = formidable();
 
     form.parse(request, (err, fields, files) => {
-        if (err) reject({ err })
-        resolve({ fields, files })
-    })
+        if (err) reject({err})
+        resolve({fields, files})
+    });
 })
 
 export default parsedFormData;
