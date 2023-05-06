@@ -5,7 +5,7 @@ import ipfs from "@libs/server/ipfs";
 import fs from "fs";
 import parsedFormData from "@libs/server/parseFormData";
 import client from "@libs/server/client";
-import {FileType, StorageType} from "@prisma/client";
+import {FileType} from "@prisma/client";
 
 
 export const config = {
@@ -40,14 +40,14 @@ const handler = async (
 
     // 업로드한 데이터 정보를 DB에 저장
     const savedFile = await client.storage.create({
-       data: {
-           name: formData.fields.name,
-           hash: ipfsFile.path,
-           fileType: "IMAGE",
-           saveType: "IPFS",
-           size: ipfsFile.size,
-           url: `https://ipfs.io/ipfs/${ipfsFile.path}`,
-       }
+        data: {
+            name: formData.fields.name,
+            hash: ipfsFile.path,
+            fileType: "IMAGE",
+            saveType: "IPFS",
+            size: ipfsFile.size,
+            url: `https://ipfs.io/ipfs/${ipfsFile.path}`,
+        }
     });
 
     const savedJson = await client.storage.create({
@@ -61,9 +61,6 @@ const handler = async (
         }
     })
 
-    console.log(savedFile);
-    console.log(savedJson);
-
     response.json({})
 }
 
@@ -72,4 +69,4 @@ export default withApiSession(
         methods: ["POST"],
         handler,
         isPrivate: false,
-}));
+    }));

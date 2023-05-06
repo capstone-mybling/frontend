@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  address     String  @unique
+  username    String?
+  avatar      String?
+  description String?
+  lastLoginIP String  @default("127.0.0.1")
+
+  following    UserFollow[]      @relation("follows")
+  followers    UserFollow[]      @relation("followedBy")
+  userLogs     UserLog[]
+  posts        Post[]
+  postLikes    PostLike[]
+  comments     PostComment[]
+  commentLikes PostCommentLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+}
+
+model UserFollow {
+  userId       Int
+  followUserId Int
+  followUser   User @relation("follows", fields: [followUserId], references: [id])
+  user         User @relation("followedBy", fields: [userId], references: [id])
+
+  @@id([userId, followUserId])
+}
+
+model UserLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  ip        String
+  userAgent String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Storage {
+  id        Int         @id @default(autoincrement())
+  name      String
+  hash      String      @unique
+  saveType  StorageType @default(LOCAL)
+  fileType  FileType    @default(IMAGE)
+  size      Int         @default(0)
+  url       String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  isDeleted Boolean     @default(false)
+}
+
+model Contract {
+  id Int @id @default(autoincrement())
+
+  address String @unique
+
+  post Post?
+}
+
+model Post {
+  id Int @id @default(autoincrement())
+
+  address String @unique
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  contract   Contract @relation(fields: [contractId], references: [id])
+  contractId Int      @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+
+  comments PostComment[]
+  likes    PostLike[]
+}
+
+model PostLike {
+  post   Post @relation(fields: [postAddress], references: [address])
+  postAddress String
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  @@id([postAddress, userId])
+}
+
+model PostComment {
+  id Int @id @default(autoincrement())
+
+  post   Post @relation(fields: [postAddress], references: [address])
+  postAddress String
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  content String
+
+  likes PostCommentLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+}
+
+model PostCommentLike {
+  comment   PostComment @relation(fields: [commentId], references: [id])
+  commentId Int
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  @@id([commentId, userId])
+}
+
+enum StorageType {
+  LOCAL
+  S3
+  IPFS
+}
+
+enum FileType {
+  IMAGE
+  VIDEO
+  METADATA
+}
