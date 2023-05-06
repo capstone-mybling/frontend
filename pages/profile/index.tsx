@@ -1,15 +1,56 @@
 import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import src from "@public/exam2.png";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import Tabs from "@mui/material/Tabs";
 import TabPanel from "@mui/lab/TabPanel";
+import axios from "axios";
+import { FileType } from "@prisma/client";
+
+type UserFollow = {};
+type UserLog = {};
+type Post = {};
+type PostLike = {};
+type PostComment = {};
+type PostCommentLike = {};
+type User = {
+  id: number;
+  address: string;
+  avatar: string;
+  description: string;
+  lastLoginIP: string;
+  following: UserFollow[];
+  followers: UserFollow[];
+  userLogs: UserLog[];
+  posts: Post[];
+  postLikes: PostLike[];
+  comments: PostComment[];
+  commentLikes: PostCommentLike[];
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+};
+interface UsersResponse {
+  Users: User[];
+}
 
 export default function MyPage() {
+  const [userData, setUserData] = useState<UsersResponse>();
+  useEffect(() => {
+    axios
+      .get("api/users")
+      .then((response) => {
+        setUserData(response.data);
+        console.log(userData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   // MUI tabs
   const [value, setValue] = useState("1");
 
