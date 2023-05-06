@@ -1,26 +1,32 @@
 import {NextApiRequest, NextApiResponse} from "next";
+import getRedisClient from "@libs/server/redis";
+import client from "@libs/server/client";
 import {withApiSession} from "@libs/server/withSession";
 import withHandler from "@libs/server/withHandler";
-import client from "@libs/server/client";
 import baseResponse from "@libs/server/response";
 import ErrorCode from "@libs/server/error_code";
-import getRedisClient from "@libs/server/redis";
 
-
+/**
+ * 댓글 좋아요 생성, 삭제
+ * @param request
+ * @param response
+ */
 const handler = async (
     request: NextApiRequest,
     response: NextApiResponse<any>
 ) => {
-    const {address} = request.query;
+    const {address, id} = request.query;
     const {user} = request.session;
     const redis = await getRedisClient();
 
-    const existLike: boolean = await client.postLike.count({
+    const findPost = await client.post.findUnique({
         where: {
-            userId: user.id,
-            postAddress: address as string,
+            address: address as string,
         }
-    }).then(count => count > 0);
+    });
+
+    const existLike: boolean = await redis.sMembers(`post:comment:${id}:likes`)
+        .then(likes => likes.some((like) => like === user.address));
 
     if (request.method === "POST") {
         if (existLike) {
@@ -35,13 +41,13 @@ const handler = async (
         }
 
         // 실제 좋아요 생성 처리 로직
-        await client.postLike.create({
+        await client.postCommentLike.create({
             data: {
                 userId: user.id,
-                postAddress: address as string
+                commentId: findPost?.id as number,
             }
         });
-        await redis.sAdd(`post:${address}:likes`, user.address);
+        await redis.sAdd(`post:comment:${id}:likes`, user.address);
 
         baseResponse(response, {
             statusCode: 201,
@@ -62,15 +68,15 @@ const handler = async (
         }
 
         // 실제 좋아요 삭제 처리 로직
-        await client.postLike.delete({
+        await client.postCommentLike.delete({
             where: {
-                postAddress_userId: {
+                commentId_userId: {
+                    commentId: +id,
                     userId: user.id,
-                    postAddress: address as string,
                 }
             }
         });
-        await redis.sRem(`post:${address}:likes`, user.address);
+        await redis.sRem(`post:comment:${id}:likes`, user.address);
 
         baseResponse<null>(response, {
             statusCode: 204,
@@ -82,8 +88,8 @@ const handler = async (
 
 export default withApiSession(
     withHandler({
-        methods: ["POST", "DELETE"],
+        methods: ["GET"],
         handler,
         isPrivate: true,
-    })
-);
+    }
+));

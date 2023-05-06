@@ -5,41 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4864ca9-f440-4e21-b859-8e81e78e82b2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/libs/server/error_code.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/api/posts/[address]/comments/create.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/api/posts/[address]/comments/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/api/posts/[address]/comments/likes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/api/posts/[address]/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/api/posts/[address]/likes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/api/users/[address].ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/api/users/follows/[address].ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/api/users/follows/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prisma/migrations/20230503102853_modify_user_table/migration.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/frontend.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/AppTopBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/AppTopBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/server/mint.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/server/mint.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/server/parseFormData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/server/parseFormData.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/server/redis.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/server/redis.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/server/response.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/server/response.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/hello.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/posts/[id]/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/posts/[id]/likes.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/posts/create.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/posts/create.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/posts/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/posts/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/users/[id].ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/users/login.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/users/login.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/users/me.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/users/me.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/api/posts/[address]/comments/[id]/likes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/server/error_code.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/server/error_code.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/server/withHandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/server/withHandler.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/posts/[address]/comments/create.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/posts/[address]/comments/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/posts/[address]/comments/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/posts/[address]/comments/likes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/posts/[address]/comments/[id]/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/posts/[address]/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/posts/[address]/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/posts/[address]/likes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/posts/[address]/likes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -49,19 +36,46 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "/Users/junsu/Developer/Projects/2023/capstone/frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/pages/api/posts/[address]/comments/[id]" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -71,7 +85,8 @@
       <option name="presentableId" value="Default" />
       <updated>1683110929026</updated>
       <workItem from="1683110931045" duration="1197000" />
-      <workItem from="1683355349161" duration="1199000" />
+      <workItem from="1683355349161" duration="1617000" />
+      <workItem from="1683357966489" duration="5360000" />
     </task>
     <servers />
   </component>

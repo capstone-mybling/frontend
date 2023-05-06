@@ -73,6 +73,7 @@ model Contract {
 model Post {
   id Int @id @default(autoincrement())
 
+  address String @unique
   author   User @relation(fields: [authorId], references: [id])
   authorId Int
 
@@ -88,20 +89,20 @@ model Post {
 }
 
 model PostLike {
-  post   Post @relation(fields: [postId], references: [id])
-  postId Int
+  post   Post @relation(fields: [postAddress], references: [address])
+  postAddress String
 
   user   User @relation(fields: [userId], references: [id])
   userId Int
 
-  @@id([postId, userId])
+  @@id([postAddress, userId])
 }
 
 model PostComment {
   id Int @id @default(autoincrement())
 
-  post   Post @relation(fields: [postId], references: [id])
-  postId Int
+  post   Post @relation(fields: [postAddress], references: [address])
+  postAddress String
 
   author   User @relation(fields: [authorId], references: [id])
   authorId Int
