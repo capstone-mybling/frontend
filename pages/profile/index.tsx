@@ -12,39 +12,17 @@ import axios from "axios";
 import { FileType } from "@prisma/client";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
-
-type UserFollow = {};
-type UserLog = {};
-type Post = {};
-type PostLike = {};
-type PostComment = {};
-type PostCommentLike = {};
-type User = {
-  id: number;
-  address: string;
-  avatar: string;
-  description: string;
-  lastLoginIP: string;
-  following: UserFollow[];
-  followers: UserFollow[];
-  userLogs: UserLog[];
-  posts: Post[];
-  postLikes: PostLike[];
-  comments: PostComment[];
-  commentLikes: PostCommentLike[];
-  createdAt: Date;
-  updatedAt: Date;
-  isDeleted: boolean;
-};
-interface UsersResponse {
-  Users: User[];
-}
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import { User } from "@prisma/client";
 
 export default function MyPage() {
-  const [userData, setUserData] = useState<UsersResponse>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [userData, setUserData] = useState<User>();
   useEffect(() => {
     axios
-      .get("api/users")
+      .get("api/users/me")
       .then((response) => {
         setUserData(response.data);
         console.log(userData);
@@ -54,24 +32,40 @@ export default function MyPage() {
       });
   }, []);
 
+  useEffect(() => {
+    if (userData) {
+      setIsLoading(false);
+    }
+  }, [userData]);
+
   const [value, setValue] = useState("1");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
-  return (
+  return isLoading ? (
+    <Stack spacing={1}>
+      {/* For variant="text", adjust the height via font-size */}
+      <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+
+      {/* For other variants, adjust the size with `width` and `height` */}
+      <Skeleton variant="circular" width={40} height={40} />
+      <Skeleton variant="rectangular" width={210} height={60} />
+      <Skeleton variant="rounded" width={210} height={60} />
+    </Stack>
+  ) : (
     <Layout>
       <section className="flex flex-col justify-center items-center py-12 border-b border-neutral-300 px-10">
         <UserAvatar
           size="Xlarge"
           UserImage="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          UserName="myprofile"
+          UserName="김서권ㅋㅋ"
         />
         <div>
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
             {/* todo : 팔로워/팔로잉 모달 컴포넌트에게 User에 대한 정보 or User를 팔로워/팔로잉 하는 데이터를 props로 어떻게 넘길지? */}
-            <FollowerModal userFollower={userData?.Users} />
+            <FollowerModal userFollower={userData!.Users.following} />
             <FollowingModal />
           </div>
           <div className="text-gray-500">
