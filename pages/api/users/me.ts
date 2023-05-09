@@ -4,6 +4,7 @@ import withHandler from "@libs/server/withHandler";
 import baseResponse from "@libs/server/response";
 import client from "@libs/server/client";
 import {User} from '@prisma/client';
+import getRedisClient from "@libs/server/redis";
 
 interface UserWithFollow extends User {
     followings: number[];
@@ -19,12 +20,23 @@ const handler = async (
     const findUser = await client.user.findUnique({
         where: {
             address
+        },
+        include: {
+            posts: true,
         }
     });
 
+    const redis = await getRedisClient();
+    const userFollowers = await redis.sMembers(`user:${address}:followers`);
+    const userFollowings = await redis.sMembers(`user:${address}:followings`);
+
     baseResponse<UserWithFollow>(response, {
         success: true,
-        data: findUser
+        data: {
+            ...findUser,
+            followers: userFollowers,
+            followings: userFollowings,
+        }
     })
 }
 

@@ -7,6 +7,7 @@ import fs from "fs";
 import {FileType} from "@prisma/client";
 import ipfs from "@libs/server/ipfs";
 import baseResponse from "@libs/server/response";
+import ErrorCode from "@libs/server/error_code";
 
 export const config = {
     api: {
@@ -27,6 +28,11 @@ interface UploadForm {
     price: number;
 }
 
+/**
+ * 게시글 목록 조회 및 생성
+ * @param request
+ * @param response
+ */
 const handler = async (
     request: NextApiRequest,
     response: NextApiResponse<any>
@@ -36,14 +42,34 @@ const handler = async (
     if (request.method === "GET") {
         const findPosts = await client.post.findMany();
 
-        baseResponse(response, {
+        return baseResponse(response, {
             success: true,
             data: findPosts,
-        })
-
+        });
     } else if (request.method === "POST") {
+        if (!user) {
+            return baseResponse(response, {
+                statusCode: 401,
+                success: false,
+                error: {
+                    errorMessage: "로그인이 필요합니다.",
+                    errorCode: ErrorCode.UNAUTHORIZED,
+                }
+            });
+        }
+
         const formData = await parsedFormData<UploadForm>(request);
         const uploadedFile = fs.readFileSync(formData.files.file.filepath);
+
+        if (!uploadedFile || !formData.fields.name) {
+            return baseResponse(response, {
+                success: false,
+                error: {
+                    errorMessage: "파일 또는 이름이 존재하지 않습니다.",
+                    errorCode: ErrorCode.FILE_IS_REQUIRED,
+                }
+            });
+        }
 
         // ipfs 에 이미지 파일 및 메타데이터 파일 업로드
         const ipfsFile = await ipfs.add(uploadedFile);
@@ -71,11 +97,9 @@ const handler = async (
             }
         });
 
-        
+
     }
 
-
-    response.json({})
 }
 
 export default withApiSession(

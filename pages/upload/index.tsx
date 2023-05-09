@@ -14,6 +14,7 @@ import Layout from "@/components/Layout";
 import { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
+import useWeb3 from "@/hooks/useWeb3";
 
 enum FileType {
   IMAGE = "image",
@@ -37,6 +38,7 @@ interface UploadForm {
 export default function Upload() {
   const [uploadImg, setUploadImg] = useState<File | null>();
   const { register, handleSubmit, reset, setValue, formState: {isValid} } = useForm<UploadForm>({mode: "onChange"});
+  const{nftContract} = useWeb3();
 
   // handlesubmit 시 작동하는 함수 두가지
   const onValid = (data: UploadForm) => {

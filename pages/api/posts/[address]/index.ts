@@ -7,7 +7,7 @@ import ErrorCode from "@libs/server/error_code";
 import getRedisClient from "@libs/server/redis";
 
 /**
- * @description 댓글 조회 및 생성
+ * @description 댓글 수정 및 삭제
  * @param request
  * @param response
  */
@@ -35,63 +35,43 @@ const handler = async (
                 errorCode: ErrorCode.ITEM_DOES_NOT_EXIST,
             }
         })
+    } else if (findPost.authorId !== user.id) {
+        // 만약 포스트의 작성자가 현재 로그인한 유저가 아니면 에러
+        baseResponse(response, {
+            statusCode: 403,
+            success: false,
+            error: {
+                message: "not author",
+                errorMessage: "포스트 작성자가 아닙니다.",
+                errorCode: ErrorCode.PERMISSION_DENIED,
+            }
+        })
     }
 
-    if (request.method === "GET") {
-        const redis = await getRedisClient();
-
-        const likes = await redis.sMembers(`post:${address}:likes`);
-
-        if (user) {
-            const existLike: boolean = likes.some((like) => like === user.address);
-            return baseResponse<any>(response, {
-                success: true,
-                data: {
-                    likes: likes.length,
-                    isLike: existLike,
-                    ...findPost
-                }
-            })
-        } else {
-            return baseResponse<any>(response, {
-                success: true,
-                data: findPost
-            })
-        }
-
-    } else if (request.method === "POST") {
-        const {content} = request.body;
-
-        if (!content) {
-            return baseResponse(response, {
-                statusCode: 400,
-                success: false,
-                error: {
-                    errorMessage: "댓글 내용을 입력해주세요.",
-                    errorCode: ErrorCode.CONTENT_DOES_NOT_EXIST,
-                }
-            })
-        }
-
-        const newPostComment = await client.postComment.create({
-            data: {
-                content,
-                authorId: user.id,
-                postAddress: address as string,
+    if (request.method === "PATCH") {
+        // 수정이 필요한지 확인
+    } else if (request.method === "DELETE") {
+        // 댓글 삭제
+        await client.post.delete({
+            where: {
+                id: findPost.id
             }
         });
 
+        // 파일과 NFT 를 삭제해야하는가...?
+
         return baseResponse(response, {
-            statusCode: 201,
+            statusCode: 204,
             success: true,
-            data: newPostComment,
+            data: null
         });
     }
 }
 
 export default withApiSession(
     withHandler({
-        methods: ["GET", "POST"],
+        methods: ["PATCH", "DELETE"],
         handler,
-        isPrivate: false,
-    }));
+        isPrivate: true,
+    })
+);

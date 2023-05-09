@@ -27,6 +27,7 @@
     "@types/redis": "^4.0.11",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
+    "ethers": "^6.3.0",
     "formidable": "^2.1.1",
     "fs": "^0.0.1-security",
     "ipfs-http-client": "^60.0.0",
@@ -38,7 +39,8 @@
     "react-icons": "^4.8.0",
     "redis": "^4.6.6",
     "styled-components": "^5.3.9",
-    "typescript": "5.0.2"
+    "typescript": "5.0.2",
+    "web3modal": "^1.9.12"
   },
   "devDependencies": {
     "@svgr/webpack": "^7.0.0",

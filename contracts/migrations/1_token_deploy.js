@@ -1,5 +1,8 @@
-const NFT = artifacts.require("MyblingNFT");
+const NFT = artifacts.require("NFT");
+const MarketPlace = artifacts.require("MarketPlace");
 
-module.exports = function(deployer) {
-  deployer.deploy(NFT, "TEST", "TEST_SB", 10, 10000, 3, 3, "ipfs://QmPD5AawNBDLVPMN7Aq4KfQiJXSZibx2RDLs1f4ZbcX1b8");
+module.exports = async function(deployer) {
+  const marketPlace = await deployer.deploy(MarketPlace);
+  const nft = await deployer.deploy(NFT, MarketPlace.address);
+  console.log(MarketPlace.address, NFT.address);
 };

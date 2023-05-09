@@ -4,9 +4,12 @@ import Layout from "@/components/Layout";
 import {useRouter} from "next/navigation";
 import src from "@public/exam2.png";
 import PostViewer from "@/components/PostViewer";
+import useWeb3 from "@/hooks/useWeb3";
 
 const Home: NextPage = () => {
     const router = useRouter();
+    const {nftContract } = useWeb3();
+    console.log(nftContract);
 
     return (
         <Layout>
