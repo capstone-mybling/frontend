@@ -1,16 +1,59 @@
 import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import src from "@public/exam2.png";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import Tabs from "@mui/material/Tabs";
 import TabPanel from "@mui/lab/TabPanel";
+import axios from "axios";
+import { FileType } from "@prisma/client";
+import FollowerModal from "@/components/FollowerModal";
+import FollowingModal from "@/components/FollowingModal";
+
+type UserFollow = {};
+type UserLog = {};
+type Post = {};
+type PostLike = {};
+type PostComment = {};
+type PostCommentLike = {};
+type User = {
+  id: number;
+  address: string;
+  avatar: string;
+  description: string;
+  lastLoginIP: string;
+  following: UserFollow[];
+  followers: UserFollow[];
+  userLogs: UserLog[];
+  posts: Post[];
+  postLikes: PostLike[];
+  comments: PostComment[];
+  commentLikes: PostCommentLike[];
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+};
+interface UsersResponse {
+  Users: User[];
+}
 
 export default function MyPage() {
-  // MUI tabs
+  const [userData, setUserData] = useState<UsersResponse>();
+  useEffect(() => {
+    axios
+      .get("api/users")
+      .then((response) => {
+        setUserData(response.data);
+        console.log(userData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const [value, setValue] = useState("1");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -27,14 +70,9 @@ export default function MyPage() {
         />
         <div>
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
-            <button>
-              <span className="mr-2 font-bold">220</span>
-              <span className="font-semibold text-gray-400">Followers</span>
-            </button>
-            <button>
-              <span className="mr-2 font-bold">130</span>
-              <span className="font-semibold text-gray-400">Followings</span>
-            </button>
+            {/* todo : 팔로워/팔로잉 모달 컴포넌트에게 User에 대한 정보 or User를 팔로워/팔로잉 하는 데이터를 props로 어떻게 넘길지? */}
+            <FollowerModal userFollower={userData?.Users} />
+            <FollowingModal />
           </div>
           <div className="text-gray-500">
             <div className="py-4 font-extrabold">About</div>

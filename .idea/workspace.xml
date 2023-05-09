@@ -5,68 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4864ca9-f440-4e21-b859-8e81e78e82b2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/contracts/contracts/MarketPlace.sol" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/contracts/contracts/NFT.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/FollowerModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/FollowingModal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/.env" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/Address.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/Address.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/Context.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/Context.bin" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useWeb3.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/Counters.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/Counters.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/ERC165.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/ERC165.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/ERC721.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/ERC721.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/ERC721URIStorage.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/ERC721URIStorage.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/IERC165.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/IERC165.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/IERC721.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/IERC721.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/IERC721Metadata.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/IERC721Metadata.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/IERC721Receiver.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/IERC721Receiver.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/Math.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/Math.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/MyblingNFT.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/MyblingNFT.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/Strings.abi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/Strings.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Address.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Context.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Counters.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/ERC165.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/ERC721.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/ERC721Enumerable.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/ERC721URIStorage.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/IERC165.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/IERC721.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/IERC721Enumerable.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/IERC721Metadata.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/IERC721Receiver.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Math.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/MyblingNFT.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Ownable.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/ReentrancyGuard.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Strings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/contracts/Mybling2.sol" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/contracts/MyblingNFT.sol" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/migrations/1_token_deploy.js" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/migrations/1_token_deploy.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/truffle-config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/server/error_code.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/server/error_code.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/server/mint.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/server/mint.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/posts/[address]/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/posts/[address]/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/posts/create.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/posts/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/posts/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/users/me.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/users/me.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/upload/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/upload/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/profile/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,21 +36,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "ts.external.directory.path": "/Users/junsu/Developer/Projects/2023/capstone/frontend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/junsu/Developer/Projects/2023/capstone/frontend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/pages/api/posts/[address]/comments/[id]" />
