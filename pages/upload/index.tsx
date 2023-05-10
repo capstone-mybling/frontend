@@ -1,6 +1,6 @@
 /**
  * 완료한 목록
- * 1. 전체적인 UI만들기
+ * 1. 전체적인 UI 만들기
  * 2. useForm 라이브러리로 변경
  * 3. 이미지 업로드 시 화면에 띄우기
  * 4. required 필드를 채우지 않았을 시, 제출 form 비활성화
@@ -15,6 +15,7 @@ import { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
 import useWeb3 from "@/hooks/useWeb3";
+import axios from "axios";
 
 enum FileType {
   IMAGE = "image",
@@ -38,13 +39,45 @@ interface UploadForm {
 export default function Upload() {
   const [uploadImg, setUploadImg] = useState<File | null>();
   const { register, handleSubmit, reset, setValue, formState: {isValid} } = useForm<UploadForm>({mode: "onChange"});
-  const{nftContract} = useWeb3();
+  const{marketplaceContract, nftContract} = useWeb3();
 
   // handlesubmit 시 작동하는 함수 두가지
-  const onValid = (data: UploadForm) => {
-    console.log(data);
-    reset();
+  const onValid = async (data: UploadForm) => {
+    const {name, description, count, price} = data;
+    const form = new FormData();
+    form.append("image", data.image);
+    form.append("name", name);
+    form.append("description", description);
+    form.append("count", count.toString());
+    form.append("price", price.toString());
+
+    const response = await axios.post("/api/posts/upload", form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (!nftContract) return;
+    const mintResponse = await nftContract.mintToken(response.data.data.ipfsHash);
+
+    const {from, to, hash} = mintResponse;
+
+    const postResponse = await axios.post("/api/posts", {
+        from, to, hash, ipfsHash: response.data.data.ipfsHash
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+
+    resetForm();
   };
+
+  const resetForm = () => {
+    reset();
+    setUploadImg(null);
+  }
+
   const onNotValid = (errors: FieldErrors) => console.log(errors);
 
   // image 업로드 시 동작하는 함수

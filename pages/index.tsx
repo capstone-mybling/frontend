@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import src from "@public/exam2.png";
 import PostViewer from "@/components/PostViewer";
 import useWeb3 from "@/hooks/useWeb3";
+import {useEffect} from "react";
 
 const Home: NextPage = () => {
     const {nftContract } = useWeb3();
-    console.log(nftContract);
+    useEffect(() => {
+    }, [nftContract]);
   const router = useRouter();
 
   return (

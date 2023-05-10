@@ -35,7 +35,7 @@ const handler = async (
                 errorCode: ErrorCode.ITEM_DOES_NOT_EXIST,
             }
         })
-    } else if (findPost.authorId !== user.id) {
+    } else if (findPost.authorAddress !== user!.address) {
         // 만약 포스트의 작성자가 현재 로그인한 유저가 아니면 에러
         baseResponse(response, {
             statusCode: 403,
@@ -54,7 +54,7 @@ const handler = async (
         // 댓글 삭제
         await client.post.delete({
             where: {
-                id: findPost.id
+                address: findPost.address
             }
         });
 

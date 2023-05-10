@@ -31,7 +31,7 @@ const handler = async (
         const commentLikes = await redis.sMembers(`post:${address}:comment:likes`)
 
         findPostComments.map(comment => {
-            const isMine = comment.authorId === user.id;
+            const isMine = comment.authorAddress === user!.address;
         })
         // TODO: 댓글 조회 시 사용자의 댓글 유무와 좋아요 여부도 같이 조회해야 함.
 
@@ -59,7 +59,7 @@ const handler = async (
             data: {
                 content,
                 postAddress: address as string,
-                authorId: user.id,
+                authorAddress: user!.address,
             }
         });
 
