@@ -1,3 +1,9 @@
+/**
+ * Todos
+ * - 팔로워/팔로잉 모달 컴포넌트에게 User에 대한 정보 or User를 팔로워/팔로잉 하는 데이터를 props로 어떻게 넘길지?
+ * - isLoading 모양 어찌 처리할지?
+ */
+
 import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
@@ -17,7 +23,7 @@ import Stack from "@mui/material/Stack";
 import { User } from "@prisma/client";
 
 export default function MyPage() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [userData, setUserData] = useState<User>();
   useEffect(() => {
@@ -25,7 +31,7 @@ export default function MyPage() {
       .get("api/users/me")
       .then((response) => {
         setUserData(response.data);
-        console.log(userData);
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -64,8 +70,8 @@ export default function MyPage() {
         />
         <div>
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
-            {/* todo : 팔로워/팔로잉 모달 컴포넌트에게 User에 대한 정보 or User를 팔로워/팔로잉 하는 데이터를 props로 어떻게 넘길지? */}
-            <FollowerModal userFollower={userData!.Users.following} />
+            <FollowerModal />
+            {/* <FollowerModal userFollower={userData!.Users.following} /> */}
             <FollowingModal />
           </div>
           <div className="text-gray-500">
