@@ -5,14 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4864ca9-f440-4e21-b859-8e81e78e82b2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/components/FollowerModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/FollowingModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/api/posts/upload.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Address.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/Address.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Context.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/Context.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Counters.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/Counters.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/ERC165.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/ERC165.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/ERC721.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/ERC721.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/ERC721URIStorage.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/ERC721URIStorage.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/IERC165.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/IERC165.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/IERC721.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/IERC721.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/IERC721Metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/IERC721Metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/IERC721Receiver.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/IERC721Receiver.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Marketplace.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/Marketplace.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Math.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/Math.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/NFT.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/NFT.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/ReentrancyGuard.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/ReentrancyGuard.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/build/contracts/Strings.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/build/contracts/Strings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/truffle-config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useWeb3.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useWeb3.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/posts/[address]/comments/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/posts/[address]/comments/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/posts/[address]/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/posts/[address]/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/posts/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/posts/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/users/login.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/users/login.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/profile/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/upload/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/upload/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,9 +43,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
         <option value="Solidity Contract" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -42,8 +63,10 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
@@ -90,6 +113,8 @@
       <workItem from="1683357966489" duration="11016000" />
       <workItem from="1683454213050" duration="9218000" />
       <workItem from="1683604003520" duration="7088000" />
+      <workItem from="1683630958381" duration="6279000" />
+      <workItem from="1683684497120" duration="10816000" />
     </task>
     <servers />
   </component>

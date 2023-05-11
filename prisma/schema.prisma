@@ -23,6 +23,7 @@ model User {
   postLikes    PostLike[]
   comments     PostComment[]
   commentLikes PostCommentLike[]
+  contracts    Contract[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -65,7 +66,15 @@ model Storage {
 model Contract {
   id Int @id @default(autoincrement())
 
-  address String @unique
+  author   User @relation(fields: [authorAddress], references: [address])
+  authorAddress String
+
+  hash String @unique
+
+  fromAddress String
+  toAddress String
+
+  createdAt DateTime @default(now())
 
   post Post?
 }
@@ -74,11 +83,11 @@ model Post {
   id Int @id @default(autoincrement())
 
   address String @unique
-  author   User @relation(fields: [authorId], references: [id])
-  authorId Int
+  author   User @relation(fields: [authorAddress], references: [address])
+  authorAddress String
 
-  contract   Contract @relation(fields: [contractId], references: [id])
-  contractId Int      @unique
+  contract   Contract @relation(fields: [contractAddress], references: [hash])
+  contractAddress String      @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -104,8 +113,8 @@ model PostComment {
   post   Post @relation(fields: [postAddress], references: [address])
   postAddress String
 
-  author   User @relation(fields: [authorId], references: [id])
-  authorId Int
+  author   User @relation(fields: [authorAddress], references: [address])
+  authorAddress String
 
   content String
 
@@ -120,10 +129,10 @@ model PostCommentLike {
   comment   PostComment @relation(fields: [commentId], references: [id])
   commentId Int
 
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  user   User @relation(fields: [userAddress], references: [address])
+  userAddress String
 
-  @@id([commentId, userId])
+  @@id([commentId, userAddress])
 }
 
 enum StorageType {

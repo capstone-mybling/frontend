@@ -18,7 +18,9 @@ const Web3DefaultValues = {
 const networkNames = {
     maticmum: 'MUMBAI',
     unknown: 'LOCALHOST',
-    goerli: 'goerli'
+    goerli: 'goerli',
+    sepolia: 'sepolia',
+    'matic-mumbai': 'MUMBAI',
 }
 
 const useWeb3 = () => {
@@ -78,8 +80,8 @@ const useWeb3 = () => {
     }
 
     const getAndSetNetwork = async (provider: any) => {
-        const { name: network } = await provider.getNetwork();
-        const networkName = networkNames[network] || '';
+        const { name } = await provider.getNetwork();
+        const networkName = networkNames[name] || '';
         setNetwork(networkName);
         return networkName;
     }
@@ -89,10 +91,12 @@ const useWeb3 = () => {
             // TODO: error
             return false;
         }
-        const marketplaceContract = new ethers.Contract("0xEE4414BbCAaDA751698F7B30B777734A538819f3", Marketplace.abi, signer);
-        const nftContract = new ethers.Contract("0x75d20409FD728431fEBDC6119B359048Aa15A4da", NFT.abi, signer);
+
+        const marketplaceContract = new ethers.Contract("0x4252294B28334AC6c36Dcb03577E4412d3ABc249", Marketplace.abi, signer);
+        const nftContract = new ethers.Contract("0xDaeB2C1dF98EF8bEb26C3b996a0114Dd643B0602", NFT.abi, signer);
         setMarketplaceContract(marketplaceContract);
         setNftContract(nftContract);
+        // console.log(nftContract.methods)
         return true;
     }
 
