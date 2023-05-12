@@ -15,9 +15,6 @@ interface postResponse {
 const Home: NextPage = () => {
   const router = useRouter();
   const [postsData, setPostsData] = useState<postResponse>();
-  const { isConnected, IsReady, account, balance, network, marketplaceContract, nftContract } =
-    useWeb3();
-  console.log(isConnected, IsReady, account, balance, network, marketplaceContract, nftContract);
   return (
     <Layout>
       <Head>

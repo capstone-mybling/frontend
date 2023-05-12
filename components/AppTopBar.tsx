@@ -12,8 +12,9 @@ import Logo from "@public/logo.png";
 import MetaMask from "@public/metamask.svg";
 import Copyright from "@public/copyright.svg";
 import { cls } from "@/libs/client/utils";
-import detectEthereumProvider from "@metamask/detect-provider";
 import axios from "axios";
+import useWeb3 from "@/hooks/useWeb3";
+import { NextApiRequest } from "next";
 
 function ResponsiveAppBar() {
   const [searchBar, setSearchBar] = useState<boolean>(false);
@@ -41,50 +42,30 @@ function ResponsiveAppBar() {
   const Onclick = () => {
     Router.push("/");
   };
-
-  const [provider, setProvider] = useState<any>(null);
-  const [userLoginInfo, setUserLoginInfo] = useState<string>("");
-  const [accounts, setAccounts] = useState<string>("");
-
-  useEffect(() => {
-    async function detectProvider() {
-      const provider = await detectEthereumProvider();
-      if (provider) {
-        setProvider(provider);
-      } else {
-        console.error(
-          "브라우저 확장 어플리케이션에 메타마스크를 추가해주시기 바랍니다."
-        );
-      }
-    }
-
-    detectProvider();
-  }, []);
-
-  async function getAccount() {
-    const accounts = await provider.request({ method: "eth_requestAccounts" });
-    console.log(accounts[0]);
-    setAccounts(accounts);
+  const [logined, setLogined] = useState<boolean>();
+  const { isConnected, balance, account, network } = useWeb3();
+  // getAccount()를 통해 서버에 유저정보가 담기면 그걸 다시 긁어오는 코드
+  const handleLogin = () => {
     axios
       .post("api/users/login", {
-        address: `"${accounts[0]}"`,
+        address: `"${account}"`,
       })
-      .then((res) => console.log("로그인이 정상적으로 처리되었습니다."))
-      .catch((e) => console.log(e));
-  }
-
-  // getAccount()를 통해 서버에 유저정보가 담기면 그걸 다시 긁어오는 코드
-  useEffect(() => {
-    axios
-      .get("api/users/me")
-      .then((response) => {
-        setUserLoginInfo(response.data.data.address);
-        console.log("메타마스크 id = ", response.data.data.address);
+      .then((res) => {
+        console.log("로그인이 정상적으로 처리되었습니다.");
+        setLogined(true);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((e) => {
+        if (e.response.status == 400) {
+          alert("이미 로그인 되어있습니다.");
+        } else console.log(e);
       });
-  }, [userLoginInfo]);
+  };
+  useEffect(() => {
+    const meData = axios
+      .get("api/users/me")
+      .then((res) => setLogined(true))
+      .catch((e) => setLogined(false));
+  }, []);
 
   return (
     <>
@@ -93,7 +74,10 @@ function ResponsiveAppBar() {
         className="w-[500px] inset-x-0 mx-auto shadow drop-shadow-[0_10px_3px_-2px_rgba(100,100,100,0.25)] h-16 z-20 justify-center"
       >
         <Container className="pr-3 pl-3">
-          <Toolbar disableGutters className="flex justify-between">
+          <Toolbar
+            disableGutters
+            className="flex justify-between"
+          >
             {/* 로고버튼 */}
             <Box>
               <Image
@@ -154,9 +138,7 @@ function ResponsiveAppBar() {
         )}
       >
         <div className="flex-cols-1 items-center justify-center">
-          <div className="w-full bg-white h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)]">
-            1
-          </div>
+          <div className="w-full bg-white h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)]">1</div>
           <button onClick={handleSearchBar}>Close</button>
         </div>
       </div>
@@ -171,15 +153,13 @@ function ResponsiveAppBar() {
           <div className="w-full bg-white h-full shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] grid grid-cols-1">
             {/* 지갑 연결 버튼  : 연결 성공시, 콘솔창에 자신의 지갑 Address가 출력 됨.*/}
             {/* TODO: 연결된 지갑의 정보 보여주기 */}
-            {accounts.length === 0 ? (
+            {!logined ? (
               <div
                 className="flex bg-sky-400 w-auto h-14 items-center mx-auto my-8 mt-10 px-10 space-x-7 rounded-full hover:cursor-pointer text-amber-600 transition-colors hover:text-amber-50 hover:bg-sky-600 shadow-md duration-500"
-                onClick={getAccount}
+                onClick={handleLogin}
               >
                 <MetaMask></MetaMask>
-                <button className=" text-center text-xl font-semibold ">
-                  Connect wallet
-                </button>
+                <button className=" text-center text-xl font-semibold ">Connect wallet</button>
               </div>
             ) : (
               <div className=" flex-1 text-center align-middle my-10">

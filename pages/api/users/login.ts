@@ -6,12 +6,9 @@ import withHandler from "@libs/server/withHandler";
 import { withApiSession } from "@/libs/server/withSession";
 import ErrorCode from "@libs/server/error_code";
 
-const handler = async (
-  request: NextApiRequest,
-  response: NextApiResponse<any>
-) => {
+const handler = async (request: NextApiRequest, response: NextApiResponse<any>) => {
   const { address } = request.body;
-  request.session.destroy();
+  // request.session.destroy();
 
   // address 가 없으면 에러
   if (!address) {
