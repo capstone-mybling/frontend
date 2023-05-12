@@ -5,11 +5,19 @@ import { useRouter } from "next/navigation";
 import src from "@public/exam2.png";
 import PostViewer from "@/components/PostViewer";
 import useWeb3 from "@/hooks/useWeb3";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Post } from "@prisma/client";
+
+interface postResponse {
+  posts: Post[];
+}
 
 const Home: NextPage = () => {
   const router = useRouter();
-
+  const [postsData, setPostsData] = useState<postResponse>();
+  const { isConnected, IsReady, account, balance, network, marketplaceContract, nftContract } =
+    useWeb3();
+  console.log(isConnected, IsReady, account, balance, network, marketplaceContract, nftContract);
   return (
     <Layout>
       <Head>
