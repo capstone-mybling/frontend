@@ -4,39 +4,12 @@ import Layout from "@/components/Layout";
 import { useRouter } from "next/navigation";
 import src from "@public/exam2.png";
 import PostViewer from "@/components/PostViewer";
-import axios from "axios";
-import { FileType } from "@prisma/client";
-import { useEffect, useState } from "react";
-import Post from "./posts/[id]";
-type PostComment = {};
-type PostLike = {};
-type Post = {
-  id: number;
-  address: string;
-  contractId: number;
-  createdAt: Date;
-  updatedAt: Date;
-  isDeleted: boolean;
-  comments: PostComment[];
-  likes: PostLike[];
-};
-interface PostsResponse {
-  Posts: Post[];
-}
+import useWeb3 from "@/hooks/useWeb3";
+import { useEffect } from "react";
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const [data, setData] = useState<PostsResponse>();
-  useEffect(() => {
-    axios
-      .get("api/posts")
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+
   return (
     <Layout>
       <Head>
@@ -55,21 +28,6 @@ const Home: NextPage = () => {
         />
       </Head>
       <div className=" grid-cols-1 space-y-7 p-5">
-        {data?.Posts?.map((post) => (
-          <PostViewer
-            key={post.externalUrl}
-            thumbnail={post.file}
-            address={`posts/${post.externalUrl}`}
-            content={post.description}
-            UserName={"userName"}
-            UserImage={
-              "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            }
-            likes={999}
-            ownerName="KKKSSSGGG"
-            ownerImage=""
-          ></PostViewer>
-        ))}
         <PostViewer
           thumbnail={src}
           address={`posts/${2}`}

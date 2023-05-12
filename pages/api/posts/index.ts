@@ -7,12 +7,7 @@ import fs from "fs";
 import {FileType} from "@prisma/client";
 import ipfs from "@libs/server/ipfs";
 import baseResponse from "@libs/server/response";
-
-export const config = {
-    api: {
-        bodyParser: false
-    }
-}
+import ErrorCode from "@libs/server/error_code";
 
 interface UploadForm {
     name: string;
@@ -27,6 +22,11 @@ interface UploadForm {
     price: number;
 }
 
+/**
+ * 게시글 목록 조회 및 생성
+ * @param request
+ * @param response
+ */
 const handler = async (
     request: NextApiRequest,
     response: NextApiResponse<any>
@@ -34,48 +34,38 @@ const handler = async (
     const {user} = request.session;
 
     if (request.method === "GET") {
-        const findPosts = await client.post.findMany();
-
-        baseResponse(response, {
-            success: true,
-            data: findPosts,
-        })
-
+        // const findPosts = await client.post.findMany();
+        //
+        // return baseResponse(response, {
+        //     success: true,
+        //     data: findPosts,
+        // });
     } else if (request.method === "POST") {
-        const formData = await parsedFormData<UploadForm>(request);
-        const uploadedFile = fs.readFileSync(formData.files.file.filepath);
-
-        // ipfs 에 이미지 파일 및 메타데이터 파일 업로드
-        const ipfsFile = await ipfs.add(uploadedFile);
-        const ipfsJson = await ipfs.add(JSON.stringify(formData.fields));
-
-        // 업로드한 데이터 정보를 DB에 저장
-        await client.storage.create({
+        console.log(request);
+        const { from, to, hash, ipfsHash } = request.body;
+        const contract = await client.contract.create({
             data: {
-                name: formData.fields.name,
-                hash: ipfsFile.path,
-                fileType: "IMAGE",
-                saveType: "IPFS",
-                size: ipfsFile.size,
-                url: `https://ipfs.io/ipfs/${ipfsFile.path}`,
-            }
-        });
-        await client.storage.create({
-            data: {
-                name: formData.fields.name,
-                hash: ipfsJson.path,
-                fileType: "METADATA",
-                saveType: "IPFS",
-                size: ipfsJson.size,
-                url: `https://ipfs.io/ipfs/${ipfsJson.path}`,
+                fromAddress: from,
+                toAddress: to,
+                hash,
+                authorAddress: user!.address
             }
         });
 
-        
+        const post = await client.post.create({
+            data: {
+                authorAddress: user!.address,
+                contractAddress: contract.hash,
+                address: ipfsHash,
+            }
+        });
+
+        return baseResponse(response, {
+            success: true,
+            data: post,
+        });
     }
 
-
-    response.json({})
 }
 
 export default withApiSession(

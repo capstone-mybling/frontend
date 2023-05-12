@@ -8,6 +8,8 @@ const enum ErrorCode {
     ITEM_DOES_NOT_EXIST,
     CONTENT_DOES_NOT_EXIST,
     PERMISSION_DENIED,
+    UNAUTHORIZED,
+    FILE_IS_REQUIRED
 }
 
 export default ErrorCode;

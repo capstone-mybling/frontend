@@ -1,40 +1,78 @@
+/**
+ * Todos
+ * - 팔로워/팔로잉 모달 컴포넌트에게 User에 대한 정보 or User를 팔로워/팔로잉 하는 데이터를 props로 어떻게 넘길지?
+ * - isLoading 모양 어찌 처리할지?
+ */
+
 import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import src from "@public/exam2.png";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import Tabs from "@mui/material/Tabs";
 import TabPanel from "@mui/lab/TabPanel";
+import axios from "axios";
+import { FileType } from "@prisma/client";
+import FollowerModal from "@/components/FollowerModal";
+import FollowingModal from "@/components/FollowingModal";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import { User } from "@prisma/client";
 
 export default function MyPage() {
-  // MUI tabs
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [userData, setUserData] = useState<User>();
+  useEffect(() => {
+    axios
+      .get("api/users/me")
+      .then((response) => {
+        setUserData(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (userData) {
+      setIsLoading(false);
+    }
+  }, [userData]);
+
   const [value, setValue] = useState("1");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
-  return (
+  return isLoading ? (
+    <Stack spacing={1}>
+      {/* For variant="text", adjust the height via font-size */}
+      <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+
+      {/* For other variants, adjust the size with `width` and `height` */}
+      <Skeleton variant="circular" width={40} height={40} />
+      <Skeleton variant="rectangular" width={210} height={60} />
+      <Skeleton variant="rounded" width={210} height={60} />
+    </Stack>
+  ) : (
     <Layout>
       <section className="flex flex-col justify-center items-center py-12 border-b border-neutral-300 px-10">
         <UserAvatar
           size="Xlarge"
           UserImage="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          UserName="myprofile"
+          UserName="김서권ㅋㅋ"
         />
         <div>
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
-            <button>
-              <span className="mr-2 font-bold">220</span>
-              <span className="font-semibold text-gray-400">Followers</span>
-            </button>
-            <button>
-              <span className="mr-2 font-bold">130</span>
-              <span className="font-semibold text-gray-400">Followings</span>
-            </button>
+            <FollowerModal />
+            {/* <FollowerModal userFollower={userData!.Users.following} /> */}
+            <FollowingModal />
           </div>
           <div className="text-gray-500">
             <div className="py-4 font-extrabold">About</div>
