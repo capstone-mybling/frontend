@@ -5,6 +5,7 @@ import client from "@/libs/server/client";
 import withHandler from "@libs/server/withHandler";
 import { withApiSession } from "@/libs/server/withSession";
 import ErrorCode from "@libs/server/error_code";
+import generateIdenticon from "@libs/server/identicon";
 
 const handler = async (
   request: NextApiRequest,
@@ -37,8 +38,11 @@ const handler = async (
     update: {},
     create: {
       address: address,
+      avatar: generateIdenticon(address)
     },
   });
+
+  console.log(findUser)
 
   if (!findUser) {
     return response.json({

@@ -67,7 +67,7 @@ function ResponsiveAppBar() {
     setAccounts(accounts);
     axios
       .post("api/users/login", {
-        address: `"${accounts[0]}"`,
+        address: accounts[0],
       })
       .then((res) => console.log("로그인이 정상적으로 처리되었습니다."))
       .catch((e) => console.log(e));

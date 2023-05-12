@@ -8,6 +8,8 @@ import {FileType} from "@prisma/client";
 import ipfs from "@libs/server/ipfs";
 import baseResponse from "@libs/server/response";
 import ErrorCode from "@libs/server/error_code";
+import generateIdenticon from "@libs/server/identicon";
+import getRedisClient from "@libs/server/redis";
 
 interface UploadForm {
     name: string;
@@ -34,11 +36,30 @@ const handler = async (
     const {user} = request.session;
 
     if (request.method === "GET") {
-        const findPosts = await client.post.findMany();
+        const redis = await getRedisClient();
+
+        const findPosts = await client.post.findMany({
+            include: {
+                author: true,
+                comments: true
+            }
+        });
+
+        const posts = await Promise.all(
+            findPosts.map(async (post) => {
+                return {
+                    ...post,
+                    likes: await redis.sCard(`posts:${post.address}:likes`),
+                    isLiked: await redis.sIsMember(`posts:${post.address}:likes`, user!.address)
+                }
+            })
+        );
+
+        console.log(posts)
 
         return baseResponse(response, {
             success: true,
-            data: findPosts,
+            data: posts,
         });
     } else if (request.method === "POST") {
         const { from, to, hash, ipfsHash, imageHash, name, description, count, price } = request.body;
