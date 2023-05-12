@@ -36,7 +36,7 @@ interface Props {
   userFollowing: User[];
 }
 
-export default function FollowerModal({ userFollowing }: Props) {
+export default function FollowerModal() {
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
   const handleModalClose = () => setOpen(false);
