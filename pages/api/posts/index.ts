@@ -34,15 +34,14 @@ const handler = async (
     const {user} = request.session;
 
     if (request.method === "GET") {
-        // const findPosts = await client.post.findMany();
-        //
-        // return baseResponse(response, {
-        //     success: true,
-        //     data: findPosts,
-        // });
+        const findPosts = await client.post.findMany();
+
+        return baseResponse(response, {
+            success: true,
+            data: findPosts,
+        });
     } else if (request.method === "POST") {
-        console.log(request);
-        const { from, to, hash, ipfsHash } = request.body;
+        const { from, to, hash, ipfsHash, imageHash, name, description, count, price } = request.body;
         const contract = await client.contract.create({
             data: {
                 fromAddress: from,
@@ -52,11 +51,33 @@ const handler = async (
             }
         });
 
+        // TODO: 스토리지에 저장된 컨트랙트 업데이트 코드 필요 시 사용 예정
+        await client.storage.update({
+            where: {
+                hash: imageHash
+            },
+            data: {
+                contractAddress: contract.hash
+            }
+        });
+        await client.storage.update({
+            where: {
+                hash: ipfsHash
+            },
+            data: {
+                contractAddress: contract.hash
+            }
+        })
+
         const post = await client.post.create({
             data: {
+                name, description,
                 authorAddress: user!.address,
                 contractAddress: contract.hash,
                 address: ipfsHash,
+                thumbnail: "https://ipfs.io/ipfs/" + imageHash,
+                price: +price,
+                count: +count
             }
         });
 

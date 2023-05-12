@@ -52,12 +52,17 @@ model UserLog {
 
 model Storage {
   id        Int         @id @default(autoincrement())
+
+  contract Contract?    @relation(fields: [contractAddress], references: [hash])
+  contractAddress String?
+
   name      String
   hash      String      @unique
   saveType  StorageType @default(LOCAL)
   fileType  FileType    @default(IMAGE)
   size      Int         @default(0)
   url       String?
+
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   isDeleted Boolean     @default(false)
@@ -77,17 +82,25 @@ model Contract {
   createdAt DateTime @default(now())
 
   post Post?
+  storages Storage[]
 }
 
 model Post {
   id Int @id @default(autoincrement())
 
   address String @unique
+
   author   User @relation(fields: [authorAddress], references: [address])
   authorAddress String
 
   contract   Contract @relation(fields: [contractAddress], references: [hash])
   contractAddress String      @unique
+
+  name String
+  description String
+  thumbnail String
+  price Int
+  count Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
