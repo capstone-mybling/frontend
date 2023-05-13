@@ -41,6 +41,10 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+      - ipfs
 
 volumes:
   ipfs-data:
