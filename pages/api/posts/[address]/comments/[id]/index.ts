@@ -17,6 +17,17 @@ const handler = async (
     const {id} = request.query;
     const {user} = request.session;
 
+    if (!id) {
+        return baseResponse(response, {
+            statusCode: 400,
+            success: false,
+            error: {
+                errorMessage: "ID가 필요합니다.",
+                errorCode: ErrorCode.ID_IS_REQUIRED
+            }
+        });
+    }
+
     const findComment = await client.postComment.findUnique({
         where: {
             id: +id
@@ -32,7 +43,7 @@ const handler = async (
                 errorCode: ErrorCode.ITEM_DOES_NOT_EXIST
             }
         });
-    } else if (findComment.authorId !== user.id) {
+    } else if (findComment.authorAddress !== user!.address) {
         return baseResponse(response, {
             statusCode: 403,
             success: false,

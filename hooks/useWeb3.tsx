@@ -15,7 +15,16 @@ const Web3DefaultValues = {
     isConnected: false,
 }
 
-const networkNames = {
+type NetworkNames = {
+    [key: string]: string;
+    maticmum: string;
+    unknown: string;
+    goerli: string;
+    sepolia: string;
+    'matic-mumbai': string;
+};
+
+const networkNames: NetworkNames = {
     maticmum: 'MUMBAI',
     unknown: 'LOCALHOST',
     goerli: 'goerli',
@@ -66,6 +75,7 @@ const useWeb3 = () => {
         setIsReady(false);
         const signer = await provider.getSigner();
         const signerAddress = await signer.getAddress();
+        console.dir(signer);
         await getAndSetAccountAndBalance(provider, signerAddress);
         const networkName = await getAndSetNetwork(provider);
         const isSuccess = await setupContracts(signer, networkName);
@@ -74,7 +84,6 @@ const useWeb3 = () => {
 
     const getAndSetAccountAndBalance = async (provider: any, address: string) => {
         setAccount(address);
-        console.log(provider);
         const signerBalance = await provider.getBalance(address);
         const balance = ethers.formatEther(signerBalance);
         setBalance(Number(balance));
@@ -82,7 +91,7 @@ const useWeb3 = () => {
 
     const getAndSetNetwork = async (provider: any) => {
         const { name } = await provider.getNetwork();
-        const networkName = networkNames[name] || '';
+        const networkName = name in networkNames ? networkNames[name] : '';
         setNetwork(networkName);
         return networkName;
     }

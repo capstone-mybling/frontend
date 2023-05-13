@@ -8,8 +8,8 @@ import ErrorCode from "@libs/server/error_code";
 import getRedisClient from "@libs/server/redis";
 
 interface UserWithFollow extends User {
-    followings: number[];
-    followers: number[];
+    followings: string[];
+    followers: string[];
 }
 
 const handler = async (
@@ -39,7 +39,7 @@ const handler = async (
     const userFollowers = await redis.sMembers(`user:${address}:followers`);
     const userFollowings = await redis.sMembers(`user:${address}:followings`);
 
-    baseResponse<UserWithFollow>(response, {
+    baseResponse(response, {
         success: true,
         data: {
             ...findUser,

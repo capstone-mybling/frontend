@@ -18,17 +18,15 @@ function baseResponse<T>(
     response: NextApiResponse,
     result: BaseResponse<T>
 ) {
-    const {success, statusCode = 200, message, error, data} = result;
+    const {success, statusCode = 200, error, data} = result;
     if (!success) {
         return response.status(statusCode!).json({
             success,
-            message,
             error,
         })
     }
     return response.status(statusCode).json({
         success,
-        message: "success",
         data,
     });
 }

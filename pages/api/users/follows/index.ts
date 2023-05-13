@@ -11,8 +11,8 @@ const handler = async (
     const {user} = request.session;
     const redis = await getRedisClient();
 
-    const followings = await redis.sMembers(`user:${user.address}:followings`);
-    const followers = await redis.sMembers(`user:${user.address}:followers`);
+    const followings = await redis.sMembers(`user:${user!.address}:followings`);
+    const followers = await redis.sMembers(`user:${user!.address}:followers`);
 
     // TODO: followings, followers를 UserWithFollow 타입으로 변환
 

@@ -19,6 +19,26 @@ const handler = async (
     const {user} = request.session;
     const redis = await getRedisClient();
 
+    if (!id) {
+        return baseResponse(response, {
+            statusCode: 400,
+            success: false,
+            error: {
+                errorMessage: "ID가 필요합니다.",
+                errorCode: ErrorCode.ID_IS_REQUIRED
+            }
+        });
+    } else if (!address) {
+        return baseResponse(response, {
+            statusCode: 400,
+            success: false,
+            error: {
+                errorMessage: "address가 필요합니다.",
+                errorCode: ErrorCode.ADDRESS_IS_REQUIRED
+            }
+        });
+    }
+
     const findPost = await client.post.findUnique({
         where: {
             address: address as string,
@@ -26,7 +46,7 @@ const handler = async (
     });
 
     const existLike: boolean = await redis.sMembers(`post:comment:${id}:likes`)
-        .then(likes => likes.some((like) => like === user.address));
+        .then(likes => likes.some((like) => like === user!.address));
 
     if (request.method === "POST") {
         if (existLike) {
@@ -43,11 +63,11 @@ const handler = async (
         // 실제 좋아요 생성 처리 로직
         await client.postCommentLike.create({
             data: {
-                userId: user.id,
-                commentId: findPost?.id as number,
+                userAddress: user!.address,
+                commentId: +findPost!.id,
             }
         });
-        await redis.sAdd(`post:comment:${id}:likes`, user.address);
+        await redis.sAdd(`post:comment:${id}:likes`, user!.address);
 
         baseResponse(response, {
             statusCode: 201,
@@ -70,13 +90,13 @@ const handler = async (
         // 실제 좋아요 삭제 처리 로직
         await client.postCommentLike.delete({
             where: {
-                commentId_userId: {
+                commentId_userAddress: {
                     commentId: +id,
-                    userId: user.id,
+                    userAddress: user!.address,
                 }
             }
         });
-        await redis.sRem(`post:comment:${id}:likes`, user.address);
+        await redis.sRem(`post:comment:${id}:likes`, user!.address);
 
         baseResponse<null>(response, {
             statusCode: 204,

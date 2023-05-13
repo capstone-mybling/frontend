@@ -41,7 +41,7 @@ const handler = async (
 
     if (request.method === "POST") {
         // 이미 팔로잉 중인 유저인 경우
-        if (await redis.sIsMember(`user:${user.address}:followings`, String(address))) {
+        if (await redis.sIsMember(`user:${user!.address}:followings`, String(address))) {
             return baseResponse(response, {
                 statusCode: 400,
                 success: false,
@@ -53,8 +53,8 @@ const handler = async (
             })
         }
 
-        await redis.sAdd(`user:${user.address}:followings`, String(address));
-        await redis.sAdd(`user:${address}:followers`, String(user.address));
+        await redis.sAdd(`user:${user!.address}:followings`, String(address));
+        await redis.sAdd(`user:${address}:followers`, String(user!.address));
 
         return baseResponse(response, {
             statusCode: 201,
@@ -63,7 +63,7 @@ const handler = async (
         });
     } else if (request.method === "DELETE") {
         // 팔로잉 하지 않은 유저를 팔로우할 경우
-        if (!await redis.sIsMember(`user:${user.address}:followings`, String(address))) {
+        if (!await redis.sIsMember(`user:${user!.address}:followings`, String(address))) {
             return baseResponse(response, {
                 statusCode: 400,
                 success: false,
@@ -74,8 +74,8 @@ const handler = async (
                 }
             })
         }
-        await redis.sRem(`user:${user.address}:followings`, String(address));
-        await redis.sRem(`user:${address}:followers`, String(user.address));
+        await redis.sRem(`user:${user!.address}:followings`, String(address));
+        await redis.sRem(`user:${address}:followers`, String(user!.address));
 
         return baseResponse(response, {
             statusCode: 204,

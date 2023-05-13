@@ -50,7 +50,7 @@ const handler = async (
         });
     }
 
-    const formData = await parsedFormData<UploadForm>(request);
+    const formData = await parsedFormData(request);
     const uploadedFile = fs.readFileSync(formData.files.image.filepath);
 
     if (!uploadedFile || !formData.fields.name) {
