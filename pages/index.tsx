@@ -25,8 +25,7 @@ const Home: NextPage = () => {
   const { isLoading, error, data, status } = useQuery<PostsResponse>("posts", () =>
     axios.get("api/posts").then((res) => res.data)
   );
-  console.log(status);
-  console.log(data);
+  
   return (
     <Layout>
       <Head>
