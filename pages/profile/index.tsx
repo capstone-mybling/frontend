@@ -21,30 +21,26 @@ import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import { User, UserFollow, Post } from "@prisma/client";
 
+interface UserWithFollow extends User {
+  followings: number[];
+  followers: number[];
+}
+
 export default function MyPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userData, setUserData] = useState<User>();
+  const [userData, setUserData] = useState<UserWithFollow>();
   const [userPost, setUserPost] = useState<Post[]>([]);
-  const [userFollower, setUserFollower] = useState<UserFollow[]>([]);
-  const [userFollowing, setUserFollowing] = useState<UserFollow[]>([]);
 
   useEffect(() => {
     axios
       .get("api/users/me")
       .then((response) => {
         setUserData(response.data.data);
-        console.log(response.data);
+        console.log(response.data.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
-  useEffect(() => {
-    axios.get("api/users/follows").then((response) => {
-      setUserFollower(response.data.data.follower);
-      setUserFollowing(response.data.data.following);
-      console.log("follow 받아온 데이터 : ", response.data.data);
-    });
   }, []);
   useEffect(() => {
     axios.get("api/posts").then((response) => {
@@ -132,9 +128,9 @@ export default function MyPage() {
         />
         <div>
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
-            <FollowerModal userFollower={userFollower} />
+            <FollowerModal userFollower={userData?.followers} />
             {/* <FollowerModal userFollower={userData!.Users.following} /> */}
-            <FollowingModal userFollowing={userFollowing} />
+            <FollowingModal userFollowing={userData?.followings} />
           </div>
           <div className="text-gray-500">
             <div className="py-4 font-extrabold">About</div>
