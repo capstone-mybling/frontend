@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy:prod": "next build && pm2 startOrRestart ecosystem.config.js --env production"
+    "deploy:prod": "next build && next start"
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.7",

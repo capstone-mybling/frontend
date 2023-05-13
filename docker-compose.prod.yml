@@ -36,6 +36,27 @@ services:
     networks:
       - app-network
 
+  nginx:
+    restart: unless-stopped
+    image: staticfloat/nginx-certbot
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      CERTBOT_EMAIL: "sunsuking@gmail.com"
+      CERTBOT_DOMAIN: "mybling.social"
+    volumes:
+      - ./conf.d:/etc/conf.d/user.conf.d:ro
+      - letsencrypt:/etc/letsencrypt
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    restart: unless-stopped
+
 volumes:
   ipfs-data:
   redis-data:
