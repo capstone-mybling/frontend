@@ -3,7 +3,7 @@ import Image, { StaticImageData } from "next/image";
 type OptionStyle = "Thumnail" | "Post";
 
 type Props = {
-  thumbnail: StaticImageData;
+  thumbnail: string;
   address: string;
   option?: OptionStyle;
 };
@@ -18,9 +18,9 @@ export default function Thumbnail({
       <Image
         src={thumbnail}
         alt={address}
-        width={140}
-        height={140}
-        className={`${getOptionStyle(option)}`}
+        width={100}
+        height={0}
+        className={"w-full h-auto"}
       ></Image>
     </div>
   );

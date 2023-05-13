@@ -17,7 +17,6 @@ import useWeb3 from "@/hooks/useWeb3";
 import EtherIcon from "@public/etherium_icon.svg";
 import Backdrop from "@mui/material/Backdrop";
 import { User } from "@prisma/client";
-import login from "@/pages/api/users/login";
 
 interface UserResponse extends User {
   followings: number[];
@@ -64,20 +63,20 @@ function ResponsiveAppBar() {
       .catch((e) => {
         if (e.response.status == 400) {
           alert("이미 로그인 되어있습니다.");
+          setLogined(true);
         } else console.log(e);
       });
   };
   const [user, setUser] = useState<UserResponse>();
   useEffect(() => {
-    if (logined) {
-      axios
-        .get("api/users/me")
-        .then((res) => {
-          setUser(res.data.data);
-        })
-        .catch((e) => console.log(e));
-    }
-  }, [logined]);
+    axios
+      .get("api/users/me")
+      .then((res) => {
+        setLogined(true);
+        setUser(res.data.data);
+      })
+      .catch((e) => console.log(e));
+  }, []);
 
   return (
     <>
@@ -182,7 +181,8 @@ function ResponsiveAppBar() {
               ) : (
                 <div className=" flex-1 text-center align-middle my-10">
                   <p className=" font-extrabold font-sans text-sm text-orange-500">
-                    블록체인 NET : {isConnected ? "connnected" : "disconnected"}
+                    블록체인 NET : {network} 이더리움 네트워크
+                    {isConnected ? " connnected" : " disconnected"}
                   </p>
                   <p className=" font-extrabold font-sans text-sm text-orange-500">
                     최근 접속 IP : {user?.lastLoginIP}

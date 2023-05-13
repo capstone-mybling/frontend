@@ -29,13 +29,41 @@ const handler = async (
   const redis = await getRedisClient();
   const userFollowers = await redis.sMembers(`user:${address}:followers`);
   const userFollowings = await redis.sMembers(`user:${address}:followings`);
+  const userFollowerWithInfo = await Promise.all(
+    userFollowers.map(async (userAddress) => {
+      const user = await client.user.findUnique({
+        where: {
+          address: userAddress,
+        },
+      });
+      return {
+        address: userAddress,
+        avatar: user.avatar,
+        username: user.username,
+      };
+    })
+  );
+  const userFollowingWithInfo = await Promise.all(
+    userFollowings.map(async (userAddress) => {
+      const user = await client.user.findUnique({
+        where: {
+          address: userAddress,
+        },
+      });
+      return {
+        address: userAddress,
+        avatar: user.avatar,
+        username: user.username,
+      };
+    })
+  );
 
   baseResponse<UserWithFollow>(response, {
     success: true,
     data: {
       ...findUser,
-      followers: userFollowers,
-      followings: userFollowings,
+      followers: userFollowerWithInfo,
+      followings: userFollowingWithInfo,
     },
   });
 };
