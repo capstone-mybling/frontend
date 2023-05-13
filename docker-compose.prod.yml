@@ -41,7 +41,9 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-    entrypoint: ["cd app && npx prisma generate && npx prisma db push && npm run deploy:prod"]
+    command:
+      - npx prisma db push
+      - npm run deploy:prod
     depends_on:
       - db
       - redis
