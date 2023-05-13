@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FileType } from "@prisma/client";
+import { FileType, UserFollow } from "@prisma/client";
 import Backdrop from "@mui/material/Backdrop";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
@@ -7,36 +7,12 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
+import { UesrFollow } from "@prisma/client";
 
-type UserFollow = {};
-type UserLog = {};
-type Post = {};
-type PostLike = {};
-type PostComment = {};
-type PostCommentLike = {};
-type User = {
-  id: number;
-  address: string;
-  avatar: string;
-  description: string;
-  lastLoginIP: string;
-  following: UserFollow[];
-  followers: UserFollow[];
-  userLogs: UserLog[];
-  posts: Post[];
-  postLikes: PostLike[];
-  comments: PostComment[];
-  commentLikes: PostCommentLike[];
-  createdAt: Date;
-  updatedAt: Date;
-  isDeleted: boolean;
-};
-
-interface Props {
-  userFollowing: User[];
-}
-
-export default function FollowerModal() {
+export default function FollowerModal({
+  userFollower,
+  userFollowing,
+}: UserFollow) {
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
   const handleModalClose = () => setOpen(false);

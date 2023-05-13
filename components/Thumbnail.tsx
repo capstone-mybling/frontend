@@ -18,6 +18,8 @@ export default function Thumbnail({
       <Image
         src={thumbnail}
         alt={address}
+        width={140}
+        height={140}
         className={`${getOptionStyle(option)}`}
       ></Image>
     </div>
