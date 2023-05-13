@@ -23,15 +23,15 @@ import Stack from "@mui/material/Stack";
 import { User } from "@prisma/client";
 
 export default function MyPage() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [userData, setUserData] = useState<User>();
   useEffect(() => {
     axios
       .get("api/users/me")
       .then((response) => {
-        setUserData(response.data);
-        console.log(response.data);
+        setUserData(response.data.data);
+        // console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -41,6 +41,7 @@ export default function MyPage() {
   useEffect(() => {
     if (userData) {
       setIsLoading(false);
+      console.log("로딩 끝, 받아온 데이터 = ", userData);
     }
   }, [userData]);
 
@@ -52,13 +53,59 @@ export default function MyPage() {
 
   return isLoading ? (
     <Stack spacing={1}>
-      {/* For variant="text", adjust the height via font-size */}
-      <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
-
       {/* For other variants, adjust the size with `width` and `height` */}
-      <Skeleton variant="circular" width={40} height={40} />
-      <Skeleton variant="rectangular" width={210} height={60} />
-      <Skeleton variant="rounded" width={210} height={60} />
+      <div className="flex justify-center pt-[100px]">
+        <Skeleton variant="circular" width={100} height={100} />
+      </div>
+      <div className="flex justify-center pt-4 rounded-full">
+        <Skeleton variant="rounded" width={180} height={60} />
+      </div>
+      <div className="flex justify-center pt-3 rounded-xl">
+        <Skeleton variant="rounded" width={200} height={50} />
+      </div>
+      <div className="flex flex-col items-center pt-16 gap-3">
+        <Skeleton animation="wave" height={20} width="80%" />
+        <Skeleton animation="wave" height={20} width="80%" />
+        <Skeleton animation="wave" height={20} width="80%" />
+      </div>
+      <div className="grid grid-cols-3 gap-1 place-content-center pt-[100px]">
+        <Skeleton
+          variant="rectangular"
+          width={130}
+          height={130}
+          className="mx-auto"
+        />
+        <Skeleton
+          variant="rectangular"
+          width={130}
+          height={130}
+          className="mx-auto"
+        />
+        <Skeleton
+          variant="rectangular"
+          width={130}
+          height={130}
+          className="mx-auto"
+        />
+        <Skeleton
+          variant="rectangular"
+          width={130}
+          height={130}
+          className="mx-auto"
+        />
+        <Skeleton
+          variant="rectangular"
+          width={130}
+          height={130}
+          className="mx-auto"
+        />
+        <Skeleton
+          variant="rectangular"
+          width={130}
+          height={130}
+          className="mx-auto"
+        />
+      </div>
     </Stack>
   ) : (
     <Layout>
@@ -66,7 +113,7 @@ export default function MyPage() {
         <UserAvatar
           size="Xlarge"
           UserImage="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          UserName="김서권ㅋㅋ"
+          UserName={userData?.username}
         />
         <div>
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
