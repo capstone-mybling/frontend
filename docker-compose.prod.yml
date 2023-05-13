@@ -54,13 +54,14 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile.prod.prod
+      dockerfile: Dockerfile
     restart: unless-stopped
 
 volumes:
   ipfs-data:
   redis-data:
   db-data:
+  letsencrypt:
 
 networks:
   app-network:
