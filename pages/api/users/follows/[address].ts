@@ -27,7 +27,7 @@ const handler = async (
     }
 
     // 자기 자신을 팔로잉 할 경우
-    if (user.address === address) {
+    if (user!.address === address) {
         return baseResponse(response, {
             statusCode: 400,
             success: false,
