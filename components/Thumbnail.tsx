@@ -3,22 +3,20 @@ import Image, { StaticImageData } from "next/image";
 type OptionStyle = "Thumnail" | "Post";
 
 type Props = {
-  thumbnail: StaticImageData;
+  thumbnail: string;
   address: string;
   option?: OptionStyle;
 };
 
-export default function Thumbnail({
-  thumbnail,
-  address,
-  option = "Post",
-}: Props) {
+export default function Thumbnail({ thumbnail, address, option = "Post" }: Props) {
   return (
     <div className={`${getOptionStyle(option).style}`}>
       <Image
         src={thumbnail}
         alt={address}
-        className={`${getOptionStyle(option)}`}
+        width={100}
+        height={0}
+        className={"w-full h-auto"}
       ></Image>
     </div>
   );
@@ -33,8 +31,7 @@ function getOptionStyle(option: OptionStyle) {
       };
     case "Thumnail":
       return {
-        style:
-          "flex items-center justify-center aspect-square bg-gray-300 hover:cursor-pointer",
+        style: "flex items-center justify-center aspect-square bg-gray-300 hover:cursor-pointer",
       };
   }
 }
