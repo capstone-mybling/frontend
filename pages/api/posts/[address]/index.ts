@@ -5,6 +5,14 @@ import baseResponse from "@libs/server/response";
 import client from "@libs/server/client";
 import ErrorCode from "@libs/server/error_code";
 import getRedisClient from "@libs/server/redis";
+import axios from "axios";
+import {init, pickChainUrl} from "etherscan-api";
+import {
+    getTokenNFTTransaction,
+    getTransactionByHash,
+    getTransactionCount,
+    getTransactionReceipt
+} from "@libs/server/etherscan";
 
 /**
  * @description 댓글 수정 및 삭제
@@ -21,12 +29,16 @@ const handler = async (
     const findPost = await client.post.findUnique({
         where: {
             address: address as string,
+        },
+        include: {
+            author: true,
+            comments: true,
         }
     });
 
     // 만약 address 에 맞는 포스트가 없으면 에러
     if (!findPost) {
-        baseResponse(response, {
+        return baseResponse(response, {
             statusCode: 404,
             success: false,
             error: {
@@ -35,9 +47,9 @@ const handler = async (
                 errorCode: ErrorCode.ITEM_DOES_NOT_EXIST,
             }
         })
-    } else if (findPost.authorAddress !== user!.address) {
+    } else if ((request.method === "PATCH" || request.method === "DELETE") && (findPost.authorAddress !== user!.address)) {
         // 만약 포스트의 작성자가 현재 로그인한 유저가 아니면 에러
-        baseResponse(response, {
+        return baseResponse(response, {
             statusCode: 403,
             success: false,
             error: {
@@ -47,8 +59,19 @@ const handler = async (
             }
         })
     }
+    if (request.method === "GET") {
+        const redis = await getRedisClient();
 
-    if (request.method === "PATCH") {
+        return baseResponse(response, {
+            statusCode: 200,
+            success: true,
+            data: {
+                ...findPost,
+                likes: await redis.sCard(`posts:${findPost.address}:likes`),
+                isLiked: await redis.sIsMember(`posts:${findPost.address}:likes`, user!.address)
+            },
+        });
+    } else if (request.method === "PATCH") {
         // 수정이 필요한지 확인
     } else if (request.method === "DELETE") {
         // 댓글 삭제
@@ -70,7 +93,7 @@ const handler = async (
 
 export default withApiSession(
     withHandler({
-        methods: ["PATCH", "DELETE"],
+        methods: ["GET", "PATCH", "DELETE"],
         handler,
         isPrivate: true,
     })

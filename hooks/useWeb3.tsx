@@ -74,6 +74,7 @@ const useWeb3 = () => {
 
     const getAndSetAccountAndBalance = async (provider: any, address: string) => {
         setAccount(address);
+        console.log(provider);
         const signerBalance = await provider.getBalance(address);
         const balance = ethers.formatEther(signerBalance);
         setBalance(Number(balance));
@@ -96,7 +97,7 @@ const useWeb3 = () => {
         const nftContract = new ethers.Contract("0xDaeB2C1dF98EF8bEb26C3b996a0114Dd643B0602", NFT.abi, signer);
         setMarketplaceContract(marketplaceContract);
         setNftContract(nftContract);
-        // console.log(nftContract.methods)
+
         return true;
     }
 

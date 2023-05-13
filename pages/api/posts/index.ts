@@ -8,6 +8,8 @@ import {FileType} from "@prisma/client";
 import ipfs from "@libs/server/ipfs";
 import baseResponse from "@libs/server/response";
 import ErrorCode from "@libs/server/error_code";
+import generateIdenticon from "@libs/server/identicon";
+import getRedisClient from "@libs/server/redis";
 
 interface UploadForm {
     name: string;
@@ -34,15 +36,33 @@ const handler = async (
     const {user} = request.session;
 
     if (request.method === "GET") {
-        // const findPosts = await client.post.findMany();
-        //
-        // return baseResponse(response, {
-        //     success: true,
-        //     data: findPosts,
-        // });
+        const redis = await getRedisClient();
+
+        const findPosts = await client.post.findMany({
+            include: {
+                author: true,
+                comments: true
+            }
+        });
+
+        const posts = await Promise.all(
+            findPosts.map(async (post) => {
+                return {
+                    ...post,
+                    likes: await redis.sCard(`posts:${post.address}:likes`),
+                    isLiked: await redis.sIsMember(`posts:${post.address}:likes`, user!.address)
+                }
+            })
+        );
+
+        console.log(posts)
+
+        return baseResponse(response, {
+            success: true,
+            data: posts,
+        });
     } else if (request.method === "POST") {
-        console.log(request);
-        const { from, to, hash, ipfsHash } = request.body;
+        const { from, to, hash, ipfsHash, imageHash, name, description, count, price } = request.body;
         const contract = await client.contract.create({
             data: {
                 fromAddress: from,
@@ -52,11 +72,33 @@ const handler = async (
             }
         });
 
+        // TODO: 스토리지에 저장된 컨트랙트 업데이트 코드 필요 시 사용 예정
+        await client.storage.update({
+            where: {
+                hash: imageHash
+            },
+            data: {
+                contractAddress: contract.hash
+            }
+        });
+        await client.storage.update({
+            where: {
+                hash: ipfsHash
+            },
+            data: {
+                contractAddress: contract.hash
+            }
+        })
+
         const post = await client.post.create({
             data: {
+                name, description,
                 authorAddress: user!.address,
                 contractAddress: contract.hash,
                 address: ipfsHash,
+                thumbnail: "https://ipfs.io/ipfs/" + imageHash,
+                price: +price,
+                count: +count
             }
         });
 

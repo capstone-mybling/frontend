@@ -56,14 +56,15 @@ export default function Upload() {
         "Content-Type": "multipart/form-data",
       },
     });
+    const {imageHash, ipfsHash} = response.data.data;
 
     if (!nftContract) return;
-    const mintResponse = await nftContract.mintToken(response.data.data.ipfsHash);
+    const mintResponse = await nftContract.mintToken(ipfsHash);
 
     const {from, to, hash} = mintResponse;
 
     const postResponse = await axios.post("/api/posts", {
-        from, to, hash, ipfsHash: response.data.data.ipfsHash
+        from, to, hash, ipfsHash, imageHash, name, description, count, price
     }, {
       headers: {
         "Content-Type": "application/json",

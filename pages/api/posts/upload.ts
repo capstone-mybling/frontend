@@ -112,6 +112,7 @@ const handler = async (
     return baseResponse(response, {
         success: true,
         data: {
+            imageHash: ipfsFile.path,
             ipfsHash: ipfsJson.path,
         }
     });

@@ -41,7 +41,7 @@ const handler = async (
                 postAddress: address as string
             }
         });
-        await redis.sAdd(`post:${address}:likes`, user.address);
+        await redis.sAdd(`posts:${address}:likes`, user.address);
 
         baseResponse(response, {
             statusCode: 201,
@@ -70,7 +70,7 @@ const handler = async (
                 }
             }
         });
-        await redis.sRem(`post:${address}:likes`, user.address);
+        await redis.sRem(`posts:${address}:likes`, user.address);
 
         baseResponse<null>(response, {
             statusCode: 204,
