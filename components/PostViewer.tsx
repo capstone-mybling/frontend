@@ -17,6 +17,7 @@ interface PostProps {
   small?: boolean;
   ownerName?: string;
   ownerImage?: string;
+  isLiked: boolean;
 }
 
 export default function PostViewer({
@@ -30,6 +31,7 @@ export default function PostViewer({
   className,
   ownerName,
   ownerImage,
+  isLiked,
   ...rest
 }: PostProps) {
   const postContentRef = useRef<HTMLDivElement>(null);
@@ -64,7 +66,7 @@ export default function PostViewer({
             </div>
             {/* 좋아요 수 */}
             <div className={cls("flex items-center space-x-1", small ? " w-10" : "")}>
-              <HeartIcon />
+              {isLiked ? <HeartFillIcon /> : <HeartIcon />}
               <span className={cls(small ? "text-xs" : "")}>{likes}</span>
             </div>
           </div>
