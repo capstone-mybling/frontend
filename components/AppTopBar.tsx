@@ -54,7 +54,7 @@ function ResponsiveAppBar() {
   const handleLogin = () => {
     axios
       .post("api/users/login", {
-        address: `"${account}"`,
+        address: account,
       })
       .then((res) => {
         console.log("로그인이 정상적으로 처리되었습니다.");
@@ -85,10 +85,7 @@ function ResponsiveAppBar() {
         className="w-[500px] inset-x-0 mx-auto shadow drop-shadow-[0_10px_3px_-2px_rgba(100,100,100,0.25)] h-16 z-20 justify-center"
       >
         <Container className="pr-3 pl-3">
-          <Toolbar
-            disableGutters
-            className="flex justify-between"
-          >
+          <Toolbar disableGutters className="flex justify-between">
             {/* 로고버튼 */}
             <Box>
               <Image
@@ -149,7 +146,9 @@ function ResponsiveAppBar() {
         )}
       >
         <div className="flex-cols-1 items-center justify-center">
-          <div className="w-full bg-white h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)]">1</div>
+          <div className="w-full bg-white h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)]">
+            1
+          </div>
           <button onClick={handleSearchBar}>Close</button>
         </div>
       </div>
@@ -175,7 +174,9 @@ function ResponsiveAppBar() {
                   onClick={handleLogin}
                 >
                   <MetaMask></MetaMask>
-                  <button className=" text-center text-xl font-semibold ">Connect wallet</button>
+                  <button className=" text-center text-xl font-semibold ">
+                    Connect wallet
+                  </button>
                 </div>
               ) : (
                 <div className=" flex-1 text-center align-middle my-10">

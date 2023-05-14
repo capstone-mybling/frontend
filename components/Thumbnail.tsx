@@ -1,4 +1,5 @@
 import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 
 type OptionStyle = "Thumnail" | "Post";
 
@@ -6,11 +7,15 @@ type Props = {
   thumbnail: string;
   address: string;
   option?: OptionStyle;
+  link: string;
 };
 
-export default function Thumbnail({ thumbnail, address, option = "Post" }: Props) {
+export default function Thumbnail({ thumbnail, address, option = "Post", link, ...rest }: Props) {
   return (
-    <div className={`${getOptionStyle(option).style}`}>
+    <Link
+      className={`${getOptionStyle(option).style}`}
+      href={link}
+    >
       <Image
         src={thumbnail}
         alt={address}
@@ -18,7 +23,7 @@ export default function Thumbnail({ thumbnail, address, option = "Post" }: Props
         height={0}
         className={"w-full h-auto"}
       ></Image>
-    </div>
+    </Link>
   );
 }
 // css 추후 변경 가능하도록 props로 'option' 넣어쑵니다

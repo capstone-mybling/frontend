@@ -5,6 +5,8 @@ import HeartFillIcon from "@components/icons/HeartFillIcon";
 import { cls } from "@libs/client/utils";
 import UserAvatar from "@components/UserAvatar";
 import Thumbnail from "./Thumbnail";
+import { useMutation } from "react-query";
+import axios from "axios";
 
 interface PostProps {
   thumbnail: string;
@@ -12,11 +14,12 @@ interface PostProps {
   content?: string;
   UserName?: string;
   UserImage?: string;
-  likes?: number;
+  likes: number;
   className?: string;
   small?: boolean;
   ownerName?: string;
   ownerImage?: string;
+  isLiked: boolean;
 }
 
 export default function PostViewer({
@@ -30,10 +33,13 @@ export default function PostViewer({
   className,
   ownerName,
   ownerImage,
+  isLiked,
   ...rest
 }: PostProps) {
   const postContentRef = useRef<HTMLDivElement>(null);
   const [shouldSummarize, setShouldSummarize] = useState<boolean>(false);
+  const [fillHeart, setFillHeart] = useState<boolean>(isLiked);
+  const [likeCount, setLikeCount] = useState<number>(likes);
   useEffect(() => {
     if (postContentRef.current) {
       const lineCount =
@@ -42,6 +48,33 @@ export default function PostViewer({
       setShouldSummarize(lineCount > 2);
     }
   }, [content]);
+  const disLikeMutation = useMutation(
+    (data: { address: string }) => axios.delete(`api/posts/${address.substring(5)}/likes`),
+    {
+      onSuccess: () => {
+        setFillHeart(false);
+        setLikeCount(likeCount - 1);
+      },
+    }
+  );
+  const likeMutation = useMutation(
+    (data: { address: string }) => axios.post(`api/posts/${address.substring(5)}/likes`),
+    {
+      onSuccess: () => {
+        setFillHeart(true);
+        setLikeCount(likeCount + 1);
+      },
+    }
+  );
+  const handleLike = async () => {
+    if (fillHeart) {
+      //do dislike
+      disLikeMutation.mutate({ address });
+    } else {
+      //do like
+      likeMutation.mutate({ address });
+    }
+  };
   return (
     <>
       {/* 게시글 */}
@@ -60,12 +93,19 @@ export default function PostViewer({
                 size={"medium"}
                 UserName={UserName!}
                 UserImage={UserImage!}
+                // link={}
               />
             </div>
             {/* 좋아요 수 */}
-            <div className={cls("flex items-center space-x-1", small ? " w-10" : "")}>
-              <HeartIcon />
-              <span className={cls(small ? "text-xs" : "")}>{likes}</span>
+            <div
+              className={cls(
+                "flex items-center space-x-1 hover:cursor-pointer",
+                small ? " w-10" : ""
+              )}
+              onClick={handleLike}
+            >
+              {fillHeart ? <HeartFillIcon /> : <HeartIcon />}
+              <span className={cls(small ? "text-xs" : "")}>{likeCount}</span>
             </div>
           </div>
         )}
@@ -73,6 +113,7 @@ export default function PostViewer({
         <Thumbnail
           thumbnail={thumbnail}
           address={address}
+          link={address}
         />
         {small ? null : (
           <>

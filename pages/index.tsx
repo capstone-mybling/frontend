@@ -25,7 +25,6 @@ const Home: NextPage = () => {
   const { isLoading, error, data, status } = useQuery<PostsResponse>("posts", () =>
     axios.get("api/posts").then((res) => res.data)
   );
-  
   return (
     <Layout>
       <Head>
@@ -65,6 +64,7 @@ const Home: NextPage = () => {
               likes={post.likes}
               ownerName="KKKSSSGGG"
               ownerImage=""
+              isLiked={post.isLiked}
             ></PostViewer>
           ))
         )}

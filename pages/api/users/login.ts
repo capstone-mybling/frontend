@@ -7,7 +7,10 @@ import { withApiSession } from "@/libs/server/withSession";
 import ErrorCode from "@libs/server/error_code";
 import generateIdenticon from "@libs/server/identicon";
 
-const handler = async (request: NextApiRequest, response: NextApiResponse<any>) => {
+const handler = async (
+  request: NextApiRequest,
+  response: NextApiResponse<any>
+) => {
   const { address } = request.body;
   // request.session.destroy();
 
@@ -35,11 +38,11 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
     update: {},
     create: {
       address: address,
-      avatar: generateIdenticon(address)
+      avatar: generateIdenticon(address),
     },
   });
 
-  console.log(findUser)
+  console.log(findUser);
 
   if (!findUser) {
     return response.json({
