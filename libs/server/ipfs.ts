@@ -1,9 +1,34 @@
-import { create } from "ipfs-http-client";
+import pinataSDK from "@pinata/sdk";
+import {ReadStream} from "fs";
 
-const ipfs = create({
-    protocol: process.env.NODE_ENV === "production" ? "https" : "http",
-    host: "127.0.0.1",
-    port: 5001,
-})
+const initializePinata = () => {
+    const pinata = new pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_SECRET_API_KEY);
+    return pinata;
+}
 
-export default ipfs;
+
+export const uploadFileToIPFS = async (file: ReadStream, name: string) => {
+    const pinata = initializePinata();
+    const response = await pinata.pinFileToIPFS(file, {
+        pinataMetadata: {
+            name,
+        }
+    });
+    return {
+        ipfsHash: response.IpfsHash,
+        pinSize: response.PinSize,
+    };
+}
+
+export const uploadJsonToIPFS = async (data: object, name: string) => {
+    const pinata = initializePinata();
+    const response = await pinata.pinJSONToIPFS(data, {
+        pinataMetadata: {
+            name,
+        }
+    });
+    return {
+        ipfsHash: response.IpfsHash,
+        pinSize: response.PinSize,
+    };
+}

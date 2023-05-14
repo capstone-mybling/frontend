@@ -6,16 +6,11 @@ import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
-import { User } from "@prisma/client";
 
-interface UserWithFollow extends User {
-  followings: number[];
-}
-
-export default function FollowingModal(userFollowing: UserWithFollow[]) {
+export default function FollowingModal(userFollowing: any) {
   const followingList = Object.values(userFollowing);
-  console.log("팔로잉목록 = ", followingList[0]);
-  console.log("팔로잉하는사람 이름 = ", followingList[0].username);
+  // console.log("팔로잉목록 = ", followingList[0]);
+  // console.log("팔로잉하는사람 이름 = ", followingList[0].username);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
   const handleModalClose = () => setOpen(false);
@@ -37,7 +32,7 @@ export default function FollowingModal(userFollowing: UserWithFollow[]) {
   return (
     <>
       <button onClick={handleModalOpen}>
-        <span className="mr-2 font-bold">{followingList[0].length}</span>
+        <span className="mr-2 font-bold">{3}</span>
         <span className="font-semibold text-gray-400">Followings</span>
       </button>
       <Modal
@@ -69,7 +64,7 @@ export default function FollowingModal(userFollowing: UserWithFollow[]) {
               </button>
             </div>
             <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              {followingList.map((following) => (
+              {followingList.map((following: any) => (
                 <li key={following.id} className="list-none">
                   <div className="flex justify-between">
                     <UserAvatar

@@ -2,13 +2,8 @@ import {NextApiRequest, NextApiResponse} from "next";
 import {withApiSession} from "@libs/server/withSession";
 import withHandler from "@libs/server/withHandler";
 import client from "@libs/server/client";
-import parsedFormData from "@libs/server/parseFormData";
-import fs from "fs";
 import {FileType} from "@prisma/client";
-import ipfs from "@libs/server/ipfs";
 import baseResponse from "@libs/server/response";
-import ErrorCode from "@libs/server/error_code";
-import generateIdenticon from "@libs/server/identicon";
 import getRedisClient from "@libs/server/redis";
 
 interface UploadForm {

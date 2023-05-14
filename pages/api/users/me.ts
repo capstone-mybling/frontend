@@ -6,16 +6,15 @@ import client from "@libs/server/client";
 import { User } from "@prisma/client";
 import getRedisClient from "@libs/server/redis";
 
-interface UserWithFollow extends User {
-  followings: number[];
-  followers: number[];
-}
-
 const handler = async (
   request: NextApiRequest,
   response: NextApiResponse<any>
 ) => {
-  const { id, address } = request.session.user;
+    // TODO: 해결 방법 찾아보기
+    if (!request.session.user) {
+        return;
+    }
+    const {address} = request.session.user;
 
   const findUser = await client.user.findUnique({
     where: {
@@ -36,6 +35,7 @@ const handler = async (
           address: userAddress,
         },
       });
+      if (!user) return;
       return {
         address: userAddress,
         avatar: user.avatar,
@@ -50,6 +50,7 @@ const handler = async (
           address: userAddress,
         },
       });
+      if (!user) return;
       return {
         address: userAddress,
         avatar: user.avatar,
@@ -58,7 +59,7 @@ const handler = async (
     })
   );
 
-  baseResponse<UserWithFollow>(response, {
+  baseResponse(response, {
     success: true,
     data: {
       ...findUser,

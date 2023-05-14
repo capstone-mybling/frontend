@@ -6,13 +6,13 @@ import client from "@libs/server/client";
 import ErrorCode from "@libs/server/error_code";
 import getRedisClient from "@libs/server/redis";
 import axios from "axios";
-import {init, pickChainUrl} from "etherscan-api";
-import {
-    getTokenNFTTransaction,
-    getTransactionByHash,
-    getTransactionCount,
-    getTransactionReceipt
-} from "@libs/server/etherscan";
+// import {init, pickChainUrl} from "etherscan-api";
+// import {
+//     getTokenNFTTransaction,
+//     getTransactionByHash,
+//     getTransactionCount,
+//     getTransactionReceipt
+// } from "@libs/server/etherscan";
 
 /**
  * @description 댓글 수정 및 삭제

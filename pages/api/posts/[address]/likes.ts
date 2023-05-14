@@ -15,9 +15,20 @@ const handler = async (
     const {user} = request.session;
     const redis = await getRedisClient();
 
+    if (!address) {
+        return baseResponse(response, {
+            statusCode: 400,
+            success: false,
+            error: {
+                errorMessage: "address가 필요합니다.",
+                errorCode: ErrorCode.ADDRESS_IS_REQUIRED
+            }
+        });
+    }
+
     const existLike: boolean = await client.postLike.count({
         where: {
-            userId: user.id,
+            userId: user!.id,
             postAddress: address as string,
         }
     }).then(count => count > 0);
@@ -37,11 +48,11 @@ const handler = async (
         // 실제 좋아요 생성 처리 로직
         await client.postLike.create({
             data: {
-                userId: user.id,
+                userId: user!.id,
                 postAddress: address as string
             }
         });
-        await redis.sAdd(`posts:${address}:likes`, user.address);
+        await redis.sAdd(`posts:${address}:likes`, user!.address);
 
         baseResponse(response, {
             statusCode: 201,
@@ -65,12 +76,12 @@ const handler = async (
         await client.postLike.delete({
             where: {
                 postAddress_userId: {
-                    userId: user.id,
+                    userId: user!.id,
                     postAddress: address as string,
                 }
             }
         });
-        await redis.sRem(`posts:${address}:likes`, user.address);
+        await redis.sRem(`posts:${address}:likes`, user!.address);
 
         baseResponse<null>(response, {
             statusCode: 204,

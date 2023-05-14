@@ -1,14 +1,12 @@
 import formidable from "formidable";
 import type {NextApiRequest} from "next";
 
-interface ParsedFormData<T> {
-    fields: T;
-    files: {
-        [key: string]: formidable.File;
-    }
+interface ParsedFormData {
+    fields: any;
+    files: any;
 }
 
-const parsedFormData = async <T>(request: NextApiRequest) => await new Promise<ParsedFormData<T>>((resolve, reject) => {
+const parsedFormData = async (request: NextApiRequest): Promise<ParsedFormData> => await new Promise<ParsedFormData>((resolve, reject) => {
     const form = formidable();
 
     form.parse(request, (err, fields, files) => {

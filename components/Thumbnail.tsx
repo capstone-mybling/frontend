@@ -4,10 +4,10 @@ import Link from "next/link";
 type OptionStyle = "Thumnail" | "Post";
 
 type Props = {
-  thumbnail: string;
+  thumbnail: any;
   address: string;
   option?: OptionStyle;
-  link: string;
+  link?: string;
 };
 
 export default function Thumbnail({
@@ -20,7 +20,8 @@ export default function Thumbnail({
   return (
     <Link
       className={`${getOptionStyle(option).style}`}
-      href="profile/`${link}`"
+      // href="profile/`${link}`"
+      href={link || ""}
     >
       <Image
         src={thumbnail}

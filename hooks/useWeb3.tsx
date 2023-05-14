@@ -15,14 +15,22 @@ const Web3DefaultValues = {
   isConnected: false,
 };
 
-const networkNames = {
-  maticmum: "MUMBAI",
-  unknown: "LOCALHOST",
-  goerli: "goerli",
-  sepolia: "sepolia",
-  "matic-mumbai": "MUMBAI",
+type NetworkNames = {
+    [key: string]: string;
+    maticmum: string;
+    unknown: string;
+    goerli: string;
+    sepolia: string;
+    'matic-mumbai': string;
 };
 
+const networkNames: NetworkNames = {
+    maticmum: 'MUMBAI',
+    unknown: 'LOCALHOST',
+    goerli: 'goerli',
+    sepolia: 'sepolia',
+    'matic-mumbai': 'MUMBAI',
+}
 const useWeb3 = () => {
   const [isConnected, setIsConnected] = useState<boolean>(
     Web3DefaultValues.isConnected
@@ -127,3 +135,4 @@ const useWeb3 = () => {
 };
 
 export default useWeb3;
+

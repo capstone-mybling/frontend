@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy:prod": "next build && pm2 startOrRestart ecosystem.config.js --env production"
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.7",
@@ -18,13 +19,13 @@
     "@mui/lab": "^5.0.0-alpha.127",
     "@mui/material": "^5.11.15",
     "@mui/styled-engine-sc": "^5.11.11",
+    "@pinata/sdk": "^2.1.0",
     "@prisma/client": "^4.13.0",
     "@tailwindcss/forms": "^0.5.3",
     "@types/formidable": "^2.0.5",
     "@types/node": "18.15.10",
     "@types/react": "18.0.29",
     "@types/react-dom": "18.0.11",
-    "@types/redis": "^4.0.11",
     "axios": "^1.4.0",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
@@ -43,6 +44,7 @@
     "react-icons": "^4.8.0",
     "react-query": "^3.39.3",
     "redis": "^4.6.6",
+    "sharp": "^0.32.1",
     "styled-components": "^5.3.9",
     "typescript": "5.0.2",
     "web3modal": "^1.9.12"
