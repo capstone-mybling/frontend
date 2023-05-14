@@ -7,7 +7,6 @@ import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
 import { useState, useEffect } from "react";
-import src from "@public/exam2.png";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
@@ -45,7 +44,7 @@ export default function MyPage() {
   useEffect(() => {
     axios.get("api/posts").then((response) => {
       setUserPost(response.data.data);
-      // console.log("posts 받아온 데이터 : ", response.data.data[1]);
+      console.log("posts 받아온 데이터 : ", response.data.data);
     });
   }, []);
 
@@ -158,6 +157,7 @@ export default function MyPage() {
                         thumbnail={post.thumbnail}
                         address={post.address}
                         option="Thumnail"
+                        link={post.address}
                       />
                     </li>
                   ))}
@@ -166,9 +166,10 @@ export default function MyPage() {
               <TabPanel value="2" sx={{ paddingTop: 3, paddingX: 0 }}>
                 <div className="grid grid-cols-3 gap-4">
                   <Thumbnail
-                    thumbnail={src}
+                    thumbnail={userData?.avatar}
                     address={`posts/${2}`}
                     option="Thumnail"
+                    link={userData?.address}
                   />
                   <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
                     test
