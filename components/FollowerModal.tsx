@@ -1,3 +1,8 @@
+/**
+ * Todo
+ * - 모달에서 삭제버튼 눌렀을 때 DELETE 요청 시 404 에러
+ */
+
 import { useState } from "react";
 import { FileType } from "@prisma/client";
 import Backdrop from "@mui/material/Backdrop";
@@ -7,9 +12,9 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
 
-export default function FollowerModal(userFollower: any) {
+export default function FollowerModal(userFollower: any[]) {
   const followerList = Object.values(userFollower);
-  console.log("팔로워목록 = ", followerList);
+  // console.log("팔로워목록 = ", followerList);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
   const handleModalClose = () => setOpen(false);
@@ -24,14 +29,17 @@ export default function FollowerModal(userFollower: any) {
     boxShadow: 12,
     p: 2,
   };
-  const handleDeleteFollower = () => {
-    console.log("팔로우삭제");
+  const handleDeleteFollower = (delAddr: string) => {
+    // axios
+    //   .delete(`api/follows/${delAddr}`)
+    //   .then((response) => console.log(response));
+    console.log("addr = ", delAddr);
   };
 
   return (
     <>
       <button onClick={handleModalOpen}>
-        <span className="mr-2 font-bold">{3}</span>
+        <span className="mr-2 font-bold">{followerList[0].length}</span>
         <span className="font-semibold text-gray-400">Followers</span>
       </button>
       <Modal
@@ -63,8 +71,8 @@ export default function FollowerModal(userFollower: any) {
               </button>
             </div>
             <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              {followerList.map((follower: any) => (
-                <li key={follower.id} className="list-none">
+              {followerList[0].map((follower: any) => (
+                <li key={follower.id} className="list-none mb-2">
                   <div className="flex justify-between">
                     <UserAvatar
                       size="small"
@@ -73,7 +81,9 @@ export default function FollowerModal(userFollower: any) {
                     />
                     <button
                       className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"
-                      onClick={handleDeleteFollower}
+                      onClick={(e) => {
+                        handleDeleteFollower(follower.address);
+                      }}
                     >
                       삭제
                     </button>

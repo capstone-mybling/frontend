@@ -18,11 +18,7 @@ export default function Thumbnail({
   ...rest
 }: Props) {
   return (
-    <Link
-      className={`${getOptionStyle(option).style}`}
-      // href="profile/`${link}`"
-      href={link || ""}
-    >
+    <Link className={`${getOptionStyle(option).style}`} href={link || ""}>
       <Image
         src={thumbnail}
         alt={address}
