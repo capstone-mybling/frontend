@@ -93,6 +93,7 @@ export default function PostViewer({
                 size={"medium"}
                 UserName={UserName!}
                 UserImage={UserImage!}
+                // link={}
               />
             </div>
             {/* 좋아요 수 */}
@@ -112,6 +113,7 @@ export default function PostViewer({
         <Thumbnail
           thumbnail={thumbnail}
           address={address}
+          link={address}
         />
         {small ? null : (
           <>
