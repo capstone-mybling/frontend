@@ -19,6 +19,7 @@
     "@mui/lab": "^5.0.0-alpha.127",
     "@mui/material": "^5.11.15",
     "@mui/styled-engine-sc": "^5.11.11",
+    "@pinata/sdk": "^2.1.0",
     "@prisma/client": "^4.13.0",
     "@tailwindcss/forms": "^0.5.3",
     "@types/formidable": "^2.0.5",
