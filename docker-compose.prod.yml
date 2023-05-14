@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  db:
+    image: tobi312/rpi-postgresql-postgis:14-3.3-alpine-arm
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  ipfs:
+    image: linuxserver/ipfs
+    command: ["daemon", "--migrate=true"]
+    ports:
+      - "5001:5001"
+      - "8080:8080"
+      - "4001:4001"
+    volumes:
+      - ipfs-data:/data/ipfs
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  redis:
+    image: arm32v7/redis:latest
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  ipfs-data:
+  redis-data:
+  db-data:
+
+networks:
+  app-network:
