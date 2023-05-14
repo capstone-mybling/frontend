@@ -6,20 +6,21 @@ type ProfileSize = "small" | "medium" | "large" | "Xlarge";
 interface AvatarProps {
   UserName: string;
   UserImage: string;
+  UserAddr: string;
   size?: ProfileSize;
 }
 
 export default function UserAvatar({
   UserName,
   UserImage,
+  UserAddr,
   size = "large",
   ...rest
 }: AvatarProps) {
-  const name = "김서건서건";
   return (
     <div>
       {/* Link 태그 - user상세페이지 추후 수정예정 */}
-      <Link href={`/profile/${name}`}>
+      <Link href={`/profile/${UserAddr}`}>
         <div
           className={`flex items-center space-x-3 ${getAvatarSize(size).flex}`}
         >
