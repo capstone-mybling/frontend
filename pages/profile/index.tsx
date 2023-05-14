@@ -123,8 +123,8 @@ export default function MyPage() {
       <section className="flex flex-col justify-center items-center py-12 border-b border-neutral-300 px-10">
         <UserAvatar
           size="Xlarge"
-          UserImage={userData?.avatar}
-          UserName={userData?.username}
+          UserImage={userData?.avatar || ""}
+          UserName={userData?.username || ""}
         />
         <div>
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">

@@ -20,7 +20,7 @@ export const uploadFileToIPFS = async (file: ReadStream, name: string) => {
     };
 }
 
-export const uploadJsonToIPFS = async (data: object, name) => {
+export const uploadJsonToIPFS = async (data: object, name: string) => {
     const pinata = initializePinata();
     const response = await pinata.pinJSONToIPFS(data, {
         pinataMetadata: {

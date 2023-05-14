@@ -44,6 +44,7 @@
     "react-icons": "^4.8.0",
     "react-query": "^3.39.3",
     "redis": "^4.6.6",
+    "sharp": "^0.32.1",
     "styled-components": "^5.3.9",
     "typescript": "5.0.2",
     "web3modal": "^1.9.12"

@@ -6,11 +6,6 @@ import client from "@libs/server/client";
 import { User } from "@prisma/client";
 import getRedisClient from "@libs/server/redis";
 
-interface UserWithFollow extends User {
-  followings: number[];
-  followers: number[];
-}
-
 const handler = async (
   request: NextApiRequest,
   response: NextApiResponse<any>
@@ -39,8 +34,8 @@ const handler = async (
         where: {
           address: userAddress,
         },
-
       });
+      if (!user) return;
       return {
         address: userAddress,
         avatar: user.avatar,
@@ -55,6 +50,7 @@ const handler = async (
           address: userAddress,
         },
       });
+      if (!user) return;
       return {
         address: userAddress,
         avatar: user.avatar,
@@ -63,7 +59,7 @@ const handler = async (
     })
   );
 
-  baseResponse<UserWithFollow>(response, {
+  baseResponse(response, {
     success: true,
     data: {
       ...findUser,

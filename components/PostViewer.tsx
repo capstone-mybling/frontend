@@ -9,17 +9,17 @@ import { useMutation } from "react-query";
 import axios from "axios";
 
 interface PostProps {
-  thumbnail: string;
+  thumbnail: any;
   address: string;
   content?: string;
   UserName?: string;
   UserImage?: string;
-  likes: number;
+  likes?: number;
   className?: string;
   small?: boolean;
   ownerName?: string;
   ownerImage?: string;
-  isLiked: boolean;
+  isLiked?: boolean;
 }
 
 export default function PostViewer({
@@ -38,8 +38,8 @@ export default function PostViewer({
 }: PostProps) {
   const postContentRef = useRef<HTMLDivElement>(null);
   const [shouldSummarize, setShouldSummarize] = useState<boolean>(false);
-  const [fillHeart, setFillHeart] = useState<boolean>(isLiked);
-  const [likeCount, setLikeCount] = useState<number>(likes);
+  const [fillHeart, setFillHeart] = useState<boolean>(isLiked || false);
+  const [likeCount, setLikeCount] = useState<number>(likes || 0);
   useEffect(() => {
     if (postContentRef.current) {
       const lineCount =

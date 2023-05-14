@@ -5,7 +5,7 @@ import client from "@libs/server/client";
 import parsedFormData from "@libs/server/parseFormData";
 import fs from "fs";
 import {FileType} from "@prisma/client";
-import ipfs, {uploadFileToIPFS, uploadJsonToIPFS} from "@libs/server/ipfs";
+import {uploadFileToIPFS, uploadJsonToIPFS} from "@libs/server/ipfs";
 import baseResponse from "@libs/server/response";
 import ErrorCode from "@libs/server/error_code";
 

@@ -27,7 +27,7 @@ const handler = async (
     }
 
     // 자기 자신을 팔로잉 할 경우
-    if (user.address === address) {
+    if (user!.address === address) {
         return baseResponse(response, {
             statusCode: 400,
             success: false,
@@ -42,7 +42,7 @@ const handler = async (
     if (request.method === "POST") {
         // 이미 팔로잉 중인 유저인 경우
         if (
-            await redis.sIsMember(`user:${user.address}:followings`, String(address))
+            await redis.sIsMember(`user:${user!.address}:followings`, String(address))
         ) {
             return baseResponse(response, {
                 statusCode: 400,
@@ -67,8 +67,8 @@ const handler = async (
                 },
             });
         }
-        await redis.sRem(`user:${user.address}:followings`, String(address));
-        await redis.sRem(`user:${address}:followers`, String(user.address));
+        await redis.sRem(`user:${user!.address}:followings`, String(address));
+        await redis.sRem(`user:${address}:followers`, String(user!.address));
 
         if (request.method === "POST") {
             // 이미 팔로잉 중인 유저인 경우
