@@ -15,13 +15,25 @@ import { User, UserFollow, Post } from "@prisma/client";
 import MypageLoading from "@/components/MypageLoading";
 
 interface UserWithFollow extends User {
-  followings: number[];
-  followers: number[];
+  followings: string[];
+  followers: string[];
 }
 
 export default function MyPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userData, setUserData] = useState<UserWithFollow>();
+  const [userData, setUserData] = useState<UserWithFollow>({
+    id: 0,
+    address: "",
+    username: "",
+    avatar: "",
+    description: "",
+    lastLoginIP: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isDeleted: false,
+    followers: [],
+    followings: [],
+  });
   const [userPost, setUserPost] = useState<Post[]>([]);
 
   useEffect(() => {
@@ -29,16 +41,18 @@ export default function MyPage() {
       .get("api/users/me")
       .then((response) => {
         setUserData(response.data.data);
-        console.log(response.data.data);
+        // console.log(response.data.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+  console.log(userData.followings);
+
   useEffect(() => {
     axios.get("api/posts").then((response) => {
       setUserPost(response.data.data);
-      console.log("posts 받아온 데이터 : ", response.data.data);
+      // console.log("posts 받아온 데이터 : ", response.data.data);
     });
   }, []);
 
@@ -64,11 +78,11 @@ export default function MyPage() {
           size="Xlarge"
           UserImage={userData?.avatar || ""}
           UserName={userData?.username || ""}
+          UserAddr={userData?.address || ""}
         />
         <div>
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
             <FollowerModal userFollower={userData?.followers} />
-            {/* <FollowerModal userFollower={userData!.Users.following} /> */}
             <FollowingModal userFollowing={userData?.followings} />
           </div>
           <div className="text-gray-500">

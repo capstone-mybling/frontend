@@ -14,6 +14,7 @@ import UserAvatar from "./UserAvatar";
 import axios from "axios";
 
 export default function FollowingModal(userFollowing: any[]) {
+  // console.log(userFollowing);
   const followingList = Object.values(userFollowing);
   // console.log("팔로잉목록 = ", followingList);
   const [open, setOpen] = useState(false);
@@ -78,7 +79,8 @@ export default function FollowingModal(userFollowing: any[]) {
                     <UserAvatar
                       size="small"
                       UserImage={following.avatar}
-                      UserName={following.username!}
+                      UserName={following.username}
+                      UserAddr={following.address}
                     />
                     <button
                       className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"

@@ -78,6 +78,7 @@ export default function FollowerModal(userFollower: any[]) {
                       size="small"
                       UserImage={follower?.avatar!}
                       UserName={follower?.username!}
+                      UserAddr={follower.address}
                     />
                     <button
                       className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"

@@ -1,20 +1,60 @@
+/**
+ * todo
+ * 1. follow 버튼 클릭 시, 현재 로그인되어있는 계정에 방문한 프로필계정을 팔로우 하는 기능 처리
+ * 2. User-Created NFT 항목에 해당 사용자의 포스트를 나열해주는 기능 처리
+ */
+
 import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import src from "@public/exam2.png";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import Tabs from "@mui/material/Tabs";
 import TabPanel from "@mui/lab/TabPanel";
+import axios from "axios";
+import FollowerModal from "@/components/FollowerModal";
+import FollowingModal from "@/components/FollowingModal";
+import { User } from "@prisma/client";
 
+interface userInfo extends User {
+  followings: string[];
+  followers: string[];
+}
 export default function UserPage() {
-  // MUI tabs
-  const [value, setValue] = useState("1");
-  const [follow, setFollow] = useState("FOLLOW");
-  let [followers, setFollowers] = useState<number>(999);
+  const router = useRouter();
+  const { address } = router.query;
 
+  const [value, setValue] = useState("1");
+  const [follow, setFollow] = useState<string>("FOLLOW");
+  const [userInfo, setUserInfo] = useState<userInfo>({
+    id: 0,
+    address: "",
+    username: "",
+    avatar: "",
+    description: "",
+    lastLoginIP: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isDeleted: false,
+    followers: [],
+    followings: [],
+  });
+  let [followers, setFollowers] = useState<number>(999);
+  useEffect(() => {
+    // console.log(address);
+    axios
+      .get(`../api/users/${address}`)
+      .then((response) => {
+        // console.log(response.data.data);
+        setUserInfo(response.data.data);
+      })
+      .catch((error) => console.log(error));
+  }, [address]);
+  console.log(userInfo.followings);
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -34,42 +74,25 @@ export default function UserPage() {
         <div className="flex flex-row justify-end w-[115%] pt-2 pb-10">
           <button
             onClick={handleFollowBtn}
-            className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70"
+            className="bg-violet-500 opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70"
           >
             {follow}
           </button>
         </div>
         <UserAvatar
           size="Xlarge"
-          UserImage="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          UserName="not mypage"
+          UserImage={userInfo.avatar || ""}
+          UserName={userInfo.username || ""}
+          UserAddr={userInfo.address || ""}
         />
         <div>
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
-            <button>
-              <span className="mr-2 font-bold">{followers}</span>
-              <span className="font-semibold text-gray-400">Followers</span>
-            </button>
-            <button>
-              <span className="mr-2 font-bold">34</span>
-              <span className="font-semibold text-gray-400">Followings</span>
-            </button>
+            <FollowerModal userFollower={userInfo?.followers} />
+            <FollowingModal userFollowing={userInfo?.followings} />
           </div>
           <div className="text-gray-500">
             <div className="py-4 font-extrabold">About</div>
-            <p>
-              반복되는 하루에 시작이 되는 이 노래 <br />니 옆에서 불러주겠어
-              힘내야지 뭐 어쩌겠어?
-              <br />
-              Ah, 파이팅 해야지 <br />
-              Ah, 파이팅 해야지 <br />
-              {`Don't give it up, never give it up, yeah `}
-              <br />
-              파이팅 해야지 <br />
-              Ah, 파이팅 해야지 <br />
-              우린 부석순 <br />
-              Ah, 파이팅 해야지
-            </p>
+            <p>{userInfo.description}</p>
           </div>
           <Box sx={{ width: "100%", typography: "body1", marginTop: 2 }}>
             <TabContext value={value}>
