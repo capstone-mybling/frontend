@@ -44,6 +44,13 @@ export default function PostViewer({
       setShouldSummarize(lineCount > 2);
     }
   }, [content]);
+  const handleLike = async () => {
+    if (isLiked) {
+      //do dislike
+    } else {
+      //do like
+    }
+  };
   return (
     <>
       {/* 게시글 */}
@@ -65,7 +72,10 @@ export default function PostViewer({
               />
             </div>
             {/* 좋아요 수 */}
-            <div className={cls("flex items-center space-x-1", small ? " w-10" : "")}>
+            <div
+              className={cls("flex items-center space-x-1", small ? " w-10" : "")}
+              onClick={handleLike}
+            >
               {isLiked ? <HeartFillIcon /> : <HeartIcon />}
               <span className={cls(small ? "text-xs" : "")}>{likes}</span>
             </div>
