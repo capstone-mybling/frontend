@@ -4,7 +4,7 @@ import Layout from "@/components/Layout";
 import { useRouter } from "next/navigation";
 import PostViewer from "@/components/PostViewer";
 import { useEffect, useState } from "react";
-import { Post, PostComment, User } from "@prisma/client";
+import { Post, PostComment, User } from "@libs/client/types";
 import axios from "axios";
 import { useQuery } from "react-query";
 

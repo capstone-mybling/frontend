@@ -4,7 +4,6 @@
  */
 
 import { useState } from "react";
-import { FileType } from "@prisma/client";
 import Backdrop from "@mui/material/Backdrop";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
@@ -66,13 +65,22 @@ export default function FollowerModal(userFollower: any[]) {
               >
                 팔로워
               </Typography>
-              <button onClick={handleModalClose} className="hover:text-red-300">
+              <button
+                onClick={handleModalClose}
+                className="hover:text-red-300"
+              >
                 X
               </button>
             </div>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+            <Typography
+              id="transition-modal-description"
+              sx={{ mt: 2 }}
+            >
               {followerList[0].map((follower: any) => (
-                <li key={follower.id} className="list-none mb-2">
+                <li
+                  key={follower.id}
+                  className="list-none mb-2"
+                >
                   <div className="flex justify-between">
                     <UserAvatar
                       size="small"

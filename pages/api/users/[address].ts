@@ -3,7 +3,7 @@ import { withApiSession } from "@libs/server/withSession";
 import withHandler from "@libs/server/withHandler";
 import baseResponse from "@libs/server/response";
 import client from "@libs/server/client";
-import { User } from "@prisma/client";
+import { User } from "@libs/client/types";
 import ErrorCode from "@libs/server/error_code";
 import getRedisClient from "@libs/server/redis";
 
@@ -12,10 +12,7 @@ interface UserWithFollow extends User {
   followers: string[];
 }
 
-const handler = async (
-  request: NextApiRequest,
-  response: NextApiResponse<any>
-) => {
+const handler = async (request: NextApiRequest, response: NextApiResponse<any>) => {
   const { address } = request.query;
 
   if (!address) {

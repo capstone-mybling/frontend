@@ -8,10 +8,9 @@ import TabContext from "@mui/lab/TabContext";
 import Tabs from "@mui/material/Tabs";
 import TabPanel from "@mui/lab/TabPanel";
 import axios from "axios";
-import { FileType } from "@prisma/client";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
-import { User, UserFollow, Post } from "@prisma/client";
+import { User, UserFollow, Post } from "@libs/client/types";
 import MypageLoading from "@/components/MypageLoading";
 
 interface UserWithFollow extends User {
@@ -99,14 +98,26 @@ export default function MyPage() {
                   indicatorColor="secondary"
                   aria-label="secondary tabs example"
                 >
-                  <Tab label="내가만든NFT" value="1" />
-                  <Tab label="구매한NFT" value="2" />
+                  <Tab
+                    label="내가만든NFT"
+                    value="1"
+                  />
+                  <Tab
+                    label="구매한NFT"
+                    value="2"
+                  />
                 </Tabs>
               </Box>
-              <TabPanel value="1" sx={{ paddingTop: 3, paddingX: 0 }}>
+              <TabPanel
+                value="1"
+                sx={{ paddingTop: 3, paddingX: 0 }}
+              >
                 <div className="grid grid-cols-3 gap-4">
                   {userPost.map((post) => (
-                    <li key={post.id} className="list-none">
+                    <li
+                      key={post.id}
+                      className="list-none"
+                    >
                       <Thumbnail
                         thumbnail={post.thumbnail}
                         address={post.address}
@@ -117,7 +128,10 @@ export default function MyPage() {
                   ))}
                 </div>
               </TabPanel>
-              <TabPanel value="2" sx={{ paddingTop: 3, paddingX: 0 }}>
+              <TabPanel
+                value="2"
+                sx={{ paddingTop: 3, paddingX: 0 }}
+              >
                 <div className="grid grid-cols-3 gap-4">
                   <Thumbnail
                     thumbnail={userData?.avatar}

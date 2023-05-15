@@ -1,22 +1,22 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import {withApiSession} from "@libs/server/withSession";
+import { NextApiRequest, NextApiResponse } from "next";
+import { withApiSession } from "@libs/server/withSession";
 import withHandler from "@libs/server/withHandler";
 import client from "@libs/server/client";
-import {FileType} from "@prisma/client";
+import { FileType } from "@libs/client/types";
 import baseResponse from "@libs/server/response";
 import getRedisClient from "@libs/server/redis";
 
 interface UploadForm {
-    name: string;
-    externalUrl: string;
-    description: string;
-    file: any;
-    fileType: FileType;
-    properties: {
-        [key: string]: string;
-    }
-    count: number;
-    price: number;
+  name: string;
+  externalUrl: string;
+  description: string;
+  file: any;
+  fileType: FileType;
+  properties: {
+    [key: string]: string;
+  };
+  count: number;
+  price: number;
 }
 
 /**
@@ -24,92 +24,88 @@ interface UploadForm {
  * @param request
  * @param response
  */
-const handler = async (
-    request: NextApiRequest,
-    response: NextApiResponse<any>
-) => {
-    const {user} = request.session;
+const handler = async (request: NextApiRequest, response: NextApiResponse<any>) => {
+  const { user } = request.session;
 
-    if (request.method === "GET") {
-        const redis = await getRedisClient();
+  if (request.method === "GET") {
+    const redis = await getRedisClient();
 
-        const findPosts = await client.post.findMany({
-            include: {
-                author: true,
-                comments: true
-            }
-        });
+    const findPosts = await client.post.findMany({
+      include: {
+        author: true,
+        comments: true,
+      },
+    });
 
-        const posts = await Promise.all(
-            findPosts.map(async (post) => {
-                return {
-                    ...post,
-                    likes: await redis.sCard(`posts:${post.address}:likes`),
-                    isLiked: await redis.sIsMember(`posts:${post.address}:likes`, user!.address)
-                }
-            })
-        );
+    const posts = await Promise.all(
+      findPosts.map(async (post) => {
+        return {
+          ...post,
+          likes: await redis.sCard(`posts:${post.address}:likes`),
+          isLiked: await redis.sIsMember(`posts:${post.address}:likes`, user!.address),
+        };
+      })
+    );
 
-        console.log(posts)
+    console.log(posts);
 
-        return baseResponse(response, {
-            success: true,
-            data: posts,
-        });
-    } else if (request.method === "POST") {
-        const { from, to, hash, ipfsHash, imageHash, name, description, count, price } = request.body;
-        const contract = await client.contract.create({
-            data: {
-                fromAddress: from,
-                toAddress: to,
-                hash,
-                authorAddress: user!.address
-            }
-        });
+    return baseResponse(response, {
+      success: true,
+      data: posts,
+    });
+  } else if (request.method === "POST") {
+    const { from, to, hash, ipfsHash, imageHash, name, description, count, price } = request.body;
+    const contract = await client.contract.create({
+      data: {
+        fromAddress: from,
+        toAddress: to,
+        hash,
+        authorAddress: user!.address,
+      },
+    });
 
-        // TODO: 스토리지에 저장된 컨트랙트 업데이트 코드 필요 시 사용 예정
-        await client.storage.update({
-            where: {
-                hash: imageHash
-            },
-            data: {
-                contractAddress: contract.hash
-            }
-        });
-        await client.storage.update({
-            where: {
-                hash: ipfsHash
-            },
-            data: {
-                contractAddress: contract.hash
-            }
-        })
+    // TODO: 스토리지에 저장된 컨트랙트 업데이트 코드 필요 시 사용 예정
+    await client.storage.update({
+      where: {
+        hash: imageHash,
+      },
+      data: {
+        contractAddress: contract.hash,
+      },
+    });
+    await client.storage.update({
+      where: {
+        hash: ipfsHash,
+      },
+      data: {
+        contractAddress: contract.hash,
+      },
+    });
 
-        const post = await client.post.create({
-            data: {
-                name, description,
-                authorAddress: user!.address,
-                contractAddress: contract.hash,
-                address: ipfsHash,
-                thumbnail: "https://ipfs.io/ipfs/" + imageHash,
-                price: +price,
-                count: +count
-            }
-        });
+    const post = await client.post.create({
+      data: {
+        name,
+        description,
+        authorAddress: user!.address,
+        contractAddress: contract.hash,
+        address: ipfsHash,
+        thumbnail: "https://ipfs.io/ipfs/" + imageHash,
+        price: +price,
+        count: +count,
+      },
+    });
 
-        return baseResponse(response, {
-            success: true,
-            data: post,
-        });
-    }
-
-}
+    return baseResponse(response, {
+      success: true,
+      data: post,
+    });
+  }
+};
 
 export default withApiSession(
-    withHandler({
-            methods: ["GET", "POST"],
-            handler,
-            isPrivate: false,
-        }
-    )
+  withHandler({
+    methods: ["GET", "POST"],
+    handler,
+    isPrivate: false,
+  })
 );

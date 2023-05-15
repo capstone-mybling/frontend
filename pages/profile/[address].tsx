@@ -18,7 +18,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
-import { User } from "@prisma/client";
+import { User } from "@libs/client/types";
 
 interface userInfo extends User {
   followings: string[];
@@ -104,11 +104,20 @@ export default function UserPage() {
                   indicatorColor="secondary"
                   aria-label="secondary tabs example"
                 >
-                  <Tab label="User-Created NFT" value="1" />
-                  <Tab label="User-Owned NFT" value="2" />
+                  <Tab
+                    label="User-Created NFT"
+                    value="1"
+                  />
+                  <Tab
+                    label="User-Owned NFT"
+                    value="2"
+                  />
                 </Tabs>
               </Box>
-              <TabPanel value="1" sx={{ paddingTop: 3, paddingX: 0 }}>
+              <TabPanel
+                value="1"
+                sx={{ paddingTop: 3, paddingX: 0 }}
+              >
                 <div className="grid grid-cols-3 gap-4">
                   <Thumbnail
                     thumbnail={src}
@@ -134,7 +143,10 @@ export default function UserPage() {
                   </div>
                 </div>
               </TabPanel>
-              <TabPanel value="2" sx={{ paddingTop: 3, paddingX: 0 }}>
+              <TabPanel
+                value="2"
+                sx={{ paddingTop: 3, paddingX: 0 }}
+              >
                 <div className="grid grid-cols-3 gap-4">
                   <Thumbnail
                     thumbnail={src}
