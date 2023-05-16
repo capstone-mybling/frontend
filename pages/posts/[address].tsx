@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, Fragment } from "react";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
-import data from "../../data.json";
 import Layout from "@components/Layout";
 import Image from "next/image";
 import HeartIcon from "@/components/icons/HeartIcons";
@@ -15,17 +15,9 @@ import TabContext from "@mui/lab/TabContext";
 import Tabs from "@mui/material/Tabs";
 import TabPanel from "@mui/lab/TabPanel";
 
-type Post = {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-  image: HTMLImageElement;
-};
-
-export default function Post() {
+const Home: NextPage = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { address } = router.query;
   const [like, setLike] = useState<boolean>(false);
   const [comment, setComment] = useState<boolean>(false);
   const [commentLike, setCommentLike] = useState<boolean>(false);
@@ -116,9 +108,7 @@ export default function Post() {
             <section className="flex justify-between mb-4">
               <div className="px-1 flex space-x-2 items-center">
                 <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
-                <span className="text-sm font-extrabold text-gray-500">
-                  Current Owner
-                </span>
+                <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
                 <span className="text-sm font-extrabold">hazzun</span>
               </div>
               <div
@@ -145,13 +135,12 @@ export default function Post() {
                 </div>
               </div>
               <p className="my-4">
-                책읽는 심슨이 있습니다. 그러나, 책을 읽는 것은 심슨 가족
-                중에서는 극적으로 드문 일이며, 그들은 대부분 이상한 모험을
-                즐기며 시간을 보냅니다.책읽는 심슨이 있습니다. 그러나, 책을 읽는
-                것은 심슨 가족 중에서는 극적으로 드문 일이며, 그들은 대부분
-                이상한 모험을 즐기며 시간을 보냅니다.책읽는 심슨이 있습니다.
-                그러나, 책을 읽는 것은 심슨 가족 중에서는 극적으로 드문 일이며,
-                그들은 대부분 이상한 모험을 즐기며 시간을 보냅니다.
+                책읽는 심슨이 있습니다. 그러나, 책을 읽는 것은 심슨 가족 중에서는 극적으로 드문
+                일이며, 그들은 대부분 이상한 모험을 즐기며 시간을 보냅니다.책읽는 심슨이 있습니다.
+                그러나, 책을 읽는 것은 심슨 가족 중에서는 극적으로 드문 일이며, 그들은 대부분 이상한
+                모험을 즐기며 시간을 보냅니다.책읽는 심슨이 있습니다. 그러나, 책을 읽는 것은 심슨
+                가족 중에서는 극적으로 드문 일이며, 그들은 대부분 이상한 모험을 즐기며 시간을
+                보냅니다.
               </p>
             </section>
             <Box sx={{ width: "100%", typography: "body1" }}>
@@ -164,13 +153,28 @@ export default function Post() {
                     indicatorColor="secondary"
                     aria-label="secondary tabs example"
                   >
-                    <Tab label="Comments" value="1" />
-                    <Tab label="Sales" value="2" />
-                    <Tab label="Ownership" value="3" />
-                    <Tab label="Additional Info" value="4" />
+                    <Tab
+                      label="Comments"
+                      value="1"
+                    />
+                    <Tab
+                      label="Sales"
+                      value="2"
+                    />
+                    <Tab
+                      label="Ownership"
+                      value="3"
+                    />
+                    <Tab
+                      label="Additional Info"
+                      value="4"
+                    />
                   </Tabs>
                 </Box>
-                <TabPanel value="1" sx={{ padding: 0 }}>
+                <TabPanel
+                  value="1"
+                  sx={{ padding: 0 }}
+                >
                   <div className="mt-4 pt-4">
                     <ul>
                       {comments.map((comment) => (
@@ -187,9 +191,7 @@ export default function Post() {
                           />
                           <div className="ml-11">{comment.content}</div>
                           <div className="flex justify-between items-center">
-                            <div className="text-gray-500 text-sm ml-11">
-                              5 minutes ago
-                            </div>
+                            <div className="text-gray-500 text-sm ml-11">5 minutes ago</div>
                             <div className="flex items-center">
                               <p>10</p>
                               <ToggleButton
@@ -228,9 +230,7 @@ export default function Post() {
                         <button
                           className="font-bold text-violet-500 ml-2"
                           onClick={() => {
-                            newComment === ""
-                              ? handleBlockComment()
-                              : handleAddComment();
+                            newComment === "" ? handleBlockComment() : handleAddComment();
                           }}
                         >
                           Post
@@ -239,13 +239,22 @@ export default function Post() {
                     </div>
                   </footer>
                 </TabPanel>
-                <TabPanel value="2" sx={{ padding: 0 }}>
+                <TabPanel
+                  value="2"
+                  sx={{ padding: 0 }}
+                >
                   앙냥냥
                 </TabPanel>
-                <TabPanel value="3" sx={{ padding: 0 }}>
+                <TabPanel
+                  value="3"
+                  sx={{ padding: 0 }}
+                >
                   띵띵땅땅띵~
                 </TabPanel>
-                <TabPanel value="4" sx={{ padding: 0 }}>
+                <TabPanel
+                  value="4"
+                  sx={{ padding: 0 }}
+                >
                   <section className="p-2 mt-4">
                     <div className="flex justify-between">
                       <p>1</p>
@@ -273,7 +282,7 @@ export default function Post() {
       )}
     </Layout>
   );
-}
+};
 
 {
   /* Todo
@@ -281,3 +290,4 @@ export default function Post() {
 - 음..
 */
 }
+export default Home;
