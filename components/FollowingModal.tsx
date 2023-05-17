@@ -12,9 +12,9 @@ import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
 import axios from "axios";
 
-export default function FollowingModal(userFollowing: any[]) {
+export default function FollowingModal(userFollowing: any) {
   // console.log(userFollowing);
-  const followingList = Object.values(userFollowing);
+  const followingList: any = Object.values(userFollowing);
   // console.log("팔로잉목록 = ", followingList);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
