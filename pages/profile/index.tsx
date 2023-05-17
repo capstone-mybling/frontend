@@ -80,7 +80,7 @@ export default function MyPage() {
           UserAddr={userData?.address || ""}
         />
         <div>
-          <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
+          <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl ">
             <FollowerModal userFollower={userData?.followers} />
             <FollowingModal userFollowing={userData?.followings} />
           </div>
@@ -98,26 +98,14 @@ export default function MyPage() {
                   indicatorColor="secondary"
                   aria-label="secondary tabs example"
                 >
-                  <Tab
-                    label="내가만든NFT"
-                    value="1"
-                  />
-                  <Tab
-                    label="구매한NFT"
-                    value="2"
-                  />
+                  <Tab label="내가만든NFT" value="1" />
+                  <Tab label="구매한NFT" value="2" />
                 </Tabs>
               </Box>
-              <TabPanel
-                value="1"
-                sx={{ paddingTop: 3, paddingX: 0 }}
-              >
+              <TabPanel value="1" sx={{ paddingTop: 3, paddingX: 0 }}>
                 <div className="grid grid-cols-3 gap-4">
                   {userPost.map((post) => (
-                    <li
-                      key={post.id}
-                      className="list-none"
-                    >
+                    <li key={post.id} className="list-none">
                       <Thumbnail
                         thumbnail={post.thumbnail}
                         address={post.address}
@@ -128,10 +116,7 @@ export default function MyPage() {
                   ))}
                 </div>
               </TabPanel>
-              <TabPanel
-                value="2"
-                sx={{ paddingTop: 3, paddingX: 0 }}
-              >
+              <TabPanel value="2" sx={{ paddingTop: 3, paddingX: 0 }}>
                 <div className="grid grid-cols-3 gap-4">
                   <Thumbnail
                     thumbnail={userData?.avatar}

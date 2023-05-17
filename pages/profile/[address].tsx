@@ -53,8 +53,8 @@ export default function UserPage() {
         setUserInfo(response.data.data);
       })
       .catch((error) => console.log(error));
+    console.log(userInfo.followings);
   }, [address]);
-  console.log(userInfo.followings);
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -74,7 +74,7 @@ export default function UserPage() {
         <div className="flex flex-row justify-end w-[115%] pt-2 pb-10">
           <button
             onClick={handleFollowBtn}
-            className="bg-violet-500 opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70"
+            className="opacity-30 px-6 py-1 rounded-2xl text-violet-500 hover:opacity-70 font-extrabold"
           >
             {follow}
           </button>
@@ -104,61 +104,26 @@ export default function UserPage() {
                   indicatorColor="secondary"
                   aria-label="secondary tabs example"
                 >
-                  <Tab
-                    label="User-Created NFT"
-                    value="1"
-                  />
-                  <Tab
-                    label="User-Owned NFT"
-                    value="2"
-                  />
+                  <Tab label="User-Created NFT" value="1" />
+                  <Tab label="User-Owned NFT" value="2" />
                 </Tabs>
               </Box>
-              <TabPanel
-                value="1"
-                sx={{ paddingTop: 3, paddingX: 0 }}
-              >
+              <TabPanel value="1" sx={{ paddingTop: 3, paddingX: 0 }}>
                 <div className="grid grid-cols-3 gap-4">
                   <Thumbnail
                     thumbnail={src}
                     address={`posts/${2}`}
                     option="Thumnail"
                   />
-                  <Thumbnail
-                    thumbnail={src}
-                    address={`posts/${2}`}
-                    option="Thumnail"
-                  />
-
-                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                    test
-                  </div>
-                  <Thumbnail
-                    thumbnail={src}
-                    address={`posts/${2}`}
-                    option="Thumnail"
-                  />
-                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                    test
-                  </div>
                 </div>
               </TabPanel>
-              <TabPanel
-                value="2"
-                sx={{ paddingTop: 3, paddingX: 0 }}
-              >
+              <TabPanel value="2" sx={{ paddingTop: 3, paddingX: 0 }}>
                 <div className="grid grid-cols-3 gap-4">
                   <Thumbnail
                     thumbnail={src}
                     address={`posts/${2}`}
                     option="Thumnail"
                   />
-                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                    test
-                  </div>
-                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                    test
-                  </div>
                   <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
                     test
                   </div>

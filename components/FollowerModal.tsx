@@ -53,6 +53,7 @@ export default function FollowerModal(userFollower: any[]) {
             timeout: 500,
           },
         }}
+        sx={{ border: "1px solid white", borderRadius: "50%" }}
       >
         <Fade in={open}>
           <Box sx={style}>
@@ -65,22 +66,13 @@ export default function FollowerModal(userFollower: any[]) {
               >
                 팔로워
               </Typography>
-              <button
-                onClick={handleModalClose}
-                className="hover:text-red-300"
-              >
+              <button onClick={handleModalClose} className="hover:text-red-300">
                 X
               </button>
             </div>
-            <Typography
-              id="transition-modal-description"
-              sx={{ mt: 2 }}
-            >
+            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
               {followerList[0].map((follower: any) => (
-                <li
-                  key={follower.id}
-                  className="list-none mb-2"
-                >
+                <li key={follower.id} className="list-none mb-2">
                   <div className="flex justify-between">
                     <UserAvatar
                       size="small"
@@ -89,7 +81,7 @@ export default function FollowerModal(userFollower: any[]) {
                       UserAddr={follower.address}
                     />
                     <button
-                      className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"
+                      className="px-4 py-2 bg-[#efefef] rounded-xl font-semibold hover:text-violet-500"
                       onClick={(e) => {
                         handleDeleteFollower(follower.address);
                       }}
