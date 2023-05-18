@@ -53,7 +53,7 @@ function ResponsiveAppBar() {
   // getAccount()를 통해 서버에 유저정보가 담기면 그걸 다시 긁어오는 코드
   const handleLogin = () => {
     axios
-      .post("api/users/login", {
+      .post("/api/users/login", {
         address: account,
       })
       .then((res) => {
@@ -70,7 +70,7 @@ function ResponsiveAppBar() {
   const [user, setUser] = useState<UserResponse>();
   useEffect(() => {
     axios
-      .get("api/users/me")
+      .get("/api/users/me")
       .then((res) => {
         setLogined(true);
         setUser(res.data.data);
