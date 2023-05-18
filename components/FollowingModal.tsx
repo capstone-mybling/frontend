@@ -12,9 +12,9 @@ import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
 import axios from "axios";
 
-export default function FollowingModal(userFollowing: any[]) {
+export default function FollowingModal(userFollowing: any) {
   // console.log(userFollowing);
-  const followingList = Object.values(userFollowing);
+  const followingList: any = Object.values(userFollowing);
   // console.log("팔로잉목록 = ", followingList);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
@@ -31,9 +31,10 @@ export default function FollowingModal(userFollowing: any[]) {
     p: 2,
   };
   const handleDeleteFollower = (delAddr: string) => {
-    // axios
-    //   .delete(`api/follows/${delAddr}`)
-    //   .then((response) => console.log(response));
+    axios
+      .delete(`api/users/follows/${delAddr}`)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error));
     console.log("addr = ", delAddr);
   };
 
@@ -67,22 +68,13 @@ export default function FollowingModal(userFollowing: any[]) {
               >
                 팔로잉
               </Typography>
-              <button
-                onClick={handleModalClose}
-                className="hover:text-red-300"
-              >
+              <button onClick={handleModalClose} className="hover:text-red-300">
                 X
               </button>
             </div>
-            <Typography
-              id="transition-modal-description"
-              sx={{ mt: 2 }}
-            >
+            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
               {followingList[0].map((following: any) => (
-                <li
-                  key={following.address}
-                  className="list-none mb-2"
-                >
+                <li key={following.address} className="list-none mb-2">
                   <div className="flex justify-between">
                     <UserAvatar
                       size="small"

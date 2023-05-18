@@ -11,8 +11,8 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
 
-export default function FollowerModal(userFollower: any[]) {
-  const followerList = Object.values(userFollower);
+export default function FollowerModal(userFollower: any) {
+  const followerList: any = Object.values(userFollower);
   // console.log("팔로워목록 = ", followerList);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);

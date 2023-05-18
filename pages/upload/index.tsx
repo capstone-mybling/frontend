@@ -38,12 +38,18 @@ interface UploadForm {
 
 export default function Upload() {
   const [uploadImg, setUploadImg] = useState<File | null>();
-  const { register, handleSubmit, reset, setValue, formState: {isValid} } = useForm<UploadForm>({mode: "onChange"});
-  const{marketplaceContract, nftContract} = useWeb3();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { isValid },
+  } = useForm<UploadForm>({ mode: "onChange" });
+  const { marketplaceContract, nftContract } = useWeb3();
 
   // handlesubmit 시 작동하는 함수 두가지
   const onValid = async (data: UploadForm) => {
-    const {name, description, count, price} = data;
+    const { name, description, count, price } = data;
     const form = new FormData();
     form.append("image", data.image);
     form.append("name", name);
@@ -56,20 +62,32 @@ export default function Upload() {
         "Content-Type": "multipart/form-data",
       },
     });
-    const {imageHash, ipfsHash} = response.data.data;
+    const { imageHash, ipfsHash } = response.data.data;
 
     if (!nftContract) return;
     const mintResponse = await nftContract.mintToken(ipfsHash);
 
-    const {from, to, hash} = mintResponse;
+    const { from, to, hash } = mintResponse;
 
-    const postResponse = await axios.post("/api/posts", {
-        from, to, hash, ipfsHash, imageHash, name, description, count, price
-    }, {
-      headers: {
-        "Content-Type": "application/json",
+    const postResponse = await axios.post(
+      "/api/posts",
+      {
+        from,
+        to,
+        hash,
+        ipfsHash,
+        imageHash,
+        name,
+        description,
+        count,
+        price,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    });
+    );
 
     resetForm();
   };
@@ -77,7 +95,7 @@ export default function Upload() {
   const resetForm = () => {
     reset();
     setUploadImg(null);
-  }
+  };
 
   const onNotValid = (errors: FieldErrors) => console.log(errors);
 
@@ -94,7 +112,10 @@ export default function Upload() {
 
   return (
     <Layout>
-      <form onSubmit={handleSubmit(onValid, onNotValid)} className="px-5 grid-cols-1 grid w-full mx-auto space-y-8 my-8">
+      <form
+        onSubmit={handleSubmit(onValid, onNotValid)}
+        className="px-5 grid-cols-1 grid w-full mx-auto space-y-8 my-8"
+      >
         <h1 className="text-4xl font-bold">Create New Item</h1>
         {/* 아직 불러온 이미지가 없을 경우 */}
         {!uploadImg ? (
@@ -125,7 +146,7 @@ export default function Upload() {
           </div>
         ) : (
           // 불러온 이미지가 있을 경우
-          <div className="relative w-full aspect-square bg-gray-200">
+          <div className="relative w-full aspect-square bg-gray-100">
             <Image
               className="object-contain"
               src={URL.createObjectURL(uploadImg)}
@@ -199,8 +220,12 @@ export default function Upload() {
           />
         </div>
         <input
-          className={cls("px-6 py-1 rounded-full text-white transition-colors duration-500 w-2/3 mx-auto h-10",
-          (isValid) ? "bg-violet-600 cursor-pointer opacity-70" : "pointer-events-none bg-gray-500 opacity-50")}
+          className={cls(
+            "px-6 py-1 rounded-full text-white transition-colors duration-500 w-2/3 mx-auto h-10",
+            isValid
+              ? "bg-violet-600 cursor-pointer opacity-70"
+              : "pointer-events-none bg-gray-500 opacity-50"
+          )}
           type="submit"
         />
       </form>

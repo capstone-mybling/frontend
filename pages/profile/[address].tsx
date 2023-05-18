@@ -45,7 +45,6 @@ export default function UserPage() {
   });
   let [followers, setFollowers] = useState<number>(999);
   useEffect(() => {
-    // console.log(address);
     axios
       .get(`../api/users/${address}`)
       .then((response) => {
@@ -53,7 +52,6 @@ export default function UserPage() {
         setUserInfo(response.data.data);
       })
       .catch((error) => console.log(error));
-    console.log(userInfo.followings);
   }, [address]);
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -70,7 +68,7 @@ export default function UserPage() {
 
   return (
     <Layout>
-      <section className="flex flex-col justify-center items-center pb-12 border-b border-neutral-300 px-10">
+      <section className="flex flex-col justify-center items-center pb-12 border-b border-neutral-300 px-6">
         <div className="flex flex-row justify-end w-[115%] pt-2 pb-10">
           <button
             onClick={handleFollowBtn}
@@ -85,7 +83,7 @@ export default function UserPage() {
           UserName={userInfo.username || ""}
           UserAddr={userInfo.address || ""}
         />
-        <div>
+        <div className="w-full">
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
             <FollowerModal userFollower={userInfo?.followers} />
             <FollowingModal userFollowing={userInfo?.followings} />
