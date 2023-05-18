@@ -17,8 +17,11 @@ import TabPanel from "@mui/lab/TabPanel";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Post, PostComment, User } from "@/libs/client/types";
+import LikeButton from "@/components/LikeButton";
 
 interface DetailPost extends Post {
+  likes: number;
+  isLiked: boolean;
   author: User;
   comments: PostComment[];
 }
@@ -37,23 +40,18 @@ interface HomeProps {
 }
 
 const Home = ({ address }: HomeProps) => {
-  // const router = useRouter();
-  const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [tabIndex, setTabIndex] = useState("1");
   //calling API and handling data
   const { data, status } = useQuery<DetailPost>(
     "post",
     async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
   );
-  console.log(data);
+  // console.log(data);
+
   // MUI tabs
+  const [tabIndex, setTabIndex] = useState("1");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabIndex(newValue);
   };
-  const handlePostLike = () => {
-    setIsLiked(!isLiked);
-  };
-  // console.log(data);
   // // 댓글 추가
   // const handleAddComment = () => {
   //   const newId = comments.length + 1;
@@ -124,12 +122,10 @@ const Home = ({ address }: HomeProps) => {
                 className="flex items-center justify-end my-3"
                 // onClick={likeUp}
               >
-                <span>{3}</span>
-                <ToggleButton
-                  toggled={isLiked}
-                  onToggle={handlePostLike}
-                  onIcon={<HeartFillIcon />}
-                  offIcon={<HeartIcon />}
+                <LikeButton
+                  isLiked={data.isLiked}
+                  likes={data.likes}
+                  address={data.address}
                 />
               </div>
             </section>
