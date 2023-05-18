@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import Image, { StaticImageData } from "next/image";
-import HeartIcon from "@components/icons/HeartIcons";
-import HeartFillIcon from "@components/icons/HeartFillIcon";
 import { cls } from "@libs/client/utils";
 import UserAvatar from "@components/UserAvatar";
 import Thumbnail from "./Thumbnail";
-import { useMutation } from "react-query";
-import axios from "axios";
 import LikeButton from "./LikeButton";
 
 interface PostProps {
@@ -39,8 +34,6 @@ export default function PostViewer({
 }: PostProps) {
   const postContentRef = useRef<HTMLDivElement>(null);
   const [shouldSummarize, setShouldSummarize] = useState<boolean>(false);
-  const [fillHeart, setFillHeart] = useState<boolean>(isLiked || false);
-  const [likeCount, setLikeCount] = useState<number>(likes || 0);
   useEffect(() => {
     if (postContentRef.current) {
       const lineCount =
@@ -68,7 +61,6 @@ export default function PostViewer({
                 UserName={UserName!}
                 UserImage={UserImage!}
                 UserAddr={address}
-                // link={}
               />
             </div>
             {/* 좋아요 수 */}

@@ -24,7 +24,6 @@ interface DetailPost extends Post {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log(context.query);
   return {
     props: {
       address: context.query.address,
@@ -43,7 +42,6 @@ const Home = ({ address }: HomeProps) => {
     async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
   );
   // console.log(data);
-  dateCalculator(data?.createdAt);
   // MUI tabs
   const [tabIndex, setTabIndex] = useState("1");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
