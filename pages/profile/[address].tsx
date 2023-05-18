@@ -18,7 +18,8 @@ import TabPanel from "@mui/lab/TabPanel";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
-import { User } from "@libs/client/types";
+import { User,Post } from "@libs/client/types";
+import { error } from "console";
 
 interface userInfo extends User {
   followings: string[];
@@ -29,6 +30,7 @@ export default function UserPage() {
   const { address } = router.query;
 
   const [value, setValue] = useState("1");
+  const [userPost, setUserPost] = useState<Post[]>([]);
   const [follow, setFollow] = useState<string>("FOLLOW");
   const [userInfo, setUserInfo] = useState<userInfo>({
     id: 0,
@@ -43,12 +45,12 @@ export default function UserPage() {
     followers: [],
     followings: [],
   });
-  let [followers, setFollowers] = useState<number>(999);
   useEffect(() => {
     axios
       .get(`../api/users/${address}`)
       .then((response) => {
         // console.log(response.data.data);
+        setUserPost(response.data.data.posts.reverse());
         setUserInfo(response.data.data);
       })
       .catch((error) => console.log(error));
@@ -56,13 +58,30 @@ export default function UserPage() {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+
+  useEffect(()=> {
+    axios.get('/api/users/me').then((response)=>{
+      const otherUserAddr = address;
+      const followingList = response.data.data.followings;
+      // console.log("other = ", otherUserAddr);
+      // console.log("list = ", followingList);
+      followingList.some((data: any) => data.address == otherUserAddr) ? setFollow("UNFOLLOW") : setFollow("FOLLOW")
+      }).catch((error)=> console.log(error))
+  },)
+
   const handleFollowBtn = () => {
     if (follow === "FOLLOW") {
+      axios
+      .post(`/api/users/follows/${address}`)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error));
       setFollow("UNFOLLOW");
-      setFollowers(++followers);
     } else {
+      axios
+      .delete(`/api/users/follows/${address}`)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error));
       setFollow("FOLLOW");
-      setFollowers(--followers);
     }
   };
 
@@ -85,8 +104,8 @@ export default function UserPage() {
         />
         <div className="w-full">
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
-            <FollowerModal userFollower={userInfo?.followers} />
-            <FollowingModal userFollowing={userInfo?.followings} />
+            <FollowerModal userFollower={userInfo?.followers} delBtn={false}/>
+            <FollowingModal userFollowing={userInfo?.followings} delBtn={false}/>
           </div>
           <div className="text-gray-500">
             <div className="py-4 font-extrabold">About</div>
@@ -108,11 +127,23 @@ export default function UserPage() {
               </Box>
               <TabPanel value="1" sx={{ paddingTop: 3, paddingX: 0 }}>
                 <div className="grid grid-cols-3 gap-4">
-                  <Thumbnail
-                    thumbnail={src}
-                    address={`posts/${2}`}
-                    option="Thumnail"
-                  />
+                  {userPost.length === 0 ? (
+                  <div className="text-center font-extrabold text-gray-400 mx-auto">
+                    <h1 className="text-2xl">게시글이 없습니다.</h1>
+                    <h3 className="text-md">게시글을 생성한 후 확인해 주세요</h3>
+                  </div>) : (
+                  <>
+                    {userPost.map((post) => (
+                    <li key={post.id} className="list-none">
+                      <Thumbnail
+                        thumbnail={post.thumbnail}
+                        address={post.address}
+                        option="Thumnail"
+                        link={post.address}
+                      />
+                    </li>
+                  ))}
+                  </>)}
                 </div>
               </TabPanel>
               <TabPanel value="2" sx={{ paddingTop: 3, paddingX: 0 }}>

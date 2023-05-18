@@ -114,11 +114,11 @@ export default function MyPage() {
   const onValid = async (data: UploadForm) => {
     const { name, description } = data;
     const form = new FormData();
-    form.append("image", data.image);
-    form.append("name", name);
+    form.append("avatar", data.image);
+    form.append("username", name);
     form.append("description", description);
 
-    axios.fetch("api/users");
+    axios.patch("api/users/me", form);
 
     resetForm();
     handleProfileEditSave();
@@ -184,6 +184,7 @@ export default function MyPage() {
                   id="input-name"
                   type="text"
                   placeholder="edit your name"
+                  defaultValue={userData.username}
                 />
               </div>
               <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl ">
@@ -197,6 +198,7 @@ export default function MyPage() {
                   type="text"
                   placeholder="edit your description"
                   className="w-full border-2 border-violet-200 rounded-xl"
+                  defaultValue={userData.description}
                 ></input>
               </div>
             </form>
