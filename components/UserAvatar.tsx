@@ -1,5 +1,7 @@
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
+import axios from "axios";
+import { useState } from "react";
 
 type ProfileSize = "small" | "medium" | "large" | "Xlarge";
 
@@ -19,31 +21,26 @@ export default function UserAvatar({
   route = true,
   ...rest
 }: AvatarProps) {
+
+
+  // console.log("props받아온 거 = ", UserAddr)
+  const [getAddr, setGetAddr] = useState<string>("");
+  axios
+  .get("/api/users/me")
+  .then((response) => {
+    // console.log(response.data.data.address);
+    setGetAddr(response.data.data.address);
+  })
+  
+  // console.log("getAddr = ", getAddr)
+
   return (
     <div>
-      {route ? (
-        <Link href={`/profile/${UserAddr}`}>
-          <div
-            className={`flex items-center space-x-3 ${
-              getAvatarSize(size).flex
-            }`}
-          >
-            <Image
-              className="inline-block rounded-full ring-2 ring-gray-200"
-              src={UserImage}
-              alt="user profile image"
-              width={parseInt(getAvatarSize(size).width)}
-              height={parseInt(getAvatarSize(size).height)}
-              unoptimized={false}
-            />
-            <span className={`${getAvatarSize(size).textSize}`}>
-              {UserName}
-            </span>
-          </div>
-        </Link>
-      ) : (
+      <Link href={UserAddr === getAddr ? `/profile` : `/profile/${UserAddr}`}>
         <div
-          className={`flex items-center space-x-3 ${getAvatarSize(size).flex} `}
+          className={`flex items-center space-x-3 ${
+            getAvatarSize(size).flex
+          }`}
         >
           <Image
             className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
@@ -53,9 +50,11 @@ export default function UserAvatar({
             height={parseInt(getAvatarSize(size).height)}
             unoptimized={false}
           />
-          <span className={`${getAvatarSize(size).textSize}`}>{UserName}</span>
+          <span className={`${getAvatarSize(size).textSize}`}>
+            {UserName}
+          </span>
         </div>
-      )}
+      </Link>
     </div>
   );
 }
