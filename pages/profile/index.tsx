@@ -219,7 +219,6 @@ export default function MyPage() {
               UserImage={userData?.avatar || ""}
               UserName={userData?.username || ""}
               UserAddr={userData?.address || ""}
-              route={false}
             />
             <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl ">
               <FollowerModal userFollower={userData?.followers} />
