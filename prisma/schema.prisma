@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-arm-openssl-3.0.x"]
 }
 
@@ -52,37 +52,37 @@ model UserLog {
 }
 
 model Storage {
-  id        Int         @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  contract Contract?    @relation(fields: [contractAddress], references: [hash])
+  contract        Contract? @relation(fields: [contractAddress], references: [hash])
   contractAddress String?
 
-  name      String
-  hash      String      @unique
-  saveType  StorageType @default(LOCAL)
-  fileType  FileType    @default(IMAGE)
-  size      Int         @default(0)
-  url       String?
+  name     String
+  hash     String      @unique
+  saveType StorageType @default(LOCAL)
+  fileType FileType    @default(IMAGE)
+  size     Int         @default(0)
+  url      String?
 
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  isDeleted Boolean     @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
 }
 
 model Contract {
   id Int @id @default(autoincrement())
 
-  author   User @relation(fields: [authorAddress], references: [address])
+  author        User   @relation(fields: [authorAddress], references: [address])
   authorAddress String
 
   hash String @unique
 
   fromAddress String
-  toAddress String
+  toAddress   String
 
   createdAt DateTime @default(now())
 
-  post Post?
+  post     Post?
   storages Storage[]
 }
 
@@ -91,17 +91,17 @@ model Post {
 
   address String @unique
 
-  author   User @relation(fields: [authorAddress], references: [address])
+  author        User   @relation(fields: [authorAddress], references: [address])
   authorAddress String
 
-  contract   Contract @relation(fields: [contractAddress], references: [hash])
-  contractAddress String      @unique
+  contract        Contract @relation(fields: [contractAddress], references: [hash])
+  contractAddress String   @unique
 
-  name String
+  name        String
   description String
-  thumbnail String
-  price Int
-  count Int
+  thumbnail   String
+  price       Int
+  count       Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -112,7 +112,7 @@ model Post {
 }
 
 model PostLike {
-  post   Post @relation(fields: [postAddress], references: [address])
+  post        Post   @relation(fields: [postAddress], references: [address])
   postAddress String
 
   user   User @relation(fields: [userId], references: [id])
@@ -124,10 +124,10 @@ model PostLike {
 model PostComment {
   id Int @id @default(autoincrement())
 
-  post   Post @relation(fields: [postAddress], references: [address])
+  post        Post   @relation(fields: [postAddress], references: [address])
   postAddress String
 
-  author   User @relation(fields: [authorAddress], references: [address])
+  author        User   @relation(fields: [authorAddress], references: [address])
   authorAddress String
 
   content String
@@ -143,7 +143,7 @@ model PostCommentLike {
   comment   PostComment @relation(fields: [commentId], references: [id])
   commentId Int
 
-  user   User @relation(fields: [userAddress], references: [address])
+  user        User   @relation(fields: [userAddress], references: [address])
   userAddress String
 
   @@id([commentId, userAddress])
