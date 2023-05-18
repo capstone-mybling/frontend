@@ -32,6 +32,16 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
     },
   });
 
+    if (!findUser) {
+        return baseResponse(response, {
+            success: false,
+            error: {
+                errorCode: ErrorCode.ITEM_DOES_NOT_EXIST,
+                errorMessage: "유저를 찾을 수 없습니다.",
+            },
+        });
+    }
+
   const redis = await getRedisClient();
   const userFollowers = await redis.sMembers(`user:${address}:followers`);
   const userFollowings = await redis.sMembers(`user:${address}:followings`);
