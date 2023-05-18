@@ -61,8 +61,8 @@ contract Marketplace is ReentrancyGuard {
         uint256 tokenId,
         uint256 price
     ) public payable nonReentrant returns (uint256) {
-        require(price > 0, "asd");
-        require(msg.value == listingFee, "qweqwe");
+        require(price > 0, "Price must be at least 1 wei");
+        require(msg.value == listingFee, "Price must be equal to listing fee");
         _marketItemIds.increment();
         uint256 marketItemId = _marketItemIds.current();
 
