@@ -1,11 +1,7 @@
-import React, { useRef, useState, useEffect, Fragment } from "react";
-import { GetServerSideProps, GetServerSidePropsResult, NextPage } from "next";
-import { useRouter } from "next/router";
+import React, { useState, useEffect, Fragment } from "react";
+import { GetServerSideProps } from "next";
 import Layout from "@components/Layout";
 import Image from "next/image";
-import HeartIcon from "@/components/icons/HeartIcons";
-import HeartFillIcon from "@/components/icons/HeartFillIcon";
-import ToggleButton from "@/components/ToggleButton";
 import CommentIcon from "@/components/icons/CommentIcon";
 import CommentFillIcon from "@/components/icons/CommentFillIcon";
 import UserAvatar from "@/components/UserAvatar";
@@ -18,6 +14,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { Post, PostComment, User } from "@/libs/client/types";
 import LikeButton from "@/components/LikeButton";
+import { dateCalculator } from "@libs/client/dateCalculator";
 
 interface DetailPost extends Post {
   likes: number;
@@ -46,7 +43,7 @@ const Home = ({ address }: HomeProps) => {
     async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
   );
   // console.log(data);
-
+  dateCalculator(data?.createdAt);
   // MUI tabs
   const [tabIndex, setTabIndex] = useState("1");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -136,7 +133,7 @@ const Home = ({ address }: HomeProps) => {
                   <h1 className="font-bold text-2xl">{data.name}</h1>
                 </div>
                 <div>
-                  <p className="text-gray-500">{data.updatedAt.toString()}</p>
+                  <p className="text-gray-500">{dateCalculator(data.createdAt)}</p>
                 </div>
               </div>
               <p className="my-4">{data.description}</p>
