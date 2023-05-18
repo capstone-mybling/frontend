@@ -65,7 +65,6 @@ export default function FollowerModal({userFollower, delBtn=true }: Props) {
             timeout: 500,
           },
         }}
-        sx={{ border: "1px solid white", borderRadius: "50%" }}
       >
         <Fade in={open}>
           <Box sx={style}>
@@ -94,8 +93,8 @@ export default function FollowerModal({userFollower, delBtn=true }: Props) {
                     />
                     {delBtn ? (
                     <button
-                      className="px-4 py-2 bg-[#efefef] rounded-xl font-semibold hover:text-violet-500"
-                      onClick={(e) => {
+                    className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"
+                    onClick={(e) => {
                         handleDeleteFollower(follower.address);
                       }}
                     >

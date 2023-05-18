@@ -1,20 +1,9 @@
-/**
- * todo
- * 1. follow 버튼 클릭 시, 현재 로그인되어있는 계정에 방문한 프로필계정을 팔로우 하는 기능 처리
- * 2. User-Created NFT 항목에 해당 사용자의 포스트를 나열해주는 기능 처리
- */
-
 import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import src from "@public/exam2.png";
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import Tabs from "@mui/material/Tabs";
-import TabPanel from "@mui/lab/TabPanel";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
@@ -45,6 +34,8 @@ export default function UserPage() {
     followers: [],
     followings: [],
   });
+  const [activeTab, setActiveTab] = useState(1);
+
   useEffect(() => {
     axios
       .get(`../api/users/${address}`)
@@ -85,6 +76,10 @@ export default function UserPage() {
     }
   };
 
+  const customTabChange = (tabIndex: number) => {
+    setActiveTab(tabIndex);
+  };
+
   return (
     <Layout>
       <section className="flex flex-col justify-center items-center pb-12 border-b border-neutral-300 px-6">
@@ -111,29 +106,38 @@ export default function UserPage() {
             <div className="py-4 font-extrabold">About</div>
             <p>{userInfo.description}</p>
           </div>
-          <Box sx={{ width: "100%", typography: "body1", marginTop: 2 }}>
-            <TabContext value={value}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <Tabs
-                  value={value}
-                  onChange={handleChange}
-                  textColor="secondary"
-                  indicatorColor="secondary"
-                  aria-label="secondary tabs example"
-                >
-                  <Tab label="User-Created NFT" value="1" />
-                  <Tab label="User-Owned NFT" value="2" />
-                </Tabs>
-              </Box>
-              <TabPanel value="1" sx={{ paddingTop: 3, paddingX: 0 }}>
-                <div className="grid grid-cols-3 gap-4">
-                  {userPost.length === 0 ? (
-                  <div className="text-center font-extrabold text-gray-400 mx-auto">
-                    <h1 className="text-2xl">게시글이 없습니다.</h1>
-                    <h3 className="text-md">게시글을 생성한 후 확인해 주세요</h3>
-                  </div>) : (
-                  <>
-                    {userPost.map((post) => (
+        </div>
+        <div className="w-full flex flex-col">
+          <div className="mx-auto my-5">
+            <button
+              className={`px-4 py-2 ${
+                activeTab === 1 ? "text-violet-500" : "text-violet-300"
+              }`}
+              onClick={() => customTabChange(1)}
+            >
+              내가만든NFT
+              <p className={`${activeTab === 1 ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500" : ""}`}></p>
+            </button>
+            <button
+              className={`px-4 py-2 ${
+                activeTab === 2 ? "text-violet-500" : "text-violet-300"
+              }`}
+              onClick={() => customTabChange(2)}
+            >
+              구매한NFT
+              <p className={`${activeTab === 2 ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500" : ""}`}></p>
+            </button>
+          </div>
+          {activeTab === 1 && 
+            <div>
+              {userPost.length === 0 ? (
+                // react auery 사용해서 isloagin 구현예정
+                <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
+                  <h1 className="text-2xl">게시글이 없습니다.</h1>
+                </div>
+                ) : (
+                <div className="grid grid-cols-3 gap-1">
+                  {userPost.map((post) => (
                     <li key={post.id} className="list-none">
                       <Thumbnail
                         thumbnail={post.thumbnail}
@@ -143,23 +147,27 @@ export default function UserPage() {
                       />
                     </li>
                   ))}
-                  </>)}
                 </div>
-              </TabPanel>
-              <TabPanel value="2" sx={{ paddingTop: 3, paddingX: 0 }}>
-                <div className="grid grid-cols-3 gap-4">
-                  <Thumbnail
-                    thumbnail={src}
-                    address={`posts/${2}`}
-                    option="Thumnail"
-                  />
-                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                    test
-                  </div>
-                </div>
-              </TabPanel>
-            </TabContext>
-          </Box>
+              )}
+            </div>}
+          {activeTab === 2 &&
+            <div className="grid grid-cols-3 gap-1">
+                <Thumbnail
+                  thumbnail={src}
+                  address={`posts/${2}`}
+                  option="Thumnail"
+                />
+              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                test
+              </div>
+              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                test
+              </div>
+              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                test
+              </div>
+            </div>
+          }
         </div>
       </section>
     </Layout>

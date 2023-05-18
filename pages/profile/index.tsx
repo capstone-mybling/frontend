@@ -2,11 +2,6 @@ import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
 import { ChangeEvent, useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import Tabs from "@mui/material/Tabs";
-import TabPanel from "@mui/lab/TabPanel";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
@@ -53,6 +48,7 @@ export default function MyPage() {
   const [edit, setEdit] = useState<boolean>(false);
   const [editTitle, setEditTitle] = useState<string>("프로필 편집");
   const [uploadImg, setUploadImg] = useState<File | null>();
+  const [activeTab, setActiveTab] = useState(1);
 
   const {
     register,
@@ -122,6 +118,10 @@ export default function MyPage() {
 
     resetForm();
     handleProfileEditSave();
+  };
+
+  const customTabChange = (tabIndex: number) => {
+    setActiveTab(tabIndex);
   };
 
   return isLoading ? (
@@ -231,22 +231,35 @@ export default function MyPage() {
             </div>
           </div>
         )}
-        <div className="w-full">
-          <Box sx={{ width: "100%", typography: "body1", marginTop: 2 }}>
-            <TabContext value={tabValue}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <Tabs
-                  value={tabValue}
-                  onChange={handleTabChange}
-                  textColor="secondary"
-                  indicatorColor="secondary"
-                  aria-label="secondary tabs example"
-                >
-                  <Tab label="내가만든NFT" value="1" />
-                  <Tab label="구매한NFT" value="2" />
-                </Tabs>
-              </Box>
-              <TabPanel value="1" sx={{ paddingTop: 3, paddingX: 0 }}>
+        <div className="w-full flex flex-col">
+          <div className="mx-auto my-5">
+            <button
+              className={`px-4 py-2 ${
+                activeTab === 1 ? "text-violet-500" : "text-violet-300"
+              }`}
+              onClick={() => customTabChange(1)}
+            >
+              내가만든NFT
+              <p className={`${activeTab === 1 ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500" : ""}`}></p>
+            </button>
+            <button
+              className={`px-4 py-2 ${
+                activeTab === 2 ? "text-violet-500" : "text-violet-300"
+              }`}
+              onClick={() => customTabChange(2)}
+            >
+              구매한NFT
+              <p className={`${activeTab === 2 ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500" : ""}`}></p>
+            </button>
+          </div>
+            {activeTab === 1 && 
+            <div>
+              {userPost.length === 0 ? (
+                // react auery 사용해서 isloagin 구현예정
+                <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
+                  <h1 className="text-2xl">게시글이 없습니다.</h1>
+                </div>
+                ) : (
                 <div className="grid grid-cols-3 gap-1">
                   {userPost.map((post) => (
                     <li key={post.id} className="list-none">
@@ -259,28 +272,27 @@ export default function MyPage() {
                     </li>
                   ))}
                 </div>
-              </TabPanel>
-              <TabPanel value="2" sx={{ paddingTop: 3, paddingX: 0 }}>
-                <div className="grid grid-cols-3 gap-4">
-                  <Thumbnail
-                    thumbnail={userData?.avatar}
-                    address={`posts/${2}`}
-                    option="Thumnail"
-                    link={userData?.address}
-                  />
-                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                    test
-                  </div>
-                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                    test
-                  </div>
-                  <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                    test
-                  </div>
+              )}
+            </div>}
+            {activeTab === 2 &&
+              <div className="grid grid-cols-3 gap-1">
+                <Thumbnail
+                  thumbnail={userData?.avatar}
+                  address={`posts/${2}`}
+                  option="Thumnail"
+                  link={userData?.address}
+                />
+                <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                  test
                 </div>
-              </TabPanel>
-            </TabContext>
-          </Box>
+                <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                  test
+                </div>
+                <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                  test
+                </div>
+              </div>
+            }
         </div>
       </section>
     </Layout>
