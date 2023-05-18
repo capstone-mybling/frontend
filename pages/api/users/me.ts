@@ -23,6 +23,7 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
   });
 
   const redis = await getRedisClient();
+
   const userFollowers = await redis.sMembers(`user:${address}:followers`);
   const userFollowings = await redis.sMembers(`user:${address}:followings`);
   const userFollowerWithInfo = await Promise.all(
