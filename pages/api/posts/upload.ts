@@ -33,7 +33,10 @@ interface UploadForm {
  * @param request
  * @param response
  */
-const handler = async (request: NextApiRequest, response: NextApiResponse<any>) => {
+const handler = async (
+  request: NextApiRequest,
+  response: NextApiResponse<any>
+) => {
   const { user } = request.session;
 
   if (!user) {
