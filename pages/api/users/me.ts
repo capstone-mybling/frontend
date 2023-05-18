@@ -94,7 +94,7 @@ const handler = async (
     const formData = await parsedFormData(request);
     console.log(formData.files.avatar);
     const avatar = fs.readFileSync(formData.files.avatar.filepath);
-    const avatarPath = `media/avatar/${
+    const avatarPath = `/media/avatar/${
       formData.files.avatar.newFilename
     }.${formData.files.avatar.originalFilename.split(".").pop()}`;
     fs.writeFileSync(avatarPath, avatar);
