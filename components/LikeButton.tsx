@@ -16,7 +16,7 @@ export default function LikeButton({ isLiked, likes, address, comment, ...rest }
   const [fillHeart, setFillHeart] = useState<boolean>(isLiked || false);
   const [likeCount, setLikeCount] = useState<number>(likes || 0);
   const disLikeMutation = useMutation(
-    (data: { address: string }) => axios.delete(`api/posts/${address.substring(5)}/likes`),
+    (data: { address: string }) => axios.delete(`/api/posts/${address}/likes`),
     {
       onSuccess: () => {
         setFillHeart(false);
@@ -25,7 +25,7 @@ export default function LikeButton({ isLiked, likes, address, comment, ...rest }
     }
   );
   const likeMutation = useMutation(
-    (data: { address: string }) => axios.post(`api/posts/${address.substring(5)}/likes`),
+    (data: { address: string }) => axios.post(`/api/posts/${address}/likes`),
     {
       onSuccess: () => {
         setFillHeart(true);

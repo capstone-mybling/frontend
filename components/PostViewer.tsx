@@ -83,7 +83,7 @@ export default function PostViewer({
         <Thumbnail
           thumbnail={thumbnail}
           address={address}
-          link={address}
+          link={`posts/${address}`}
         />
         {small ? null : (
           <>
