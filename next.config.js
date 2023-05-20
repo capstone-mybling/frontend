@@ -1,7 +1,13 @@
-/** @type {import('next').NextConfig} */
+/** @type {import("next").NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["localhost", "*", "images.unsplash.com", "ipfs.io"],
+    domains: [
+      "localhost",
+      "*",
+      "images.unsplash.com",
+      "ipfs.io",
+      "gateway.pinata.cloud",
+    ],
   },
   reactStrictMode: true,
   webpack: (config, { isServer }) => {

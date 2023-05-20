@@ -9,19 +9,21 @@
  * 7. required 필드를 채우지 않았을 시, 제출 form 비활성화 효과를 주고싶음 (제출버튼 hover시 디자인과 마우스커서가 pointer로 변경되지 않게)
  */
 
-import { useForm, FieldErrors } from "react-hook-form";
+import { FieldErrors, useForm } from "react-hook-form";
 import Layout from "@/components/Layout";
 import { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
 import useWeb3 from "@/hooks/useWeb3";
 import axios from "axios";
+import { ethers } from "ethers";
 
 enum FileType {
   IMAGE = "image",
   VIDEO = "video",
   METADATA = "metadata",
 }
+
 interface UploadForm {
   name: string;
   externalUrl: string;
@@ -38,12 +40,19 @@ interface UploadForm {
 
 export default function Upload() {
   const [uploadImg, setUploadImg] = useState<File | null>();
-  const { register, handleSubmit, reset, setValue, formState: {isValid} } = useForm<UploadForm>({mode: "onChange"});
-  const{marketplaceContract, nftContract} = useWeb3();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { isValid },
+  } = useForm<UploadForm>({ mode: "onChange" });
+  const { marketplaceContract, nftContract } = useWeb3();
+  console.log(nftContract, marketplaceContract);
 
   // handlesubmit 시 작동하는 함수 두가지
   const onValid = async (data: UploadForm) => {
-    const {name, description, count, price} = data;
+    const { name, description, count, price } = data;
     const form = new FormData();
     form.append("image", data.image);
     form.append("name", name);
@@ -56,20 +65,54 @@ export default function Upload() {
         "Content-Type": "multipart/form-data",
       },
     });
-    const {imageHash, ipfsHash} = response.data.data;
+    const { imageHash, ipfsHash } = response.data.data;
 
     if (!nftContract) return;
-    const mintResponse = await nftContract.mintToken(ipfsHash);
+    const mintResponse = await nftContract.mint(
+      `https://gateway.pinata.cloud/ipfs/${ipfsHash}`
+    );
+    const mintId = await nftContract.tokenCount();
+    const approvalResponse = await (
+      await nftContract.setApprovalForAll(
+        process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
+        true
+      )
+    ).wait();
 
-    const {from, to, hash} = mintResponse;
+    // TODO: price 를 입력 값으로 고치기
+    const listingPrice = ethers.parseEther("0.001");
+    await (
+      await marketplaceContract.makeItem(
+        process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS,
+        mintId,
+        listingPrice
+      )
+    ).wait();
+    const itemId = await marketplaceContract.itemCount();
+    const { from, to, hash } = mintResponse;
 
-    const postResponse = await axios.post("/api/posts", {
-        from, to, hash, ipfsHash, imageHash, name, description, count, price
-    }, {
-      headers: {
-        "Content-Type": "application/json",
+    const postResponse = await axios.post(
+      "/api/posts",
+      {
+        from,
+        to,
+        hash,
+        ipfsHash,
+        imageHash,
+        name,
+        description,
+        count,
+        price,
+        itemId: Number(itemId),
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    });
+    );
+
+    console.log(postResponse);
 
     resetForm();
   };
@@ -77,7 +120,7 @@ export default function Upload() {
   const resetForm = () => {
     reset();
     setUploadImg(null);
-  }
+  };
 
   const onNotValid = (errors: FieldErrors) => console.log(errors);
 
@@ -85,7 +128,6 @@ export default function Upload() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     // e.preventDefault();
     const files = e.target?.files;
-    console.log(files);
     if (files && files.length > 0) {
       setUploadImg(files.item(0));
       setValue("image", files.item(0)!);
@@ -94,7 +136,10 @@ export default function Upload() {
 
   return (
     <Layout>
-      <form onSubmit={handleSubmit(onValid, onNotValid)} className="px-5 grid-cols-1 grid w-full mx-auto space-y-8 my-8">
+      <form
+        onSubmit={handleSubmit(onValid, onNotValid)}
+        className="px-5 grid-cols-1 grid w-full mx-auto space-y-8 my-8"
+      >
         <h1 className="text-4xl font-bold">Create New Item</h1>
         {/* 아직 불러온 이미지가 없을 경우 */}
         {!uploadImg ? (
@@ -199,8 +244,12 @@ export default function Upload() {
           />
         </div>
         <input
-          className={cls("px-6 py-1 rounded-full text-white transition-colors duration-500 w-2/3 mx-auto h-10",
-          (isValid) ? "bg-violet-600 cursor-pointer opacity-70" : "pointer-events-none bg-gray-500 opacity-50")}
+          className={cls(
+            "px-6 py-1 rounded-full text-white transition-colors duration-500 w-2/3 mx-auto h-10",
+            isValid
+              ? "bg-violet-600 cursor-pointer opacity-70"
+              : "pointer-events-none bg-gray-500 opacity-50"
+          )}
           type="submit"
         />
       </form>

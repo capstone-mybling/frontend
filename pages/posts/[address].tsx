@@ -1,9 +1,7 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { GetServerSideProps } from "next";
 import Layout from "@components/Layout";
 import Image from "next/image";
-import CommentIcon from "@/components/icons/CommentIcon";
-import CommentFillIcon from "@/components/icons/CommentFillIcon";
 import UserAvatar from "@/components/UserAvatar";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -15,6 +13,8 @@ import axios from "axios";
 import { Post, PostComment, User } from "@/libs/client/types";
 import LikeButton from "@/components/LikeButton";
 import { dateCalculator } from "@libs/client/dateCalculator";
+import useWeb3 from "@/hooks/useWeb3";
+import { ethers } from "ethers";
 
 interface DetailPost extends Post {
   likes: number;
@@ -36,10 +36,13 @@ interface HomeProps {
 }
 
 const Home = ({ address }: HomeProps) => {
+  const { marketplaceContract } = useWeb3();
+
   //calling API and handling data
   const { data, status } = useQuery<DetailPost>(
     "post",
-    async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
+    async () =>
+      await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
   );
   // console.log(data);
   // MUI tabs
@@ -47,6 +50,17 @@ const Home = ({ address }: HomeProps) => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabIndex(newValue);
   };
+
+  const purchase = async () => {
+    const itemId = data.contract.itemId;
+    const response = await (
+      await marketplaceContract.purchaseItem(BigInt(3), {
+        value: ethers.parseEther(`${0.001 * 1.01}`),
+      })
+    ).wait();
+    console.log(response);
+  };
+
   // // 댓글 추가
   // const handleAddComment = () => {
   //   const newId = comments.length + 1;
@@ -91,8 +105,11 @@ const Home = ({ address }: HomeProps) => {
                     : "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                 }
               />
-              <button className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70">
-                <a href="https://opensea.io/">구매하기</a>
+              <button
+                onClick={purchase}
+                className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70"
+              >
+                구매하기
               </button>
             </div>
           </div>
@@ -110,7 +127,9 @@ const Home = ({ address }: HomeProps) => {
             <section className="flex justify-between mb-4">
               <div className="px-1 flex space-x-2 items-center">
                 <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
-                <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
+                <span className="text-sm font-extrabold text-gray-500">
+                  Current Owner
+                </span>
                 <span className="text-sm font-extrabold">hazzun</span>
               </div>
               <div
@@ -131,7 +150,9 @@ const Home = ({ address }: HomeProps) => {
                   <h1 className="font-bold text-2xl">{data.name}</h1>
                 </div>
                 <div>
-                  <p className="text-gray-500">{dateCalculator(data.createdAt)}</p>
+                  <p className="text-gray-500">
+                    {dateCalculator(data.createdAt)}
+                  </p>
                 </div>
               </div>
               <p className="my-4">{data.description}</p>
@@ -146,28 +167,13 @@ const Home = ({ address }: HomeProps) => {
                     indicatorColor="secondary"
                     aria-label="secondary tabs example"
                   >
-                    <Tab
-                      label="Comments"
-                      value="1"
-                    />
-                    <Tab
-                      label="Sales"
-                      value="2"
-                    />
-                    <Tab
-                      label="Ownership"
-                      value="3"
-                    />
-                    <Tab
-                      label="Additional Info"
-                      value="4"
-                    />
+                    <Tab label="Comments" value="1" />
+                    <Tab label="Sales" value="2" />
+                    <Tab label="Ownership" value="3" />
+                    <Tab label="Additional Info" value="4" />
                   </Tabs>
                 </Box>
-                <TabPanel
-                  value="1"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="1" sx={{ padding: 0 }}>
                   <div className="mt-4 pt-4">
                     <ul>
                       {data.comments.map((comment) => (
@@ -185,7 +191,9 @@ const Home = ({ address }: HomeProps) => {
                           />
                           <div className="ml-11">{comment.content}</div>
                           <div className="flex justify-between items-center">
-                            <div className="text-gray-500 text-sm ml-11">5 minutes ago</div>
+                            <div className="text-gray-500 text-sm ml-11">
+                              5 minutes ago
+                            </div>
                             <div className="flex items-center">
                               <p>10</p>
                               {/* <ToggleButton
@@ -233,22 +241,13 @@ const Home = ({ address }: HomeProps) => {
                     </div>
                   </footer>
                 </TabPanel>
-                <TabPanel
-                  value="2"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="2" sx={{ padding: 0 }}>
                   앙냥냥
                 </TabPanel>
-                <TabPanel
-                  value="3"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="3" sx={{ padding: 0 }}>
                   띵띵땅땅띵~
                 </TabPanel>
-                <TabPanel
-                  value="4"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="4" sx={{ padding: 0 }}>
                   <section className="p-2 mt-4">
                     <div className="flex justify-between">
                       <p>1</p>
@@ -280,8 +279,8 @@ const Home = ({ address }: HomeProps) => {
 
 {
   /* Todo
-- 댓글 좋아요 버튼 개별적으로 동작하게끔 
-- 음..
-*/
+          - 댓글 좋아요 버튼 개별적으로 동작하게끔 
+          - 음..
+          */
 }
 export default Home;
