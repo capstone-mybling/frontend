@@ -10,7 +10,7 @@ import MypageLoading from "@/components/MypageLoading";
 import { useForm, FieldErrors } from "react-hook-form";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
-import { useQuery } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 
 interface UserWithFollow extends User {
   followings: string[];
@@ -30,27 +30,11 @@ interface UploadForm {
 }
 
 export default function MyPage() {
+  const queryClient = useQueryClient();
   const { isLoading, data, error } = useQuery<UserWithFollow>("userInfo", () =>
     axios.get("api/users/me").then((response) => response.data.data)
   );
 
-  // console.log("react auery data : ", data.posts.slice(0).reverse());
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [userData, setUserData] = useState<UserWithFollow>({
-  //   id: 0,
-  //   address: "",
-  //   username: "",
-  //   avatar: "",
-  //   description: "",
-  //   lastLoginIP: "",
-  //   createdAt: new Date(),
-  //   updatedAt: new Date(),
-  //   isDeleted: false,
-  //   followers: [],
-  //   followings: [],
-  // });
-  // const [tabValue, setTabValue] = useState("1");
-  // const [userPost, setUserPost] = useState<Post[]>([]);
   const [edit, setEdit] = useState<boolean>(false);
   const [editTitle, setEditTitle] = useState<string>("프로필 편집");
   const [uploadImg, setUploadImg] = useState<File | null>();
@@ -73,32 +57,7 @@ export default function MyPage() {
       setValue("image", files.item(0)!);
     }
   };
-  // console.log(uploadImg);
 
-  // useEffect(() => {
-  //   axios
-  //     .get("api/users/me")
-  //     .then((response) => {
-  //       setUserData(response.data.data);
-  //       setUserPost(response.data.data.posts.reverse());
-  //       // console.log(response.data.data);
-  //       // console.log(userData.posts);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   if (userData) {
-  //     setIsLoading(false);
-  //     // console.log("로딩 끝, 받아온 데이터 = ", userData);
-  //   }
-  // }, [userData]);
-
-  // const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-  //   setTabValue(newValue);
-  // };
   const handleProfileEdit = () => {
     setEdit(!edit);
     setEditTitle("저장하기");
@@ -112,6 +71,11 @@ export default function MyPage() {
     reset();
     setUploadImg(null);
   };
+
+  const editProfileMutation = useMutation((formData: FormData) =>
+    axios.patch("api/users/me", formData)
+  );
+
   const onNotValid = (errors: FieldErrors) => console.log(errors);
   const onValid = async (data: UploadForm) => {
     const { name, description } = data;
@@ -120,10 +84,11 @@ export default function MyPage() {
     form.append("username", name);
     form.append("description", description);
 
-    axios.patch("api/users/me", form);
+    await editProfileMutation.mutateAsync(form);
 
     resetForm();
     handleProfileEditSave();
+    queryClient.invalidateQueries("userInfo");
   };
 
   const customTabChange = (tabIndex: number) => {
@@ -272,7 +237,6 @@ export default function MyPage() {
           {activeTab === 1 && (
             <div>
               {data.posts.length === 0 ? (
-                // react auery 사용해서 isloagin 구현예정
                 <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
                   <h1 className="text-2xl">게시글이 없습니다.</h1>
                 </div>
