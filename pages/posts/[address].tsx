@@ -14,6 +14,7 @@ import axios from "axios";
 import { Post, PostComment, User } from "@/libs/client/types";
 import LikeButton from "@/components/LikeButton";
 import { dateCalculator } from "@libs/client/dateCalculator";
+import comments from "../api/posts/[address]/comments";
 
 interface DetailPost extends Post {
   likes: number;
@@ -147,7 +148,7 @@ const Home = ({ address }: HomeProps) => {
                     aria-label="secondary tabs example"
                   >
                     <Tab
-                      label="Comments"
+                      label={`Comments (${data.comments.length})`}
                       value="1"
                     />
                     <Tab
