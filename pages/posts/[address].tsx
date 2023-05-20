@@ -2,8 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { GetServerSideProps } from "next";
 import Layout from "@components/Layout";
 import Image from "next/image";
-import CommentIcon from "@/components/icons/CommentIcon";
-import CommentFillIcon from "@/components/icons/CommentFillIcon";
+import Comment from "@/components/Comment";
 import UserAvatar from "@/components/UserAvatar";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -46,6 +45,7 @@ const Home = ({ address }: HomeProps) => {
   const [tabIndex, setTabIndex] = useState("1");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabIndex(newValue);
+    console.log(data?.comments);
   };
   // // 댓글 추가
   // const handleAddComment = () => {
@@ -175,33 +175,7 @@ const Home = ({ address }: HomeProps) => {
                           key={comment.id}
                           className="flex justify-between px-5 flex-col pb-4"
                         >
-                          <UserAvatar
-                            size="small"
-                            UserAddr={comment.authorAddress}
-                            UserName={"1212"}
-                            UserImage={
-                              "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                            }
-                          />
-                          <div className="ml-11">{comment.content}</div>
-                          <div className="flex justify-between items-center">
-                            <div className="text-gray-500 text-sm ml-11">5 minutes ago</div>
-                            <div className="flex items-center">
-                              <p>10</p>
-                              {/* <ToggleButton
-                              toggled={commentLike}
-                              onToggle={setCommentLike}
-                              onIcon={<HeartFillIcon />}
-                              offIcon={<HeartIcon />}
-                            />
-                            <button
-                              className="text-violet-200 ml-2 text-2xl"
-                              onClick={() => handleDeleteComment(comment.id)}
-                            >
-                              X
-                            </button> */}
-                            </div>
-                          </div>
+                          <Comment comment={comment} />
                         </li>
                       ))}
                     </ul>

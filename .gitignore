@@ -15,7 +15,7 @@ Icon
 ._*
 
 # personal image file
-./public/avatar
+public/avatar
 
 # Files that might appear in the root of a volume
 .DocumentRevisions-V100
