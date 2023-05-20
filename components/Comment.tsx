@@ -23,7 +23,7 @@ export default function Comment({ comment }: CommentProps) {
       </div>
       <div className="flex-row justify-self-stretch col-start-3 col-end-8 pr-3">
         <p className="">{comment.content}</p>
-        <div className="text-gray-500 text-sm">{dateCalculator(comment.createdAt)}</div>
+        <div className="text-gray-500 text-xs">{dateCalculator(comment.createdAt)}</div>
       </div>
       <div className="flex justify-self-end">
         <LikeButton

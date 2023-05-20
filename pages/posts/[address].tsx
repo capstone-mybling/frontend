@@ -9,12 +9,12 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import Tabs from "@mui/material/Tabs";
 import TabPanel from "@mui/lab/TabPanel";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import { Post, PostComment, User } from "@/libs/client/types";
 import LikeButton from "@/components/LikeButton";
 import { dateCalculator } from "@libs/client/dateCalculator";
-import comments from "../api/posts/[address]/comments";
+import { useForm } from "react-hook-form";
 
 interface DetailPost extends Post {
   likes: number;
@@ -22,7 +22,10 @@ interface DetailPost extends Post {
   author: User;
   comments: PostComment[];
 }
-
+interface CommentsResponse extends PostComment {}
+interface commentPostForm {
+  content: string;
+}
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -41,27 +44,22 @@ const Home = ({ address }: HomeProps) => {
     "post",
     async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
   );
-  // console.log(data);
+  const comments = useQuery<PostComment[]>(
+    "comments",
+    async () => await axios.get(`/api/posts/${address}/comments`).then((res) => res.data.data)
+  );
   // MUI tabs
   const [tabIndex, setTabIndex] = useState("1");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabIndex(newValue);
-    console.log(data?.comments);
+    console.log(data);
   };
-  // // 댓글 추가
-  // const handleAddComment = () => {
-  //   const newId = comments.length + 1;
-  //   const newCommentObj = { id: newId, content: newComment };
-  //   setComments([...comments, newCommentObj]);
-  //   setNewComment("");
-  //   // console.log(comments);
-  // };
-  // const handleBlockComment = () => {
-  //   console.log("block!");
-  //   // e.preventDefault();
-  //   inputRef.current?.focus();
-  // };
-
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      return axios.post(`/api/posts/${address}/comments`, data);
+    },
+  });
+  const { register, handleSubmit } = useForm<commentPostForm>();
   // // 댓글 삭제
   // const handleDeleteComment = (id: number) => {
   //   const updatedComments = comments.filter((comment) => comment.id !== id);
@@ -156,12 +154,8 @@ const Home = ({ address }: HomeProps) => {
                       value="2"
                     />
                     <Tab
-                      label="Ownership"
-                      value="3"
-                    />
-                    <Tab
                       label="Additional Info"
-                      value="4"
+                      value="3"
                     />
                   </Tabs>
                 </Box>
@@ -171,14 +165,16 @@ const Home = ({ address }: HomeProps) => {
                 >
                   <div className="mt-4 pt-4">
                     <ul>
-                      {data.comments.map((comment) => (
-                        <li
-                          key={comment.id}
-                          className="flex justify-between px-5 flex-col pb-4"
-                        >
-                          <Comment comment={comment} />
-                        </li>
-                      ))}
+                      {comments.isLoading || comments.data === undefined
+                        ? null
+                        : comments.data.map((comment) => (
+                            <li
+                              key={comment.id}
+                              className="flex justify-between px-5 flex-col pb-4"
+                            >
+                              <Comment comment={comment} />
+                            </li>
+                          ))}
                     </ul>
                   </div>
                   {/* footer의 위치는 어차피 고정이기 때문에 어디 있어도 똑같아서 댓글 탭 안에 포함 시킴 */}
@@ -186,22 +182,17 @@ const Home = ({ address }: HomeProps) => {
                     <div>
                       <form
                         className="flex border-t border-neutral-300 p-3"
-                        // onSubmit={console.log("submit")}
+                        // onSubmit={handleSubmit()}
                       >
                         <input
-                          className="w-full ml-2 border-none outline-none"
+                          className="w-full ml-2 border-none outline-none focus:ring-0"
                           type="text"
                           placeholder="Add a comment..."
-                          // onChange={(e) => setNewComment(e.target.value)}
-                          // ref={inputRef}
-                          // value={newComment}
+                          {...register("content", {
+                            required: "댓글을 입력하세요.",
+                          })}
                         />
-                        <button
-                          className="font-bold text-violet-500 ml-2"
-                          onClick={() => {
-                            // newComment === "" ? handleBlockComment() : handleAddComment();
-                          }}
-                        >
+                        <button className="font-bold text-violet-300 ml-2 transition-colors duration-300 hover:text-violet-700">
                           Post
                         </button>
                       </form>
@@ -218,28 +209,22 @@ const Home = ({ address }: HomeProps) => {
                   value="3"
                   sx={{ padding: 0 }}
                 >
-                  띵띵땅땅띵~
-                </TabPanel>
-                <TabPanel
-                  value="4"
-                  sx={{ padding: 0 }}
-                >
                   <section className="p-2 mt-4">
                     <div className="flex justify-between">
-                      <p>1</p>
-                      <p>test</p>
+                      <p>author</p>
+                      <p>{data.author.username}</p>
                     </div>
                     <div className="flex justify-between">
-                      <p>fsdlndlsnf</p>
-                      <p>oprqwekopqjwel;kmads</p>
+                      <p>price</p>
+                      <p>{data.price}</p>
                     </div>
                     <div className="flex justify-between">
-                      <p>fsdlndlsnf</p>
-                      <p>oprqwekopqjwel;kmads</p>
+                      <p>copies</p>
+                      <p>{data.count}</p>
                     </div>
                     <div className="flex justify-between">
-                      <p>fsdlndlsnf</p>
-                      <p>oprqwekopqjwel;kmads</p>
+                      <p>contract</p>
+                      <p className="w-3/4">{data.contractAddress}</p>
                     </div>
                   </section>
                 </TabPanel>
