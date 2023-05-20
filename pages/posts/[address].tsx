@@ -1,26 +1,34 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { GetServerSideProps } from "next";
 import Layout from "@components/Layout";
 import Image from "next/image";
-import CommentIcon from "@/components/icons/CommentIcon";
-import CommentFillIcon from "@/components/icons/CommentFillIcon";
+import Comment from "@/components/Comment";
 import UserAvatar from "@/components/UserAvatar";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import Tabs from "@mui/material/Tabs";
 import TabPanel from "@mui/lab/TabPanel";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import { Post, PostComment, User } from "@/libs/client/types";
 import LikeButton from "@/components/LikeButton";
 import { dateCalculator } from "@libs/client/dateCalculator";
+import { useForm } from "react-hook-form";
+import useWeb3 from "@/hooks/useWeb3";
+import { ethers } from "ethers";
 
 interface DetailPost extends Post {
   likes: number;
   isLiked: boolean;
   author: User;
   comments: PostComment[];
+}
+
+interface CommentsResponse extends PostComment {}
+
+interface commentPostForm {
+  content: string;
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -36,40 +44,42 @@ interface HomeProps {
 }
 
 const Home = ({ address }: HomeProps) => {
+  const { marketplaceContract } = useWeb3();
+
   //calling API and handling data
   const { data, status } = useQuery<DetailPost>(
     "post",
-    async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
+    async () =>
+      await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
   );
-  // console.log(data);
+  const comments = useQuery<PostComment[]>(
+    "comments",
+    async () =>
+      await axios
+        .get(`/api/posts/${address}/comments`)
+        .then((res) => res.data.data)
+  );
   // MUI tabs
   const [tabIndex, setTabIndex] = useState("1");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabIndex(newValue);
   };
-  // // 댓글 추가
-  // const handleAddComment = () => {
-  //   const newId = comments.length + 1;
-  //   const newCommentObj = { id: newId, content: newComment };
-  //   setComments([...comments, newCommentObj]);
-  //   setNewComment("");
-  //   // console.log(comments);
-  // };
-  // const handleBlockComment = () => {
-  //   console.log("block!");
-  //   // e.preventDefault();
-  //   inputRef.current?.focus();
-  // };
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      return axios.post(`/api/posts/${address}/comments`, data);
+    },
+  });
+  const { register, handleSubmit } = useForm<commentPostForm>();
 
-  // // 댓글 삭제
-  // const handleDeleteComment = (id: number) => {
-  //   const updatedComments = comments.filter((comment) => comment.id !== id);
-  //   setComments(updatedComments);
-  // };
-
-  // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  // };
+  const purchase = async () => {
+    const itemId = data.contract.itemId;
+    const response = await (
+      await marketplaceContract.purchaseItem(BigInt(3), {
+        value: ethers.parseEther(`${0.001 * 1.01}`),
+      })
+    ).wait();
+    console.log(response);
+  };
 
   return (
     <Layout disableFooter>
@@ -91,8 +101,11 @@ const Home = ({ address }: HomeProps) => {
                     : "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                 }
               />
-              <button className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70">
-                <a href="https://opensea.io/">구매하기</a>
+              <button
+                onClick={purchase}
+                className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70"
+              >
+                구매하기
               </button>
             </div>
           </div>
@@ -110,7 +123,9 @@ const Home = ({ address }: HomeProps) => {
             <section className="flex justify-between mb-4">
               <div className="px-1 flex space-x-2 items-center">
                 <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
-                <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
+                <span className="text-sm font-extrabold text-gray-500">
+                  Current Owner
+                </span>
                 <span className="text-sm font-extrabold">hazzun</span>
               </div>
               <div
@@ -131,7 +146,9 @@ const Home = ({ address }: HomeProps) => {
                   <h1 className="font-bold text-2xl">{data.name}</h1>
                 </div>
                 <div>
-                  <p className="text-gray-500">{dateCalculator(data.createdAt)}</p>
+                  <p className="text-gray-500">
+                    {dateCalculator(data.createdAt)}
+                  </p>
                 </div>
               </div>
               <p className="my-4">{data.description}</p>
@@ -147,63 +164,26 @@ const Home = ({ address }: HomeProps) => {
                     aria-label="secondary tabs example"
                   >
                     <Tab
-                      label="Comments"
+                      label={`Comments (${data.comments.length})`}
                       value="1"
                     />
-                    <Tab
-                      label="Sales"
-                      value="2"
-                    />
-                    <Tab
-                      label="Ownership"
-                      value="3"
-                    />
-                    <Tab
-                      label="Additional Info"
-                      value="4"
-                    />
+                    <Tab label="Sales" value="2" />
+                    <Tab label="Additional Info" value="3" />
                   </Tabs>
                 </Box>
-                <TabPanel
-                  value="1"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="1" sx={{ padding: 0 }}>
                   <div className="mt-4 pt-4">
                     <ul>
-                      {data.comments.map((comment) => (
-                        <li
-                          key={comment.id}
-                          className="flex justify-between px-5 flex-col pb-4"
-                        >
-                          <UserAvatar
-                            size="small"
-                            UserAddr={comment.authorAddress}
-                            UserName={"1212"}
-                            UserImage={
-                              "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                            }
-                          />
-                          <div className="ml-11">{comment.content}</div>
-                          <div className="flex justify-between items-center">
-                            <div className="text-gray-500 text-sm ml-11">5 minutes ago</div>
-                            <div className="flex items-center">
-                              <p>10</p>
-                              {/* <ToggleButton
-                              toggled={commentLike}
-                              onToggle={setCommentLike}
-                              onIcon={<HeartFillIcon />}
-                              offIcon={<HeartIcon />}
-                            />
-                            <button
-                              className="text-violet-200 ml-2 text-2xl"
-                              onClick={() => handleDeleteComment(comment.id)}
+                      {comments.isLoading || comments.data === undefined
+                        ? null
+                        : comments.data.map((comment) => (
+                            <li
+                              key={comment.id}
+                              className="flex justify-between px-5 flex-col pb-4"
                             >
-                              X
-                            </button> */}
-                            </div>
-                          </div>
-                        </li>
-                      ))}
+                              <Comment comment={comment} />
+                            </li>
+                          ))}
                     </ul>
                   </div>
                   {/* footer의 위치는 어차피 고정이기 때문에 어디 있어도 똑같아서 댓글 탭 안에 포함 시킴 */}
@@ -214,57 +194,40 @@ const Home = ({ address }: HomeProps) => {
                         // onSubmit={console.log("submit")}
                       >
                         <input
-                          className="w-full ml-2 border-none outline-none"
+                          className="w-full ml-2 border-none outline-none focus:ring-0"
                           type="text"
                           placeholder="Add a comment..."
-                          // onChange={(e) => setNewComment(e.target.value)}
-                          // ref={inputRef}
-                          // value={newComment}
+                          {...register("content", {
+                            required: "댓글을 입력하세요.",
+                          })}
                         />
-                        <button
-                          className="font-bold text-violet-500 ml-2"
-                          onClick={() => {
-                            // newComment === "" ? handleBlockComment() : handleAddComment();
-                          }}
-                        >
+                        <button className="font-bold text-violet-300 ml-2 transition-colors duration-300 hover:text-violet-700">
                           Post
                         </button>
                       </form>
                     </div>
                   </footer>
                 </TabPanel>
-                <TabPanel
-                  value="2"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="2" sx={{ padding: 0 }}>
                   앙냥냥
                 </TabPanel>
-                <TabPanel
-                  value="3"
-                  sx={{ padding: 0 }}
-                >
-                  띵띵땅땅띵~
-                </TabPanel>
-                <TabPanel
-                  value="4"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="3" sx={{ padding: 0 }}>
                   <section className="p-2 mt-4">
                     <div className="flex justify-between">
-                      <p>1</p>
-                      <p>test</p>
+                      <p>author</p>
+                      <p>{data.author.username}</p>
                     </div>
                     <div className="flex justify-between">
-                      <p>fsdlndlsnf</p>
-                      <p>oprqwekopqjwel;kmads</p>
+                      <p>price</p>
+                      <p>{data.price}</p>
                     </div>
                     <div className="flex justify-between">
-                      <p>fsdlndlsnf</p>
-                      <p>oprqwekopqjwel;kmads</p>
+                      <p>copies</p>
+                      <p>{data.count}</p>
                     </div>
                     <div className="flex justify-between">
-                      <p>fsdlndlsnf</p>
-                      <p>oprqwekopqjwel;kmads</p>
+                      <p>contract</p>
+                      <p className="w-3/4">{data.contractAddress}</p>
                     </div>
                   </section>
                 </TabPanel>

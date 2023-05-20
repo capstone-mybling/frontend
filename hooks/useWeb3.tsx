@@ -16,21 +16,21 @@ const Web3DefaultValues = {
 };
 
 type NetworkNames = {
-    [key: string]: string;
-    maticmum: string;
-    unknown: string;
-    goerli: string;
-    sepolia: string;
-    'matic-mumbai': string;
+  [key: string]: string;
+  maticmum: string;
+  unknown: string;
+  goerli: string;
+  sepolia: string;
+  "matic-mumbai": string;
 };
 
 const networkNames: NetworkNames = {
-    maticmum: 'MUMBAI',
-    unknown: 'LOCALHOST',
-    goerli: 'goerli',
-    sepolia: 'sepolia',
-    'matic-mumbai': 'MUMBAI',
-}
+  maticmum: "MUMBAI",
+  unknown: "LOCALHOST",
+  goerli: "goerli",
+  sepolia: "sepolia",
+  "matic-mumbai": "MUMBAI",
+};
 const useWeb3 = () => {
   const [isConnected, setIsConnected] = useState<boolean>(
     Web3DefaultValues.isConnected
@@ -106,14 +106,13 @@ const useWeb3 = () => {
       // TODO: error
       return false;
     }
-
     const marketplaceContract = new ethers.Contract(
-      "0x4252294B28334AC6c36Dcb03577E4412d3ABc249",
+      process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
       Marketplace.abi,
       signer
     );
     const nftContract = new ethers.Contract(
-      "0xDaeB2C1dF98EF8bEb26C3b996a0114Dd643B0602",
+      process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS,
       NFT.abi,
       signer
     );
@@ -135,4 +134,3 @@ const useWeb3 = () => {
 };
 
 export default useWeb3;
-
