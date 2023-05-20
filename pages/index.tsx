@@ -53,7 +53,7 @@ const Home: NextPage = () => {
             <PostViewer
               key={post.id}
               thumbnail={post.thumbnail}
-              address={post.address}
+              address={post.authorAddress}
               content={post.description}
               UserName={post.author.username == null ? "undefined" : post.author.username}
               UserImage={

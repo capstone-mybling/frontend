@@ -48,7 +48,6 @@ export default function Upload() {
     formState: { isValid },
   } = useForm<UploadForm>({ mode: "onChange" });
   const { marketplaceContract, nftContract } = useWeb3();
-  console.log(nftContract, marketplaceContract);
 
   // handlesubmit 시 작동하는 함수 두가지
   const onValid = async (data: UploadForm) => {
@@ -112,8 +111,6 @@ export default function Upload() {
       }
     );
 
-    console.log(postResponse);
-
     resetForm();
   };
 
@@ -163,14 +160,15 @@ export default function Upload() {
                 <br />
                 Max upload size 30MB
               </p>
-              <span className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
+              <span
+                className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
                 + Add File
               </span>
             </label>
           </div>
         ) : (
           // 불러온 이미지가 있을 경우
-          <div className="relative w-full aspect-square bg-gray-200">
+          <div className="relative w-full aspect-square bg-gray-100">
             <Image
               className="object-contain"
               src={URL.createObjectURL(uploadImg)}
