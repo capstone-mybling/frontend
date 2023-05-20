@@ -24,10 +24,13 @@ interface DetailPost extends Post {
   author: User;
   comments: PostComment[];
 }
+
 interface CommentsResponse extends PostComment {}
+
 interface commentPostForm {
   content: string;
 }
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -51,7 +54,10 @@ const Home = ({ address }: HomeProps) => {
   );
   const comments = useQuery<PostComment[]>(
     "comments",
-    async () => await axios.get(`/api/posts/${address}/comments`).then((res) => res.data.data)
+    async () =>
+      await axios
+        .get(`/api/posts/${address}/comments`)
+        .then((res) => res.data.data)
   );
   // MUI tabs
   const [tabIndex, setTabIndex] = useState("1");
@@ -161,20 +167,11 @@ const Home = ({ address }: HomeProps) => {
                       label={`Comments (${data.comments.length})`}
                       value="1"
                     />
-                    <Tab
-                      label="Sales"
-                      value="2"
-                    />
-                    <Tab
-                      label="Additional Info"
-                      value="3"
-                    />
+                    <Tab label="Sales" value="2" />
+                    <Tab label="Additional Info" value="3" />
                   </Tabs>
                 </Box>
-                <TabPanel
-                  value="1"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="1" sx={{ padding: 0 }}>
                   <div className="mt-4 pt-4">
                     <ul>
                       {comments.isLoading || comments.data === undefined
@@ -211,16 +208,10 @@ const Home = ({ address }: HomeProps) => {
                     </div>
                   </footer>
                 </TabPanel>
-                <TabPanel
-                  value="2"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="2" sx={{ padding: 0 }}>
                   앙냥냥
                 </TabPanel>
-                <TabPanel
-                  value="3"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="3" sx={{ padding: 0 }}>
                   <section className="p-2 mt-4">
                     <div className="flex justify-between">
                       <p>author</p>
