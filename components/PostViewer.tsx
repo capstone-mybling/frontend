@@ -9,6 +9,7 @@ interface PostProps {
   address: string;
   content: string;
   UserName?: string;
+  UserAddr: string;
   UserImage?: string;
   likes: number;
   small?: boolean;
@@ -23,6 +24,7 @@ export default function PostViewer({
   address,
   content,
   UserName,
+  UserAddr,
   UserImage,
   likes,
   small,
@@ -60,7 +62,7 @@ export default function PostViewer({
                 size={"medium"}
                 UserName={UserName!}
                 UserImage={UserImage!}
-                UserAddr={address}
+                UserAddr={UserAddr}
               />
             </div>
             {/* 좋아요 수 */}
