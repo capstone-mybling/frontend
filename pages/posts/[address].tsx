@@ -9,7 +9,7 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import Tabs from "@mui/material/Tabs";
 import TabPanel from "@mui/lab/TabPanel";
-import { useMutation, useQuery } from "react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import { Post, PostComment, User } from "@/libs/client/types";
 import LikeButton from "@/components/LikeButton";
@@ -22,10 +22,10 @@ interface DetailPost extends Post {
   author: User;
   comments: PostComment[];
 }
-interface CommentsResponse extends PostComment {}
 interface commentPostForm {
   content: string;
 }
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -33,12 +33,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
-
 interface HomeProps {
   address: string;
 }
-
 const Home = ({ address }: HomeProps) => {
+  const queryClient = useQueryClient();
   //calling API and handling data
   const { data, status } = useQuery<DetailPost>(
     "post",
@@ -52,14 +51,16 @@ const Home = ({ address }: HomeProps) => {
   const [tabIndex, setTabIndex] = useState("1");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabIndex(newValue);
-    console.log(data);
   };
   const mutation = useMutation({
-    mutationFn: (data) => {
+    mutationFn: (data: commentPostForm) => {
       return axios.post(`/api/posts/${address}/comments`, data);
     },
+    onSuccess: (newComment) => {
+      queryClient.setQueryData("comments", () => [...comments.data!, newComment.data.data]);
+    },
   });
-  const { register, handleSubmit } = useForm<commentPostForm>();
+  const { register, handleSubmit, reset } = useForm<commentPostForm>();
   // // 댓글 삭제
   // const handleDeleteComment = (id: number) => {
   //   const updatedComments = comments.filter((comment) => comment.id !== id);
@@ -182,7 +183,10 @@ const Home = ({ address }: HomeProps) => {
                     <div>
                       <form
                         className="flex border-t border-neutral-300 p-3"
-                        // onSubmit={handleSubmit()}
+                        onSubmit={handleSubmit((data) => {
+                          mutation.mutate(data);
+                          reset();
+                        })}
                       >
                         <input
                           className="w-full ml-2 border-none outline-none focus:ring-0"
