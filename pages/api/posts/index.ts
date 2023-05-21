@@ -24,7 +24,10 @@ interface UploadForm {
  * @param request
  * @param response
  */
-const handler = async (request: NextApiRequest, response: NextApiResponse<any>) => {
+const handler = async (
+  request: NextApiRequest,
+  response: NextApiResponse<any>
+) => {
   const { user } = request.session;
 
   if (request.method === "GET") {
@@ -42,7 +45,10 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
         return {
           ...post,
           likes: await redis.sCard(`posts:${post.address}:likes`),
-          isLiked: await redis.sIsMember(`posts:${post.address}:likes`, user!.address),
+          isLiked: await redis.sIsMember(
+            `posts:${post.address}:likes`,
+            user!.address
+          ),
         };
       })
     );
@@ -54,7 +60,18 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
       data: posts,
     });
   } else if (request.method === "POST") {
-    const { from, to, hash, ipfsHash, imageHash, name, description, count, price } = request.body;
+    const {
+      from,
+      to,
+      hash,
+      ipfsHash,
+      imageHash,
+      name,
+      description,
+      count,
+      price,
+      itemId,
+    } = request.body;
     const contract = await client.contract.create({
       data: {
         fromAddress: from,
@@ -89,7 +106,7 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
         authorAddress: user!.address,
         contractAddress: contract.hash,
         address: ipfsHash,
-        thumbnail: "https://ipfs.io/ipfs/" + imageHash,
+        thumbnail: "https://gateway.pinata.cloud/ipfs/" + imageHash,
         price: +price,
         count: +count,
       },

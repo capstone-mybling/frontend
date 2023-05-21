@@ -9,19 +9,21 @@
  * 7. required 필드를 채우지 않았을 시, 제출 form 비활성화 효과를 주고싶음 (제출버튼 hover시 디자인과 마우스커서가 pointer로 변경되지 않게)
  */
 
-import { useForm, FieldErrors } from "react-hook-form";
+import { FieldErrors, useForm } from "react-hook-form";
 import Layout from "@/components/Layout";
 import { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
 import useWeb3 from "@/hooks/useWeb3";
 import axios from "axios";
+import { ethers } from "ethers";
 
 enum FileType {
   IMAGE = "image",
   VIDEO = "video",
   METADATA = "metadata",
 }
+
 interface UploadForm {
   name: string;
   externalUrl: string;
@@ -65,8 +67,27 @@ export default function Upload() {
     const { imageHash, ipfsHash } = response.data.data;
 
     if (!nftContract) return;
-    const mintResponse = await nftContract.mintToken(ipfsHash);
+    const mintResponse = await nftContract.mint(
+      `https://gateway.pinata.cloud/ipfs/${ipfsHash}`
+    );
+    const mintId = await nftContract.tokenCount();
+    const approvalResponse = await (
+      await nftContract.setApprovalForAll(
+        process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
+        true
+      )
+    ).wait();
 
+    // TODO: price 를 입력 값으로 고치기
+    const listingPrice = ethers.parseEther("0.001");
+    await (
+      await marketplaceContract.makeItem(
+        process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS,
+        mintId,
+        listingPrice
+      )
+    ).wait();
+    const itemId = await marketplaceContract.itemCount();
     const { from, to, hash } = mintResponse;
 
     const postResponse = await axios.post(
@@ -81,6 +102,7 @@ export default function Upload() {
         description,
         count,
         price,
+        itemId: Number(itemId),
       },
       {
         headers: {
@@ -103,7 +125,6 @@ export default function Upload() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     // e.preventDefault();
     const files = e.target?.files;
-    console.log(files);
     if (files && files.length > 0) {
       setUploadImg(files.item(0));
       setValue("image", files.item(0)!);
@@ -139,7 +160,8 @@ export default function Upload() {
                 <br />
                 Max upload size 30MB
               </p>
-              <span className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
+              <span
+                className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
                 + Add File
               </span>
             </label>
@@ -216,7 +238,8 @@ export default function Upload() {
             className="border-2 border-gray-300 rounded-xl w-full"
             id="input-price"
             type="number"
-            placeholder="Enter price for one piece"
+            step={0.000001}
+            placeholder="Enter price for one piece.         ex) 0.000134"
           />
         </div>
         <input

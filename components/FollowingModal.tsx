@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Modal from "@mui/material/Modal";
@@ -7,14 +6,17 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
 import axios from "axios";
-
+import { useMutation } from "react-query";
 
 interface Props {
   userFollowing: string[];
   delBtn?: boolean;
 }
 
-export default function FollowingModal({userFollowing, delBtn=true} : Props) {
+export default function FollowingModal({
+  userFollowing,
+  delBtn = true,
+}: Props) {
   // console.log("팔로잉목록 = ", userFollowing);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
@@ -30,13 +32,24 @@ export default function FollowingModal({userFollowing, delBtn=true} : Props) {
     boxShadow: 12,
     p: 2,
   };
-    const handleDeleteFollower = (delAddr: string) => {
-      axios
-        .delete(`api/users/follows/${delAddr}`)
-        .then((response) => console.log(response))
-        .catch((error) => console.log(error));
-      console.log("addr = ", delAddr);
-    };
+
+  const deleteMutation = useMutation(
+    (delAddr: string) => axios.delete(`api/users/follows/${delAddr}`),
+    {
+      onSuccess: () => {
+        console.log("following 삭제 성공!");
+      },
+    }
+  );
+
+  const handleDeleteFollower = (delAddr: string) => {
+    deleteMutation.mutate(delAddr);
+    // axios
+    //   .delete(`api/users/follows/${delAddr}`)
+    //   .then((response) => console.log(response))
+    //   .catch((error) => console.log(error));
+    console.log("addr = ", delAddr);
+  };
 
   return (
     <>
@@ -83,15 +96,17 @@ export default function FollowingModal({userFollowing, delBtn=true} : Props) {
                       UserAddr={following.address}
                     />
                     {delBtn ? (
-                    <button
-                      className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"
-                      onClick={(e) => {
-                        handleDeleteFollower(following.address);
-                      }}
-                    >
-                      삭제
-                    </button>
-                    ) : (<></>)}
+                      <button
+                        className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"
+                        onClick={(e) => {
+                          handleDeleteFollower(following.address);
+                        }}
+                      >
+                        삭제
+                      </button>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </li>
               ))}

@@ -12,41 +12,65 @@ const Explore: NextPage = () => {
         <div className="flex w-1/2 flex-col mt-14 space-y-4">
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
@@ -55,41 +79,65 @@ const Explore: NextPage = () => {
         <div className="flex w-1/2 flex-col space-y-4">
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>
           <PostViewer
             small
+            content="hello"
+            likes={2}
+            isLiked
             thumbnail={src}
             address={`posts/${2}`}
           ></PostViewer>

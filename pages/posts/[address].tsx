@@ -15,6 +15,8 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import Tabs from "@mui/material/Tabs";
 import TabPanel from "@mui/lab/TabPanel";
+import useWeb3 from "@/hooks/useWeb3";
+import { ethers } from "ethers";
 
 interface DetailPost extends Post {
   likes: number;
@@ -42,6 +44,8 @@ interface HomeProps {
 
 const Home = ({ address }: HomeProps) => {
   const queryClient = useQueryClient();
+  const { marketplaceContract } = useWeb3();
+
   //calling API and handling data
   const { data, status } = useQuery<DetailPost>(
     "post",
@@ -73,6 +77,15 @@ const Home = ({ address }: HomeProps) => {
   /* ********************************************** */
   //TODO: 자신의 댓글 삭제, 댓글마다 독립적인 좋아요 기능 연결
   /* ********************************************** */
+  const purchase = async () => {
+    const itemId = data.contract.itemId;
+    const response = await (
+      await marketplaceContract.purchaseItem(BigInt(3), {
+        value: ethers.parseEther(`${0.001 * 1.01}`),
+      })
+    ).wait();
+    console.log(response);
+  };
 
   return (
     <Layout disableFooter>
@@ -93,8 +106,11 @@ const Home = ({ address }: HomeProps) => {
                     : "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                 }
               />
-              <button className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70">
-                <a href="https://opensea.io/">구매하기</a>
+              <button
+                onClick={purchase}
+                className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70"
+              >
+                구매하기
               </button>
             </div>
           </div>

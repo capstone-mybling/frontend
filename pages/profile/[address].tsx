@@ -7,8 +7,10 @@ import src from "@public/exam2.png";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
-import { User,Post } from "@libs/client/types";
+import { User, Post } from "@libs/client/types";
 import { error } from "console";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import MypageLoading from "@/components/MypageLoading";
 
 interface userInfo extends User {
   followings: string[];
@@ -18,61 +20,62 @@ export default function UserPage() {
   const router = useRouter();
   const { address } = router.query;
 
-  const [value, setValue] = useState("1");
+  const queryClient = useQueryClient();
+  const { isLoading, data, error } = useQuery<userInfo>("userInfo", () =>
+    axios.get(`/api/users/${address}`).then((response) => response.data.data)
+  );
+
   const [userPost, setUserPost] = useState<Post[]>([]);
   const [follow, setFollow] = useState<string>("FOLLOW");
-  const [userInfo, setUserInfo] = useState<userInfo>({
-    id: 0,
-    address: "",
-    username: "",
-    avatar: "",
-    description: "",
-    lastLoginIP: "",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    isDeleted: false,
-    followers: [],
-    followings: [],
-  });
   const [activeTab, setActiveTab] = useState(1);
 
   useEffect(() => {
     axios
-      .get(`../api/users/${address}`)
+      .get("/api/users/me")
       .then((response) => {
-        // console.log(response.data.data);
-        setUserPost(response.data.data.posts.reverse());
-        setUserInfo(response.data.data);
+        const otherUserAddr = address;
+        const followingList = response.data.data.followings;
+        // console.log("other = ", otherUserAddr);
+        // console.log("list = ", followingList);
+        followingList.some((data: any) => data.address == otherUserAddr)
+          ? setFollow("UNFOLLOW")
+          : setFollow("FOLLOW");
       })
       .catch((error) => console.log(error));
-  }, [address]);
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+  });
 
-  useEffect(()=> {
-    axios.get('/api/users/me').then((response)=>{
-      const otherUserAddr = address;
-      const followingList = response.data.data.followings;
-      // console.log("other = ", otherUserAddr);
-      // console.log("list = ", followingList);
-      followingList.some((data: any) => data.address == otherUserAddr) ? setFollow("UNFOLLOW") : setFollow("FOLLOW")
-      }).catch((error)=> console.log(error))
-  },)
+  const addFollowing = useMutation(
+    () => axios.post(`/api/users/follows/${address}`),
+    {
+      onSuccess: () => {
+        setFollow("UNFOLLOW");
+        queryClient.invalidateQueries("userInfo");
+      },
+    }
+  );
+  const delFollowing = useMutation(
+    () => axios.delete(`/api/users/follows/${address}`),
+    {
+      onSuccess: () => {
+        setFollow("FOLLOW");
+        queryClient.invalidateQueries("userInfo");
+      },
+    }
+  );
 
   const handleFollowBtn = () => {
     if (follow === "FOLLOW") {
-      axios
-      .post(`/api/users/follows/${address}`)
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error));
-      setFollow("UNFOLLOW");
+      // axios
+      //   .post(`/api/users/follows/${address}`)
+      //   .then((response) => console.log(response))
+      //   .catch((error) => console.log(error));
+      addFollowing.mutate();
     } else {
-      axios
-      .delete(`/api/users/follows/${address}`)
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error));
-      setFollow("FOLLOW");
+      // axios
+      //   .delete(`/api/users/follows/${address}`)
+      //   .then((response) => console.log(response))
+      //   .catch((error) => console.log(error));
+      delFollowing.mutate();
     }
   };
 
@@ -80,7 +83,9 @@ export default function UserPage() {
     setActiveTab(tabIndex);
   };
 
-  return (
+  return isLoading || data == undefined ? (
+    <MypageLoading />
+  ) : (
     <Layout>
       <section className="flex flex-col justify-center items-center pb-12 border-b border-neutral-300 px-6">
         <div className="flex flex-row justify-end w-[115%] pt-2 pb-10">
@@ -93,18 +98,18 @@ export default function UserPage() {
         </div>
         <UserAvatar
           size="Xlarge"
-          UserImage={userInfo.avatar || ""}
-          UserName={userInfo.username || ""}
-          UserAddr={userInfo.address || ""}
+          UserImage={data.avatar || ""}
+          UserName={data.username || ""}
+          UserAddr={data.address || ""}
         />
         <div className="w-full">
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
-            <FollowerModal userFollower={userInfo?.followers} delBtn={false}/>
-            <FollowingModal userFollowing={userInfo?.followings} delBtn={false}/>
+            <FollowerModal userFollower={data?.followers} delBtn={false} />
+            <FollowingModal userFollowing={data?.followings} delBtn={false} />
           </div>
           <div className="text-gray-500">
             <div className="py-4 font-extrabold">About</div>
-            <p>{userInfo.description}</p>
+            <p>{data.description}</p>
           </div>
         </div>
         <div className="w-full flex flex-col">
@@ -116,7 +121,13 @@ export default function UserPage() {
               onClick={() => customTabChange(1)}
             >
               내가만든NFT
-              <p className={`${activeTab === 1 ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500" : ""}`}></p>
+              <p
+                className={`${
+                  activeTab === 1
+                    ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
+                    : ""
+                }`}
+              ></p>
             </button>
             <button
               className={`px-4 py-2 ${
@@ -125,38 +136,48 @@ export default function UserPage() {
               onClick={() => customTabChange(2)}
             >
               구매한NFT
-              <p className={`${activeTab === 2 ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500" : ""}`}></p>
+              <p
+                className={`${
+                  activeTab === 2
+                    ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
+                    : ""
+                }`}
+              ></p>
             </button>
           </div>
-          {activeTab === 1 && 
+          {activeTab === 1 && (
             <div>
-              {userPost.length === 0 ? (
+              {data.posts.length === 0 ? (
                 // react auery 사용해서 isloagin 구현예정
                 <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
                   <h1 className="text-2xl">게시글이 없습니다.</h1>
                 </div>
-                ) : (
+              ) : (
                 <div className="grid grid-cols-3 gap-1">
-                  {userPost.map((post) => (
-                    <li key={post.id} className="list-none">
-                      <Thumbnail
-                        thumbnail={post.thumbnail}
-                        address={post.address}
-                        option="Thumnail"
-                        link={post.address}
-                      />
-                    </li>
-                  ))}
+                  {data.posts
+                    .slice(0)
+                    .reverse()
+                    .map((post) => (
+                      <li key={post.id} className="list-none">
+                        <Thumbnail
+                          thumbnail={post.thumbnail}
+                          address={post.address}
+                          option="Thumnail"
+                          link={post.address}
+                        />
+                      </li>
+                    ))}
                 </div>
               )}
-            </div>}
-          {activeTab === 2 &&
+            </div>
+          )}
+          {activeTab === 2 && (
             <div className="grid grid-cols-3 gap-1">
-                <Thumbnail
-                  thumbnail={src}
-                  address={`posts/${2}`}
-                  option="Thumnail"
-                />
+              <Thumbnail
+                thumbnail={src}
+                address={`posts/${2}`}
+                option="Thumnail"
+              />
               <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
                 test
               </div>
@@ -167,7 +188,7 @@ export default function UserPage() {
                 test
               </div>
             </div>
-          }
+          )}
         </div>
       </section>
     </Layout>

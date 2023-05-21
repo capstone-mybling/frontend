@@ -10,6 +10,7 @@ import MypageLoading from "@/components/MypageLoading";
 import { useForm, FieldErrors } from "react-hook-form";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 
 interface UserWithFollow extends User {
   followings: string[];
@@ -29,22 +30,11 @@ interface UploadForm {
 }
 
 export default function MyPage() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userData, setUserData] = useState<UserWithFollow>({
-    id: 0,
-    address: "",
-    username: "",
-    avatar: "",
-    description: "",
-    lastLoginIP: "",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    isDeleted: false,
-    followers: [],
-    followings: [],
-  });
-  const [tabValue, setTabValue] = useState("1");
-  const [userPost, setUserPost] = useState<Post[]>([]);
+  const queryClient = useQueryClient();
+  const { isLoading, data, error } = useQuery<UserWithFollow>("userInfo", () =>
+    axios.get("api/users/me").then((response) => response.data.data)
+  );
+
   const [edit, setEdit] = useState<boolean>(false);
   const [editTitle, setEditTitle] = useState<string>("프로필 편집");
   const [uploadImg, setUploadImg] = useState<File | null>();
@@ -67,32 +57,7 @@ export default function MyPage() {
       setValue("image", files.item(0)!);
     }
   };
-  // console.log(uploadImg);
 
-  useEffect(() => {
-    axios
-      .get("api/users/me")
-      .then((response) => {
-        setUserData(response.data.data);
-        setUserPost(response.data.data.posts.reverse());
-        // console.log(response.data.data);
-        // console.log(userData.posts);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (userData) {
-      setIsLoading(false);
-      // console.log("로딩 끝, 받아온 데이터 = ", userData);
-    }
-  }, [userData]);
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    setTabValue(newValue);
-  };
   const handleProfileEdit = () => {
     setEdit(!edit);
     setEditTitle("저장하기");
@@ -106,6 +71,11 @@ export default function MyPage() {
     reset();
     setUploadImg(null);
   };
+
+  const editProfileMutation = useMutation((formData: FormData) =>
+    axios.patch("api/users/me", formData)
+  );
+
   const onNotValid = (errors: FieldErrors) => console.log(errors);
   const onValid = async (data: UploadForm) => {
     const { name, description } = data;
@@ -114,17 +84,18 @@ export default function MyPage() {
     form.append("username", name);
     form.append("description", description);
 
-    axios.patch("api/users/me", form);
+    await editProfileMutation.mutateAsync(form);
 
     resetForm();
     handleProfileEditSave();
+    queryClient.invalidateQueries("userInfo");
   };
 
   const customTabChange = (tabIndex: number) => {
     setActiveTab(tabIndex);
   };
 
-  return isLoading ? (
+  return isLoading || data == undefined ? (
     <MypageLoading />
   ) : (
     <Layout>
@@ -184,12 +155,12 @@ export default function MyPage() {
                   id="input-name"
                   type="text"
                   placeholder="edit your name"
-                  defaultValue={userData.username}
+                  defaultValue={data.username!}
                 />
               </div>
               <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl ">
-                <FollowerModal userFollower={userData?.followers} />
-                <FollowingModal userFollowing={userData?.followings} />
+                <FollowerModal userFollower={data?.followers} />
+                <FollowingModal userFollowing={data?.followings} />
               </div>
               <div className="text-gray-500">
                 <div className="py-4 font-extrabold">About</div>
@@ -198,7 +169,7 @@ export default function MyPage() {
                   type="text"
                   placeholder="edit your description"
                   className="w-full border-2 border-violet-200 rounded-xl"
-                  defaultValue={userData.description}
+                  defaultValue={data.description!}
                 ></input>
               </div>
             </form>
@@ -216,17 +187,17 @@ export default function MyPage() {
             </div>
             <UserAvatar
               size="Xlarge"
-              UserImage={userData?.avatar || ""}
-              UserName={userData?.username || ""}
-              UserAddr={userData?.address || ""}
+              UserImage={data?.avatar || ""}
+              UserName={data?.username || ""}
+              UserAddr={data?.address || ""}
             />
             <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl ">
-              <FollowerModal userFollower={userData?.followers} />
-              <FollowingModal userFollowing={userData?.followings} />
+              <FollowerModal userFollower={data?.followers} />
+              <FollowingModal userFollowing={data?.followings} />
             </div>
             <div className="text-gray-500">
               <div className="py-4 font-extrabold">About</div>
-              <p>{userData?.description}</p>
+              <p>{data?.description}</p>
             </div>
           </div>
         )}
@@ -239,7 +210,13 @@ export default function MyPage() {
               onClick={() => customTabChange(1)}
             >
               내가만든NFT
-              <p className={`${activeTab === 1 ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500" : ""}`}></p>
+              <p
+                className={`${
+                  activeTab === 1
+                    ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
+                    : ""
+                }`}
+              ></p>
             </button>
             <button
               className={`px-4 py-2 ${
@@ -248,50 +225,59 @@ export default function MyPage() {
               onClick={() => customTabChange(2)}
             >
               구매한NFT
-              <p className={`${activeTab === 2 ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500" : ""}`}></p>
+              <p
+                className={`${
+                  activeTab === 2
+                    ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
+                    : ""
+                }`}
+              ></p>
             </button>
           </div>
-            {activeTab === 1 && 
+          {activeTab === 1 && (
             <div>
-              {userPost.length === 0 ? (
-                // react auery 사용해서 isloagin 구현예정
+              {data.posts.length === 0 ? (
                 <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
                   <h1 className="text-2xl">게시글이 없습니다.</h1>
                 </div>
-                ) : (
+              ) : (
                 <div className="grid grid-cols-3 gap-1">
-                  {userPost.map((post) => (
-                    <li key={post.id} className="list-none">
-                      <Thumbnail
-                        thumbnail={post.thumbnail}
-                        address={post.address}
-                        option="Thumnail"
-                        link={post.address}
-                      />
-                    </li>
-                  ))}
+                  {data.posts
+                    .slice(0)
+                    .reverse()
+                    .map((post) => (
+                      <li key={post.id} className="list-none">
+                        <Thumbnail
+                          thumbnail={post.thumbnail}
+                          address={post.address}
+                          option="Thumnail"
+                          link={post.address}
+                        />
+                      </li>
+                    ))}
                 </div>
               )}
-            </div>}
-            {activeTab === 2 &&
-              <div className="grid grid-cols-3 gap-1">
-                <Thumbnail
-                  thumbnail={userData?.avatar}
-                  address={`posts/${2}`}
-                  option="Thumnail"
-                  link={userData?.address}
-                />
-                <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                  test
-                </div>
-                <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                  test
-                </div>
-                <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                  test
-                </div>
+            </div>
+          )}
+          {activeTab === 2 && (
+            <div className="grid grid-cols-3 gap-1">
+              <Thumbnail
+                thumbnail={data?.avatar}
+                address={`posts/${2}`}
+                option="Thumnail"
+                link={data?.address}
+              />
+              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                test
               </div>
-            }
+              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                test
+              </div>
+              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
+                test
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </Layout>
