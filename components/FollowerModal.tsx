@@ -1,7 +1,7 @@
 /**
  * Todo
  * - 팔로워 목록에서 삭제버튼은 어떻게 처리할지?
- * 
+ *
  */
 
 import { useState } from "react";
@@ -13,18 +13,12 @@ import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
 import axios from "axios";
 
-// interface followers {
-//   address:string;
-//   avatar:string;
-//   username:string;
-// }
-
 interface Props {
   userFollower: string[];
   delBtn?: boolean;
 }
 
-export default function FollowerModal({userFollower, delBtn=true }: Props) {
+export default function FollowerModal({ userFollower, delBtn = true }: Props) {
   // console.log("팔로워목록 = ", userFollower);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
@@ -92,15 +86,17 @@ export default function FollowerModal({userFollower, delBtn=true }: Props) {
                       UserAddr={follower.address}
                     />
                     {delBtn ? (
-                    <button
-                    className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"
-                    onClick={(e) => {
-                        handleDeleteFollower(follower.address);
-                      }}
-                    >
-                      삭제
-                    </button>
-                    ) : (<></>)}
+                      <button
+                        className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"
+                        onClick={(e) => {
+                          handleDeleteFollower(follower.address);
+                        }}
+                      >
+                        삭제
+                      </button>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </li>
               ))}

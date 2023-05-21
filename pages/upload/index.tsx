@@ -238,7 +238,8 @@ export default function Upload() {
             className="border-2 border-gray-300 rounded-xl w-full"
             id="input-price"
             type="number"
-            placeholder="Enter price for one piece"
+            step={0.000001}
+            placeholder="Enter price for one piece.         ex) 0.000134"
           />
         </div>
         <input

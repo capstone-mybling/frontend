@@ -12,6 +12,7 @@ export type User = {
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
+  posts: Post[];
 };
 
 /**
@@ -140,4 +141,5 @@ export enum StorageTypeEnum {
   IPFS = "IPFS",
 }
 
-export type StorageType = (typeof StorageTypeEnum)[keyof typeof StorageTypeEnum];
+export type StorageType =
+  (typeof StorageTypeEnum)[keyof typeof StorageTypeEnum];

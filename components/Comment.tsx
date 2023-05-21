@@ -8,7 +8,6 @@ interface CommentProps {
 }
 
 export default function Comment({ comment }: CommentProps) {
-  console.log(comment);
   return (
     <div className="grid grid-cols-8 items-start">
       <div className="justify-self-start">
