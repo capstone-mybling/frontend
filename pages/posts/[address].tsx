@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from "react";
-import { Post, PostComment, User } from "@/libs/client/types";
+import { Contract, Post, PostComment, User } from "@/libs/client/types";
 import { GetServerSideProps } from "next";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
@@ -19,6 +19,7 @@ import useWeb3 from "@/hooks/useWeb3";
 import { ethers } from "ethers";
 
 interface DetailPost extends Post {
+  contract: Contract;
   likes: number;
   isLiked: boolean;
   author: User;
@@ -78,7 +79,7 @@ const Home = ({ address }: HomeProps) => {
   //TODO: 자신의 댓글 삭제, 댓글마다 독립적인 좋아요 기능 연결
   /* ********************************************** */
   const purchase = async () => {
-    const itemId = data.contract.itemId;
+    const itemId = data!.contract.itemId;
     const response = await (
       await marketplaceContract.purchaseItem(BigInt(3), {
         value: ethers.parseEther(`${0.001 * 1.01}`),
