@@ -38,6 +38,7 @@ interface CommentDetail extends PostComment {
   };
   isMine: boolean;
   likes: number;
+  isLiked: boolean;
 }
 
 // issue:
@@ -206,31 +207,6 @@ const Home = ({ address }: HomeProps) => {
                           )))}
                     </ul>
                   </div>
-                  {/* footer의 위치는 어차피 고정이기 때문에 어디 있어도 똑같아서 댓글 탭 안에 포함 시킴 */}
-                  <footer className="sticky bottom-0 bg-white z-10 border-b">
-                    <div>
-                      {/* comment form */}
-                      <form
-                        className="flex border-t border-neutral-300 p-3"
-                        onSubmit={handleSubmit((data) => {
-                          mutation.mutate(data);
-                          reset();
-                        })}
-                      >
-                        <input
-                          className="w-full ml-2 border-none outline-none focus:ring-0"
-                          type="text"
-                          placeholder="Add a comment..."
-                          {...register("content", {
-                            required: "댓글을 입력하세요.",
-                          })}
-                        />
-                        <button className="font-bold text-violet-300 ml-2 transition-colors duration-300 hover:text-violet-700">
-                          Post
-                        </button>
-                      </form>
-                    </div>
-                  </footer>
                 </TabPanel>
                 <TabPanel value="2" sx={{ padding: 0 }}>
                   {/* sales section */}
@@ -262,6 +238,30 @@ const Home = ({ address }: HomeProps) => {
           </div>
         </Fragment>
       )}
+      {tabIndex === "1" ? (
+        <footer className="sticky bottom-0 bg-white z-10 border-b">
+          {/* comment form */}
+          <form
+            className="flex border-t border-neutral-300 p-3"
+            onSubmit={handleSubmit((data) => {
+              mutation.mutate(data);
+              reset();
+            })}
+          >
+            <input
+              className="w-full ml-2 border-none outline-none focus:ring-0"
+              type="text"
+              placeholder="Add a comment..."
+              {...register("content", {
+                required: "댓글을 입력하세요.",
+              })}
+            />
+            <button className="font-bold text-violet-300 ml-2 transition-colors duration-300 hover:text-violet-700">
+              Post
+            </button>
+          </form>
+        </footer>
+      ) : null}
     </Layout>
   );
 };
