@@ -106,12 +106,14 @@ const Home = ({ address }: HomeProps) => {
   //TODO: 자신의 댓글 삭제, 댓글마다 독립적인 좋아요 기능 연결
   /* ********************************************** */
   const purchase = async () => {
-    const itemId = data!.contract.itemId;
+    console.log(postData.price);
+    const itemId = postData!.contract.itemId;
     const response = await (
-      await marketplaceContract.purchaseItem(BigInt(3), {
-        value: ethers.parseEther(`${0.001 * 1.01}`),
+      await marketplaceContract.purchaseItem(BigInt(itemId), {
+        value: ethers.parseEther((postData.price * 1.01).toString()),
       })
     ).wait();
+    console.log(response);
   };
 
   return (

@@ -75,6 +75,7 @@ model Contract {
   authorAddress String
 
   hash   String @unique
+  mintId Int    @default(0)
   itemId Int    @default(0)
 
   fromAddress String
@@ -100,7 +101,7 @@ model Post {
   name        String
   description String
   thumbnail   String
-  price       Int
+  price       Float
   count       Int
 
   createdAt DateTime @default(now())

@@ -12,6 +12,7 @@ const handler = async (
   response: NextApiResponse<any>
 ) => {
   const { address } = request.body;
+  const lowerCaseAddress = address.toLowerCase();
 
   // address 가 없으면 에러
   if (!address) {
@@ -23,18 +24,22 @@ const handler = async (
   }
 
   // 이미 로그인 되어있으면 에러
-  if (request.session.user && request.session.user.address !== address) {
+  if (
+    request.session.user &&
+    request.session.user.address !== lowerCaseAddress
+  ) {
     request.session.destroy();
   }
 
   const findUser = await client.user.upsert({
     where: {
-      address: address,
+      address: lowerCaseAddress,
     },
     update: {},
     create: {
-      address: address,
-      avatar: generateIdenticon(address),
+      address: lowerCaseAddress,
+      avatar: generateIdenticon(lowerCaseAddress),
+      username: lowerCaseAddress,
     },
   });
 

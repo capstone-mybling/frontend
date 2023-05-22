@@ -85,6 +85,7 @@ const handler = async (
       description,
       count,
       price,
+      mintId,
       itemId,
     } = request.body;
     const contract = await client.contract.create({
@@ -93,6 +94,8 @@ const handler = async (
         toAddress: to,
         hash,
         authorAddress: user!.address,
+        itemId,
+        mintId,
       },
     });
 
