@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
 import axios from "axios";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 interface Props {
   userFollowing: string[];
@@ -32,12 +32,14 @@ export default function FollowingModal({
     boxShadow: 12,
     p: 2,
   };
+  const queryClient = useQueryClient();
 
   const deleteMutation = useMutation(
     (delAddr: string) => axios.delete(`api/users/follows/${delAddr}`),
     {
       onSuccess: () => {
         console.log("following 삭제 성공!");
+        queryClient.invalidateQueries("userInfo");
       },
     }
   );

@@ -15,10 +15,9 @@ import axios from "axios";
 
 interface Props {
   userFollower: string[];
-  delBtn?: boolean;
 }
 
-export default function FollowerModal({ userFollower, delBtn = true }: Props) {
+export default function FollowerModal({ userFollower }: Props) {
   // console.log("팔로워목록 = ", userFollower);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
@@ -85,18 +84,6 @@ export default function FollowerModal({ userFollower, delBtn = true }: Props) {
                       UserName={follower?.username!}
                       UserAddr={follower.address}
                     />
-                    {delBtn ? (
-                      <button
-                        className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"
-                        onClick={(e) => {
-                          handleDeleteFollower(follower.address);
-                        }}
-                      >
-                        삭제
-                      </button>
-                    ) : (
-                      <></>
-                    )}
                   </div>
                 </li>
               ))}

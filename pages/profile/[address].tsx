@@ -11,15 +11,25 @@ import { User, Post } from "@libs/client/types";
 import { error } from "console";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import MypageLoading from "@/components/MypageLoading";
+import { GetServerSideProps } from "next";
 
 interface userInfo extends User {
   followings: string[];
   followers: string[];
 }
-export default function UserPage() {
-  const router = useRouter();
-  const { address } = router.query;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      address: context.query.address,
+    },
+  };
+};
 
+interface HomeProps {
+  address: string;
+}
+
+const Home = ({ address }: HomeProps) => {
   const queryClient = useQueryClient();
   const { isLoading, data, error } = useQuery<userInfo>("userInfo", () =>
     axios.get(`/api/users/${address}`).then((response) => response.data.data)
@@ -193,4 +203,6 @@ export default function UserPage() {
       </section>
     </Layout>
   );
-}
+};
+
+export default Home;
