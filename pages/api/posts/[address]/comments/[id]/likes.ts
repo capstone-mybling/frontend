@@ -59,19 +59,21 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
     }
 
     // 실제 좋아요 생성 처리 로직
-    await client.postCommentLike.create({
-      data: {
-        userAddress: user!.address,
-        commentId: +findComment!.id,
-      },
-    });
-    await redis.sAdd(`post:comment:${id}:likes`, user!.address);
+    else {
+      await client.postCommentLike.create({
+        data: {
+          userAddress: user!.address,
+          commentId: +findComment!.id,
+        },
+      });
+      await redis.sAdd(`post:comment:${id}:likes`, user!.address);
 
-    baseResponse(response, {
-      statusCode: 201,
-      success: true,
-      data: null,
-    });
+      baseResponse(response, {
+        statusCode: 201,
+        success: true,
+        data: null,
+      });
+    }
   } else if (request.method === "DELETE") {
     if (!existLike) {
       baseResponse(response, {
