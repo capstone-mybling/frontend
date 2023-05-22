@@ -11,7 +11,10 @@ import ErrorCode from "@libs/server/error_code";
  * @param request
  * @param response
  */
-const handler = async (request: NextApiRequest, response: NextApiResponse<any>) => {
+const handler = async (
+  request: NextApiRequest,
+  response: NextApiResponse<any>
+) => {
   const { address, id } = request.query;
   const { user } = request.session;
   const redis = await getRedisClient();
@@ -43,7 +46,7 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
   });
 
   const existLike: boolean = await redis
-    .sMembers(`post:comment:${id}:likes`)
+    .sMembers(`posts:comments:${id}:likes`)
     .then((likes) => likes.some((like) => like === user!.address));
 
   if (request.method === "POST") {
@@ -65,7 +68,8 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
         commentId: +findComment!.id,
       },
     });
-    await redis.sAdd(`post:comment:${id}:likes`, user!.address);
+
+    await redis.sAdd(`posts:comments:${id}:likes`, user!.address);
 
     baseResponse(response, {
       statusCode: 201,
@@ -92,7 +96,8 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
           },
         },
       });
-      await redis.sRem(`post:comment:${id}:likes`, user!.address);
+
+      await redis.sRem(`posts:comments:${id}:likes`, user!.address);
 
       baseResponse<null>(response, {
         statusCode: 204,

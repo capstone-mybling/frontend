@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { Contract, Post, PostComment, User } from "@/libs/client/types";
 import { GetServerSideProps } from "next";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { dateCalculator } from "@libs/client/dateCalculator";
 import axios from "axios";
@@ -61,17 +61,26 @@ const Home = ({ address }: HomeProps) => {
   const { marketplaceContract } = useWeb3();
 
   //calling API and handling data
-  const { data, status } = useQuery<DetailPost>(
-    "post",
-    async () =>
-      await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
-  );
+  const { data: postData, isLoading: postIsLoading } = useQuery<DetailPost>({
+    queryKey: ["posts", address],
+    queryFn: async () =>
+      await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
+  });
+
+  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<
+    CommentDetail[]
+  >({
+    queryKey: ["postComments", address],
+    queryFn: async () =>
+      await axios
+        .get(`/api/posts/${address}/comments`)
+        .then((res) => res.data.data),
+  });
 
   // MUI tabs
   const [tabIndex, setTabIndex] = useState("1");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabIndex(newValue);
-    console.log(comments);
   };
 
   // comments mutation using react-query
@@ -80,10 +89,7 @@ const Home = ({ address }: HomeProps) => {
       return axios.post(`/api/posts/${address}/comments`, data);
     },
     onSuccess: (newComment) => {
-      queryClient.setQueryData("comments", () => [
-        ...comments.data!,
-        newComment.data.data,
-      ]);
+      queryClient.invalidateQueries(["postComments", address]);
     },
   });
   // new comment form
@@ -104,7 +110,7 @@ const Home = ({ address }: HomeProps) => {
 
   return (
     <Layout disableFooter>
-      {status !== "success" ? (
+      {postIsLoading ? (
         <h2>Loading...</h2>
       ) : (
         <Fragment>
@@ -113,13 +119,9 @@ const Home = ({ address }: HomeProps) => {
             <div className="flex flex-1 items-center justify-between">
               <UserAvatar
                 size="medium"
-                UserAddr={data.authorAddress}
-                UserName={data.author.username!}
-                UserImage={
-                  data.author.avatar
-                    ? data.author.avatar
-                    : "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                }
+                UserAddr={postData.authorAddress}
+                UserName={postData.author?.username}
+                UserImage={postData.author.avatar}
               />
               <button
                 onClick={purchase}
@@ -132,8 +134,8 @@ const Home = ({ address }: HomeProps) => {
           <div className="flex justify-center align-middle py-6 ">
             <Image
               className="h-full x-auto block object-cover m-0"
-              src={`${data.thumbnail}`}
-              alt={data.name}
+              src={`${postData.thumbnail}`}
+              alt={postData.name}
               width="2000"
               height="2000"
             />
@@ -150,9 +152,9 @@ const Home = ({ address }: HomeProps) => {
               </div>
               <div className="flex items-center justify-end my-3">
                 <LikeButton
-                  isLiked={data.isLiked}
-                  likes={data.likes}
-                  address={data.address}
+                  isLiked={postData.isLiked}
+                  likes={postData.likes}
+                  address={postData.address}
                 />
               </div>
             </section>
@@ -160,15 +162,15 @@ const Home = ({ address }: HomeProps) => {
             <section className="px-2">
               <div className="flex justify-between items-center">
                 <div>
-                  <h1 className="font-bold text-2xl">{data.name}</h1>
+                  <h1 className="font-bold text-2xl">{postData.name}</h1>
                 </div>
                 <div>
                   <p className="text-gray-500">
-                    {dateCalculator(data.createdAt)}
+                    {dateCalculator(postData.createdAt)}
                   </p>
                 </div>
               </div>
-              <p className="my-4">{data.description}</p>
+              <p className="my-4">{postData.description}</p>
             </section>
             <Box sx={{ width: "100%", typography: "body1" }}>
               <TabContext value={tabIndex}>
@@ -181,7 +183,7 @@ const Home = ({ address }: HomeProps) => {
                     aria-label="secondary tabs example"
                   >
                     <Tab
-                      label={`Comments (${data.comments.length})`}
+                      label={`Comments (${postData.comments.length})`}
                       value="1"
                     />
                     <Tab label="Sales" value="2" />
@@ -192,16 +194,16 @@ const Home = ({ address }: HomeProps) => {
                   {/* comments section */}
                   <div className="mt-4 pt-4">
                     <ul>
-                      {comments.isLoading || comments.data === undefined
-                        ? null
-                        : comments.data.map((comment) => (
+                      {commentsIsLoading ||
+                        (commentsData &&
+                          commentsData.map((comment) => (
                             <li
                               key={comment.id}
                               className="flex justify-between px-5 flex-col pb-4"
                             >
                               <Comment comment={comment} />
                             </li>
-                          ))}
+                          )))}
                     </ul>
                   </div>
                   {/* footer의 위치는 어차피 고정이기 때문에 어디 있어도 똑같아서 댓글 탭 안에 포함 시킴 */}
@@ -239,19 +241,19 @@ const Home = ({ address }: HomeProps) => {
                   <section className="p-2 mt-4">
                     <div className="flex justify-between">
                       <p>author</p>
-                      <p>{data.author.username}</p>
+                      <p>{postData.author.username}</p>
                     </div>
                     <div className="flex justify-between">
                       <p>price</p>
-                      <p>{data.price}</p>
+                      <p>{postData.price}</p>
                     </div>
                     <div className="flex justify-between">
                       <p>copies</p>
-                      <p>{data.count}</p>
+                      <p>{postData.count}</p>
                     </div>
                     <div className="flex justify-between">
                       <p>contract</p>
-                      <p className="w-3/4">{data.contractAddress}</p>
+                      <p className="w-3/4">{postData.contractAddress}</p>
                     </div>
                   </section>
                 </TabPanel>

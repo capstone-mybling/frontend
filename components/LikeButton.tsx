@@ -1,6 +1,6 @@
 import { cls } from "@/libs/client/utils";
 import axios from "axios";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import HeartFillIcon from "./icons/HeartFillIcon";
 import HeartIcon from "./icons/HeartIcons";
@@ -12,13 +12,22 @@ interface LikeButtonProps {
   comment?: string;
 }
 
-export default function LikeButton({ isLiked, likes, address, comment, ...rest }: LikeButtonProps) {
+export default function LikeButton({
+                                     isLiked,
+                                     likes,
+                                     address,
+                                     comment,
+                                     ...rest
+                                   }: LikeButtonProps) {
   const [fillHeart, setFillHeart] = useState<boolean>(isLiked || false);
   const [likeCount, setLikeCount] = useState<number>(likes || 0);
+
   const disLikeMutation = useMutation(
     () =>
       axios.delete(
-        comment ? `/api/posts/${address}/comments/${comment}/likes` : `/api/posts/${address}/likes`
+        comment
+          ? `/api/posts/${address}/comments/${comment}/likes`
+          : `/api/posts/${address}/likes`
       ),
     {
       onSuccess: () => {
@@ -27,10 +36,13 @@ export default function LikeButton({ isLiked, likes, address, comment, ...rest }
       },
     }
   );
+
   const likeMutation = useMutation(
     () =>
       axios.post(
-        comment ? `/api/posts/${address}/comments/${comment}/likes` : `/api/posts/${address}/likes`
+        comment
+          ? `/api/posts/${address}/comments/${comment}/likes`
+          : `/api/posts/${address}/likes`
       ),
     {
       onSuccess: () => {
@@ -39,8 +51,8 @@ export default function LikeButton({ isLiked, likes, address, comment, ...rest }
       },
     }
   );
+
   const handleLike = async () => {
-    console.log(comment);
     if (fillHeart) {
       //do dislike
       disLikeMutation.mutate();

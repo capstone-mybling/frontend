@@ -75,21 +75,6 @@ const handler = async (
   if (request.method === "GET") {
     const redis = await getRedisClient();
 
-    const commentsWithLikes = await Promise.all(
-      findPost.comments.map(async (comment) => {
-        return {
-          ...comment,
-          likes: await redis.sCard(`posts:comments:${findPost.address}:likes`),
-          isLiked:
-            user &&
-            (await redis.sIsMember(
-              `posts:comments:${findPost.address}:likes`,
-              user!.address
-            )),
-        };
-      })
-    );
-
     return baseResponse(response, {
       statusCode: 200,
       success: true,
@@ -100,7 +85,6 @@ const handler = async (
           `posts:${findPost.address}:likes`,
           user!.address
         ),
-        comments: commentsWithLikes,
       },
     });
   } else if (request.method === "PATCH") {
