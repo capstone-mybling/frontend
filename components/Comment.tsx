@@ -20,35 +20,27 @@ interface CommentProps {
 
 export default function Comment({ comment }: CommentProps) {
   return (
-    <div className="grid grid-cols-8 items-start">
-      <div className="justify-self-start">
-        <UserAvatar
-          size="small"
-          UserAddr={comment.authorAddress}
-          UserName={"1212"}
-          UserImage={
-            "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          }
-        />
+    <div className="flex items-center w-full justify-between">
+      <div className="flex">
+        <div className="justify-start w-auto mr-2">
+          <UserAvatar
+            size="small"
+            UserAddr={comment.authorAddress}
+            UserName={comment.author.username}
+            UserImage={comment.author.avatar}
+          />
+        </div>
+        <div className="flex-row justify-self-stretch pr-3 ">
+          <p className="">{comment.content}</p>
+          <div className="text-gray-500 text-xs">{dateCalculator(comment.createdAt)}</div>
+        </div>
       </div>
-      <div className="flex-row justify-self-stretch col-start-3 col-end-8 pr-3">
-        <p className="">{comment.content}</p>
-        <div className="text-gray-500 text-xs">{dateCalculator(comment.createdAt)}</div>
-      </div>
-      <div className="flex justify-self-end">
-        <LikeButton
-          isLiked={comment.isLiked}
-          likes={comment.likes}
-          address={comment.postAddress}
-          comment={comment.id.toString()}
-        />
-        <button
-          className="text-violet-200 ml-2 text-xl"
-          // onClick={() => handleDeleteComment(comment.id)}
-        >
-          X
-        </button>
-      </div>
+      <LikeButton
+        isLiked={comment.isLiked}
+        likes={comment.likes}
+        address={comment.postAddress}
+        comment={comment.id.toString()}
+      />
     </div>
   );
 }

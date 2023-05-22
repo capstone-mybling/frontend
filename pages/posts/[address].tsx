@@ -71,6 +71,7 @@ const Home = ({ address }: HomeProps) => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabIndex(newValue);
     console.log(comments);
+    console.log(data);
   };
 
   // comments mutation using react-query
