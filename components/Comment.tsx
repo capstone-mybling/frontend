@@ -3,8 +3,19 @@ import LikeButton from "./LikeButton";
 import { PostComment } from "@/libs/client/types";
 import { dateCalculator } from "@/libs/client/dateCalculator";
 
+interface CommentDetail extends PostComment {
+  author: {
+    address: string;
+    avatar: string;
+    username: string;
+  };
+  isMine: boolean;
+  likes: number;
+  isLiked: boolean;
+}
+
 interface CommentProps {
-  comment: PostComment;
+  comment: CommentDetail;
 }
 
 export default function Comment({ comment }: CommentProps) {
@@ -26,10 +37,10 @@ export default function Comment({ comment }: CommentProps) {
       </div>
       <div className="flex justify-self-end">
         <LikeButton
-          isLiked={false}
-          likes={1}
-          address=""
-          comment
+          isLiked={comment.isLiked}
+          likes={comment.likes}
+          address={comment.postAddress}
+          comment={comment.id.toString()}
         />
         <button
           className="text-violet-200 ml-2 text-xl"
