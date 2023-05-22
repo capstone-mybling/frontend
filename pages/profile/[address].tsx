@@ -2,7 +2,6 @@ import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import src from "@public/exam2.png";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
@@ -10,21 +9,31 @@ import FollowingModal from "@/components/FollowingModal";
 import { Post, User } from "@libs/client/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import MypageLoading from "@/components/MypageLoading";
+import { GetServerSideProps } from "next";
 
 interface userInfo extends User {
   followings: string[];
   followers: string[];
 }
 
-enum Tab {
-  POST = 1,
-  OWNED = 2,
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      address: context.query.address,
+    },
+  };
+};
+
+interface HomeProps {
+  address: string;
 }
 
-export default function UserPage() {
-  const router = useRouter();
-  const { address } = router.query;
+enum TabType {
+  POST = "post",
+  OWNED = "owned",
+}
 
+const Home = ({ address }: HomeProps) => {
   const queryClient = useQueryClient();
   const { isLoading, data, error } = useQuery<userInfo>({
     queryKey: ["users", address!],
@@ -34,7 +43,7 @@ export default function UserPage() {
 
   const [userPost, setUserPost] = useState<Post[]>([]);
   const [follow, setFollow] = useState<string>("FOLLOW");
-  const [activeTab, setActiveTab] = useState<Tab>(Tab.POST);
+  const [activeTab, setActiveTab] = useState<TabType>(TabType.POST);
 
   useEffect(() => {
     axios
@@ -56,7 +65,7 @@ export default function UserPage() {
     {
       onSuccess: () => {
         setFollow("UNFOLLOW");
-        await queryClient.invalidateQueries(["users", address!]);
+        queryClient.invalidateQueries(["users", address!]);
       },
     }
   );
@@ -65,7 +74,7 @@ export default function UserPage() {
     {
       onSuccess: () => {
         setFollow("FOLLOW");
-        await queryClient.invalidateQueries(["users", address!]);
+        queryClient.invalidateQueries(["users", address!]);
       },
     }
   );
@@ -86,7 +95,7 @@ export default function UserPage() {
     }
   };
 
-  const customTabChange = (tabIndex: number) => {
+  const customTabChange = (tabIndex: TabType) => {
     setActiveTab(tabIndex);
   };
 
@@ -123,34 +132,38 @@ export default function UserPage() {
           <div className="mx-auto my-5">
             <button
               className={`px-4 py-2 ${
-                activeTab === Tab.POST ? "text-violet-500" : "text-violet-300"
+                activeTab === TabType.POST
+                  ? "text-violet-500"
+                  : "text-violet-300"
               }`}
-              onClick={() => customTabChange(1)}
+              onClick={() => customTabChange(TabType.POST)}
             >
               생성한 NFT
               <p
                 className={`${
-                  activeTab === Tab.POST &&
+                  activeTab === TabType.POST &&
                   "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
                 }`}
               ></p>
             </button>
             <button
               className={`px-4 py-2 ${
-                activeTab === Tab.OWNED ? "text-violet-500" : "text-violet-300"
+                activeTab === TabType.OWNED
+                  ? "text-violet-500"
+                  : "text-violet-300"
               }`}
-              onClick={() => customTabChange(2)}
+              onClick={() => customTabChange(TabType.OWNED)}
             >
               구매한 NFT
               <p
                 className={`${
-                  activeTab === Tab.OWNED &&
+                  activeTab === TabType.OWNED &&
                   "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
                 }`}
               ></p>
             </button>
           </div>
-          {activeTab === Tab.POST && (
+          {activeTab === TabType.POST && (
             <div>
               {data.posts.length === 0 ? (
                 // react auery 사용해서 isloagin 구현예정
@@ -176,7 +189,7 @@ export default function UserPage() {
               )}
             </div>
           )}
-          {activeTab === Tab.OWNED && (
+          {activeTab === TabType.OWNED && (
             <div className="grid grid-cols-3 gap-1">
               <Thumbnail
                 thumbnail={src}
@@ -198,4 +211,6 @@ export default function UserPage() {
       </section>
     </Layout>
   );
-}
+};
+
+export default Home;
