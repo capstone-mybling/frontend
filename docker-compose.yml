@@ -14,21 +14,9 @@ services:
     networks:
       - app-network
 
-  ipfs:
-    image: ipfs/go-ipfs
-    command: ["daemon", "--migrate=true"]
-    ports:
-      - "5001:5001"
-      - "8080:8080"
-      - "4001:4001"
-    volumes:
-      - ipfs-data:/data/ipfs
-    networks:
-      - app-network
-
   redis:
     image: redis:latest
-    command: ["redis-server", "--requirepass", "mypassword", "--appendonly", "yes"]
+    command: [ "redis-server", "--requirepass", "mypassword", "--appendonly", "yes" ]
     ports:
       - "6379:6379"
     volumes:

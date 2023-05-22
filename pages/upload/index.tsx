@@ -79,7 +79,7 @@ export default function Upload() {
     ).wait();
 
     // TODO: price 를 입력 값으로 고치기
-    const listingPrice = ethers.parseEther("0.001");
+    const listingPrice = ethers.parseEther(price.toString());
     await (
       await marketplaceContract.makeItem(
         process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS,
@@ -88,8 +88,6 @@ export default function Upload() {
       )
     ).wait();
     const itemId = await marketplaceContract.itemCount();
-    console.dir(marketplaceContract);
-    console.log(itemId);
     const { from, to, hash } = mintResponse;
 
     const postResponse = await axios.post(
@@ -104,6 +102,7 @@ export default function Upload() {
         description,
         count,
         price,
+        mintId: Number(mintId),
         itemId: Number(itemId),
       },
       {

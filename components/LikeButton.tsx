@@ -1,6 +1,6 @@
 import { cls } from "@/libs/client/utils";
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import HeartFillIcon from "./icons/HeartFillIcon";
 import HeartIcon from "./icons/HeartIcons";
@@ -12,22 +12,15 @@ interface LikeButtonProps {
   comment?: string;
 }
 
-export default function LikeButton({
-                                     isLiked,
-                                     likes,
-                                     address,
-                                     comment,
-                                     ...rest
-                                   }: LikeButtonProps) {
+export default function LikeButton({ isLiked, likes, address, comment, ...rest }: LikeButtonProps) {
   const [fillHeart, setFillHeart] = useState<boolean>(isLiked || false);
   const [likeCount, setLikeCount] = useState<number>(likes || 0);
+  const queryClient = useQueryClient();
 
   const disLikeMutation = useMutation(
     () =>
       axios.delete(
-        comment
-          ? `/api/posts/${address}/comments/${comment}/likes`
-          : `/api/posts/${address}/likes`
+        comment ? `/api/posts/${address}/comments/${comment}/likes` : `/api/posts/${address}/likes`
       ),
     {
       onSuccess: () => {
@@ -40,9 +33,7 @@ export default function LikeButton({
   const likeMutation = useMutation(
     () =>
       axios.post(
-        comment
-          ? `/api/posts/${address}/comments/${comment}/likes`
-          : `/api/posts/${address}/likes`
+        comment ? `/api/posts/${address}/comments/${comment}/likes` : `/api/posts/${address}/likes`
       ),
     {
       onSuccess: () => {
@@ -63,7 +54,10 @@ export default function LikeButton({
   };
   return (
     <div
-      className={cls("flex items-center space-x-1 hover:cursor-pointer")}
+      className={cls(
+        "flex items-center space-x-1 hover:cursor-pointer",
+        comment ? "w-8 text-m" : ""
+      )}
       onClick={handleLike}
     >
       {fillHeart ? <HeartFillIcon /> : <HeartIcon />}

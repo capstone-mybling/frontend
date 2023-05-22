@@ -69,19 +69,14 @@ const Home = ({ address }: HomeProps) => {
 
   //calling API and handling data
   const { data: postData, isLoading: postIsLoading } = useQuery<DetailPost>({
-    queryKey: ["posts", address],
-    queryFn: async () =>
-      await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
+    queryKey: ["post", address],
+    queryFn: async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
   });
 
-  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<
-    CommentDetail[]
-  >({
+  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<CommentDetail[]>({
     queryKey: ["postComments", address],
     queryFn: async () =>
-      await axios
-        .get(`/api/posts/${address}/comments`)
-        .then((res) => res.data.data),
+      await axios.get(`/api/posts/${address}/comments`).then((res) => res.data.data),
   });
 
   // MUI tabs
@@ -106,12 +101,14 @@ const Home = ({ address }: HomeProps) => {
   //TODO: 자신의 댓글 삭제, 댓글마다 독립적인 좋아요 기능 연결
   /* ********************************************** */
   const purchase = async () => {
-    const itemId = data!.contract.itemId;
+    console.log(postData.price);
+    const itemId = postData!.contract.itemId;
     const response = await (
-      await marketplaceContract.purchaseItem(BigInt(3), {
-        value: ethers.parseEther(`${0.001 * 1.01}`),
+      await marketplaceContract.purchaseItem(BigInt(itemId), {
+        value: ethers.parseEther((postData.price * 1.01).toString()),
       })
     ).wait();
+    console.log(response);
   };
 
   return (
@@ -151,9 +148,7 @@ const Home = ({ address }: HomeProps) => {
             <section className="flex justify-between mb-4">
               <div className="px-1 flex space-x-2 items-center">
                 <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
-                <span className="text-sm font-extrabold text-gray-500">
-                  Current Owner
-                </span>
+                <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
                 <span className="text-sm font-extrabold">hazzun</span>
               </div>
               <div className="flex items-center justify-end my-3">
@@ -171,9 +166,7 @@ const Home = ({ address }: HomeProps) => {
                   <h1 className="font-bold text-2xl">{postData.name}</h1>
                 </div>
                 <div>
-                  <p className="text-gray-500">
-                    {dateCalculator(postData.createdAt)}
-                  </p>
+                  <p className="text-gray-500">{dateCalculator(postData.createdAt)}</p>
                 </div>
               </div>
               <p className="my-4">{postData.description}</p>
@@ -192,11 +185,20 @@ const Home = ({ address }: HomeProps) => {
                       label={`Comments (${postData.comments.length})`}
                       value={TabType.COMMENTS}
                     />
-                    <Tab label="Sales" value={TabType.SALES} />
-                    <Tab label="Additional Info" value={TabType.ADDITIONAL} />
+                    <Tab
+                      label="Sales"
+                      value={TabType.SALES}
+                    />
+                    <Tab
+                      label="Additional Info"
+                      value={TabType.ADDITIONAL}
+                    />
                   </Tabs>
                 </Box>
-                <TabPanel value={TabType.COMMENTS} sx={{ padding: 0 }}>
+                <TabPanel
+                  value={TabType.COMMENTS}
+                  sx={{ padding: 0 }}
+                >
                   {/* comments section */}
                   <div className="mt-4 pt-4">
                     <ul>
@@ -213,11 +215,17 @@ const Home = ({ address }: HomeProps) => {
                     </ul>
                   </div>
                 </TabPanel>
-                <TabPanel value={TabType.SALES} sx={{ padding: 0 }}>
+                <TabPanel
+                  value={TabType.SALES}
+                  sx={{ padding: 0 }}
+                >
                   {/* sales section */}
                   앙냥냥
                 </TabPanel>
-                <TabPanel value={TabType.ADDITIONAL} sx={{ padding: 0 }}>
+                <TabPanel
+                  value={TabType.ADDITIONAL}
+                  sx={{ padding: 0 }}
+                >
                   {/* additional information section */}
                   <section className="p-2 mt-4">
                     <div className="flex justify-between">
