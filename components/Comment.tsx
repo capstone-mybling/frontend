@@ -24,6 +24,7 @@ export default function Comment({ comment }: CommentProps) {
       <div className="flex">
         <div className="justify-start w-auto mr-2">
           <UserAvatar
+            isMine={comment.isMine}
             size="small"
             UserAddr={comment.authorAddress}
             UserName={comment.author.username}
