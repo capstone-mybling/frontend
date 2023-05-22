@@ -11,7 +11,10 @@ import getRedisClient from "@libs/server/redis";
  * @param request
  * @param response
  */
-const handler = async (request: NextApiRequest, response: NextApiResponse<any>) => {
+const handler = async (
+  request: NextApiRequest,
+  response: NextApiResponse<any>
+) => {
   const { address } = request.query;
   const { user } = request.session;
   const redis = await getRedisClient();
@@ -21,6 +24,7 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
     const findPostComments = await client.postComment.findMany({
       where: {
         postAddress: address as string,
+        isDeleted: false,
       },
       include: {
         author: {
@@ -39,7 +43,11 @@ const handler = async (request: NextApiRequest, response: NextApiResponse<any>) 
           ...comment,
           likes: await redis.sCard(`posts:comments:${comment.id}:likes`),
           isLiked:
-            user && (await redis.sIsMember(`posts:comments:${comment.id}:likes`, user!.address)),
+            user &&
+            (await redis.sIsMember(
+              `posts:comments:${comment.id}:likes`,
+              user!.address
+            )),
           isMine: comment.authorAddress === user!.address,
         };
       })

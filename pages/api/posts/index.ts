@@ -33,7 +33,22 @@ const handler = async (
   if (request.method === "GET") {
     const redis = await getRedisClient();
 
+    console.log(user);
+
+    const followings = await redis.sMembers(`user:${user!.address}:followings`);
+
     const findPosts = await client.post.findMany({
+      where: {
+        OR: {
+          author: {
+            is: {
+              address: {
+                in: [...followings, user.address],
+              },
+            },
+          },
+        },
+      },
       include: {
         author: true,
         comments: true,
@@ -45,15 +60,15 @@ const handler = async (
         return {
           ...post,
           likes: await redis.sCard(`posts:${post.address}:likes`),
-          isLiked: await redis.sIsMember(
-            `posts:${post.address}:likes`,
-            user!.address
-          ),
+          isLiked:
+            !user ||
+            (await redis.sIsMember(
+              `posts:${post.address}:likes`,
+              user!.address
+            )),
         };
       })
     );
-
-    console.log(posts);
 
     return baseResponse(response, {
       success: true,

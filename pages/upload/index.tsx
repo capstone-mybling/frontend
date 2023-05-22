@@ -71,7 +71,7 @@ export default function Upload() {
       `https://gateway.pinata.cloud/ipfs/${ipfsHash}`
     );
     const mintId = await nftContract.tokenCount();
-    const approvalResponse = await (
+    await (
       await nftContract.setApprovalForAll(
         process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
         true
@@ -88,6 +88,8 @@ export default function Upload() {
       )
     ).wait();
     const itemId = await marketplaceContract.itemCount();
+    console.dir(marketplaceContract);
+    console.log(itemId);
     const { from, to, hash } = mintResponse;
 
     const postResponse = await axios.post(
@@ -160,8 +162,7 @@ export default function Upload() {
                 <br />
                 Max upload size 30MB
               </p>
-              <span
-                className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
+              <span className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
                 + Add File
               </span>
             </label>

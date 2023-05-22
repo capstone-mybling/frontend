@@ -92,14 +92,27 @@ const handler = async (
     });
   } else if (request.method === "PATCH") {
     const formData = await parsedFormData(request);
-    console.log(formData.files.avatar);
-    const avatar = fs.readFileSync(formData.files.avatar.filepath);
-    const avatarPath = `/avatar/${
-      formData.files.avatar.newFilename
-    }.${formData.files.avatar.originalFilename.split(".").pop()}`;
-    fs.writeFileSync(`public${avatarPath}`, avatar);
+    const userData = {
+      username: findUser.username,
+      avatar: findUser.avatar,
+      description: findUser.description,
+    };
 
-    fs.unlinkSync(formData.files.avatar.filepath);
+    if (formData.fields) {
+      const { username, description } = formData.fields;
+      userData.username = username;
+      userData.description = description;
+    }
+
+    if (formData.files.avatar) {
+      const avatar = fs.readFileSync(formData.files.avatar.filepath);
+      const avatarPath = `/avatar/${
+        formData.files.avatar.newFilename
+      }.${formData.files.avatar.originalFilename.split(".").pop()}`;
+      fs.writeFileSync(`public${avatarPath}`, avatar);
+      fs.unlinkSync(formData.files.avatar.filepath);
+      userData.avatar = avatarPath;
+    }
 
     const { username, description } = formData.fields;
 
@@ -107,11 +120,7 @@ const handler = async (
       where: {
         address,
       },
-      data: {
-        username,
-        avatar: avatarPath,
-        description,
-      },
+      data: userData,
     });
 
     return baseResponse(response, {
