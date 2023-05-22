@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Layout from "@/components/Layout";
-import { useRouter } from "next/navigation";
 import PostViewer from "@/components/PostViewer";
 import { Post, PostComment, User } from "@libs/client/types";
 import axios from "axios";
@@ -21,12 +20,14 @@ type PostsResponse = {
 };
 
 const Home: NextPage = () => {
-  const router = useRouter();
   const { isLoading, error, data, status } = useQuery<PostsResponse>({
     queryKey: ["posts"],
-    queryFn: () => axios.get("api/posts").then((res) => res.data),
+    queryFn: () => axios.get("api/posts").then((res) => res.data.data),
     staleTime: 1000 * 60 * 5,
   });
+
+  console.log(data);
+
   return (
     <Layout>
       <Head>
@@ -36,34 +37,26 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className=" grid-cols-1 space-y-7 p-5">
-        {isLoading || data == undefined ? null : data.data.length == 0 ? ( // loading component
+        {isLoading || !data || data.length === 0 ? ( // loading component
           <div className="text-center font-extrabold text-gray-400 mt-20">
             <h1 className="text-4xl">게시글이 없습니다.</h1>
             <h3 className="text-lg">게시글을 생성한 후 확인해 주세요</h3>
           </div>
         ) : (
-          data.data.map((post) => (
+          data.map((post) => (
             <PostViewer
               key={post.id}
               thumbnail={post.thumbnail}
               address={post.address}
               UserAddr={post.authorAddress}
               content={post.description}
-              UserName={
-                post.author.username == null
-                  ? "undefined"
-                  : post.author.username
-              }
-              UserImage={
-                post.author.avatar == null
-                  ? "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  : post.author.avatar
-              }
+              UserName={post.author.username}
+              UserImage={post.author.avatar}
               likes={post.likes}
               ownerName="KKKSSSGGG"
               ownerImage=""
               isLiked={post.isLiked}
-            ></PostViewer>
+            />
           ))
         )}
       </div>

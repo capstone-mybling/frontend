@@ -5,7 +5,7 @@ type ProfileSize = "small" | "medium" | "large" | "XLarge";
 
 interface AvatarProps {
   UserName?: string;
-  UserImage: string;
+  UserImage?: string;
   UserAddr: string;
   size: ProfileSize;
   isMine: boolean;
@@ -22,7 +22,7 @@ interface AvatarSize {
 const DEFAULT_PROFILE_IMAGE =
   "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80";
 
-const setDefaultAvatar = (avatar: string) => {
+const setDefaultAvatar = (avatar?: string) => {
   return avatar ?? DEFAULT_PROFILE_IMAGE;
 };
 
@@ -43,7 +43,7 @@ export default function UserAvatar({
         >
           <Image
             className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
-            src={UserImage}
+            src={setDefaultAvatar(UserImage)}
             alt="user profile image"
             width={parseInt(getAvatarSize(size).width)}
             height={parseInt(getAvatarSize(size).height)}

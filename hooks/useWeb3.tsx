@@ -3,6 +3,7 @@ import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 import NFT from "@contracts/build/contracts/NFT.json";
 import Marketplace from "@contracts/build/contracts/Marketplace.json";
+import axios from "axios";
 
 const Web3DefaultValues = {
   account: "",
@@ -35,7 +36,9 @@ const useWeb3 = () => {
   const [isConnected, setIsConnected] = useState<boolean>(
     Web3DefaultValues.isConnected
   );
+
   const [IsReady, setIsReady] = useState<boolean>(Web3DefaultValues.isReady);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   const [account, setAccount] = useState<string>(Web3DefaultValues.account);
   const [balance, setBalance] = useState<number>(Web3DefaultValues.balance);
   const [network, setNetwork] = useState<string>(Web3DefaultValues.network);
@@ -88,7 +91,7 @@ const useWeb3 = () => {
 
   const getAndSetAccountAndBalance = async (provider: any, address: string) => {
     setAccount(address);
-    // console.log(provider);
+    await setLogin(address);
     const signerBalance = await provider.getBalance(address);
     const balance = ethers.formatEther(signerBalance);
     setBalance(Number(balance));
@@ -99,6 +102,16 @@ const useWeb3 = () => {
     const networkName = networkNames[name] || "";
     setNetwork(networkName);
     return networkName;
+  };
+
+  const setLogin = async (address: string) => {
+    try {
+      await axios.post("/api/users/login", { address: address.toLowerCase() });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLogin(true);
+    }
   };
 
   const setupContracts = async (signer: any, networkName: string) => {
@@ -130,6 +143,7 @@ const useWeb3 = () => {
     network,
     marketplaceContract,
     nftContract,
+    isLogin,
   };
 };
 

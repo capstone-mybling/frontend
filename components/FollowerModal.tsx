@@ -75,18 +75,22 @@ export default function FollowerModal({ userFollower }: Props) {
               </button>
             </div>
             <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              {userFollower.map((follower: any) => (
-                <li key={follower.id} className="list-none mb-2">
-                  <div className="flex justify-between">
-                    <UserAvatar
-                      size="small"
-                      UserImage={follower?.avatar!}
-                      UserName={follower?.username!}
-                      UserAddr={follower.address}
-                    />
-                  </div>
-                </li>
-              ))}
+              {userFollower?.map((follower: any) => {
+                if (follower) {
+                  return (
+                    <li key={follower.id} className="list-none mb-2">
+                      <div className="flex justify-between">
+                        <UserAvatar
+                          size="small"
+                          UserImage={follower.avatar}
+                          UserName={follower.username}
+                          UserAddr={follower.address}
+                        />
+                      </div>
+                    </li>
+                  );
+                }
+              })}
             </Typography>
           </Box>
         </Fade>

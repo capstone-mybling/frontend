@@ -5,7 +5,6 @@ import client from "@libs/server/client";
 import { FileType } from "@libs/client/types";
 import baseResponse from "@libs/server/response";
 import getRedisClient from "@libs/server/redis";
-import { redirect } from "next/navigation";
 
 interface UploadForm {
   name: string;
@@ -34,9 +33,7 @@ const handler = async (
   if (request.method === "GET") {
     const redis = await getRedisClient();
 
-    if (!user) {
-      return redirect("/api/posts/explore");
-    }
+    console.log(user);
 
     const followings = await redis.sMembers(`user:${user!.address}:followings`);
 
@@ -57,7 +54,6 @@ const handler = async (
         comments: true,
       },
     });
-    console.log(findPosts);
 
     const posts = await Promise.all(
       findPosts.map(async (post) => {

@@ -12,7 +12,6 @@ const handler = async (
   response: NextApiResponse<any>
 ) => {
   const { address } = request.body;
-  // request.session.destroy();
 
   // address 가 없으면 에러
   if (!address) {
@@ -24,11 +23,8 @@ const handler = async (
   }
 
   // 이미 로그인 되어있으면 에러
-  if (request.session.user) {
-    return response.status(400).json({
-      success: false,
-      message: "already logged in",
-    });
+  if (request.session.user && request.session.user.address !== address) {
+    request.session.destroy();
   }
 
   const findUser = await client.user.upsert({
@@ -60,7 +56,7 @@ const handler = async (
 
   await request.session.save();
 
-  response.json({
+  response.status(200).json({
     success: true,
   });
 };

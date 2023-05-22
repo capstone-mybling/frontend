@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
 import axios from "axios";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   userFollowing: string[];
@@ -88,30 +88,34 @@ export default function FollowingModal({
               </button>
             </div>
             <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              {userFollowing.map((following: any) => (
-                <li key={following.address} className="list-none mb-2">
-                  <div className="flex justify-between">
-                    <UserAvatar
-                      size="small"
-                      UserImage={following.avatar}
-                      UserName={following.username}
-                      UserAddr={following.address}
-                    />
-                    {delBtn ? (
-                      <button
-                        className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"
-                        onClick={(e) => {
-                          handleDeleteFollower(following.address);
-                        }}
-                      >
-                        삭제
-                      </button>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                </li>
-              ))}
+              {userFollowing.map((following: any) => {
+                if (following) {
+                  return (
+                    <li key={following.address} className="list-none mb-2">
+                      <div className="flex justify-between">
+                        <UserAvatar
+                          size="small"
+                          UserImage={following.avatar}
+                          UserName={following.username}
+                          UserAddr={following.address}
+                        />
+                        {delBtn ? (
+                          <button
+                            className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"
+                            onClick={(e) => {
+                              handleDeleteFollower(following.address);
+                            }}
+                          >
+                            삭제
+                          </button>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    </li>
+                  );
+                }
+              })}
             </Typography>
           </Box>
         </Fade>
