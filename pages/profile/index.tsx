@@ -1,16 +1,16 @@
 import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
-import { ChangeEvent, useState, useEffect } from "react";
+import { ChangeEvent, useState } from "react";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
-import { User, Post } from "@libs/client/types";
+import { User } from "@libs/client/types";
 import MypageLoading from "@/components/MypageLoading";
-import { useForm, FieldErrors } from "react-hook-form";
+import { FieldErrors, useForm } from "react-hook-form";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface UserWithFollow extends User {
   followings: string[];
@@ -22,6 +22,7 @@ enum FileType {
   VIDEO = "video",
   METADATA = "metadata",
 }
+
 interface UploadForm {
   image: File;
   name: string;
@@ -31,9 +32,11 @@ interface UploadForm {
 
 export default function MyPage() {
   const queryClient = useQueryClient();
-  const { isLoading, data, error } = useQuery<UserWithFollow>("userInfo", () =>
-    axios.get("api/users/me").then((response) => response.data.data)
-  );
+  const { isLoading, data, error } = useQuery<UserWithFollow>({
+    queryKey: ["users", "me"],
+    queryFn: () =>
+      axios.get("api/users/me").then((response) => response.data.data),
+  });
 
   const [edit, setEdit] = useState<boolean>(false);
   const [editTitle, setEditTitle] = useState<string>("프로필 편집");
@@ -190,7 +193,7 @@ export default function MyPage() {
               </button>
             </div>
             <UserAvatar
-              size="Xlarge"
+              size="XLarge"
               UserImage={data?.avatar || ""}
               UserName={data?.username || ""}
               UserAddr={data?.address || ""}
@@ -213,7 +216,7 @@ export default function MyPage() {
               }`}
               onClick={() => customTabChange(1)}
             >
-              내가만든NFT
+              생성한 NFT
               <p
                 className={`${
                   activeTab === 1
@@ -228,7 +231,7 @@ export default function MyPage() {
               }`}
               onClick={() => customTabChange(2)}
             >
-              구매한NFT
+              구매한 NFT
               <p
                 className={`${
                   activeTab === 2

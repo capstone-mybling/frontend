@@ -1,7 +1,7 @@
-import React, { useState, Fragment } from "react";
-import { Post, PostComment, User } from "@/libs/client/types";
+import React, { Fragment, useState } from "react";
+import { Contract, Post, PostComment, User } from "@/libs/client/types";
 import { GetServerSideProps } from "next";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { dateCalculator } from "@libs/client/dateCalculator";
 import axios from "axios";
@@ -19,14 +19,28 @@ import useWeb3 from "@/hooks/useWeb3";
 import { ethers } from "ethers";
 
 interface DetailPost extends Post {
+  contract: Contract;
   likes: number;
   isLiked: boolean;
   author: User;
   comments: PostComment[];
 }
+
 interface commentPostForm {
   content: string;
 }
+
+interface CommentDetail extends PostComment {
+  author: {
+    address: string;
+    avatar: string;
+    username: string;
+  };
+  isMine: boolean;
+  likes: number;
+  isLiked: boolean;
+}
+
 // issue:
 // -> 라우터로 쿼리를 불러오기전에 클라이언트에서 API요청과 렌더링을 진행하여 에러가 발생 (like 모래없이 모래성 만들기)
 // solution:
@@ -38,6 +52,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
+
 interface HomeProps {
   address: string;
 }
@@ -47,14 +62,21 @@ const Home = ({ address }: HomeProps) => {
   const { marketplaceContract } = useWeb3();
 
   //calling API and handling data
-  const { data, status } = useQuery<DetailPost>(
-    "post",
-    async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
-  );
-  const comments = useQuery<PostComment[]>(
-    "comments",
-    async () => await axios.get(`/api/posts/${address}/comments`).then((res) => res.data.data)
-  );
+  const { data: postData, isLoading: postIsLoading } = useQuery<DetailPost>({
+    queryKey: ["posts", address],
+    queryFn: async () =>
+      await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
+  });
+
+  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<
+    CommentDetail[]
+  >({
+    queryKey: ["postComments", address],
+    queryFn: async () =>
+      await axios
+        .get(`/api/posts/${address}/comments`)
+        .then((res) => res.data.data),
+  });
 
   // MUI tabs
   const [tabIndex, setTabIndex] = useState("1");
@@ -68,7 +90,7 @@ const Home = ({ address }: HomeProps) => {
       return axios.post(`/api/posts/${address}/comments`, data);
     },
     onSuccess: (newComment) => {
-      queryClient.setQueryData("comments", () => [...comments.data!, newComment.data.data]);
+      queryClient.invalidateQueries(["postComments", address]);
     },
   });
   // new comment form
@@ -78,7 +100,7 @@ const Home = ({ address }: HomeProps) => {
   //TODO: 자신의 댓글 삭제, 댓글마다 독립적인 좋아요 기능 연결
   /* ********************************************** */
   const purchase = async () => {
-    const itemId = data.contract.itemId;
+    const itemId = data!.contract.itemId;
     const response = await (
       await marketplaceContract.purchaseItem(BigInt(3), {
         value: ethers.parseEther(`${0.001 * 1.01}`),
@@ -89,7 +111,7 @@ const Home = ({ address }: HomeProps) => {
 
   return (
     <Layout disableFooter>
-      {status !== "success" ? (
+      {postIsLoading ? (
         <h2>Loading...</h2>
       ) : (
         <Fragment>
@@ -98,13 +120,9 @@ const Home = ({ address }: HomeProps) => {
             <div className="flex flex-1 items-center justify-between">
               <UserAvatar
                 size="medium"
-                UserAddr={data.authorAddress}
-                UserName={data.author.username!}
-                UserImage={
-                  data.author.avatar
-                    ? data.author.avatar
-                    : "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                }
+                UserAddr={postData.authorAddress}
+                UserName={postData.author?.username}
+                UserImage={postData.author.avatar}
               />
               <button
                 onClick={purchase}
@@ -117,8 +135,8 @@ const Home = ({ address }: HomeProps) => {
           <div className="flex justify-center align-middle py-6 ">
             <Image
               className="h-full x-auto block object-cover m-0"
-              src={`${data.thumbnail}`}
-              alt={data.name}
+              src={`${postData.thumbnail}`}
+              alt={postData.name}
               width="2000"
               height="2000"
             />
@@ -128,14 +146,16 @@ const Home = ({ address }: HomeProps) => {
             <section className="flex justify-between mb-4">
               <div className="px-1 flex space-x-2 items-center">
                 <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
-                <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
+                <span className="text-sm font-extrabold text-gray-500">
+                  Current Owner
+                </span>
                 <span className="text-sm font-extrabold">hazzun</span>
               </div>
               <div className="flex items-center justify-end my-3">
                 <LikeButton
-                  isLiked={data.isLiked}
-                  likes={data.likes}
-                  address={data.address}
+                  isLiked={postData.isLiked}
+                  likes={postData.likes}
+                  address={postData.address}
                 />
               </div>
             </section>
@@ -143,13 +163,15 @@ const Home = ({ address }: HomeProps) => {
             <section className="px-2">
               <div className="flex justify-between items-center">
                 <div>
-                  <h1 className="font-bold text-2xl">{data.name}</h1>
+                  <h1 className="font-bold text-2xl">{postData.name}</h1>
                 </div>
                 <div>
-                  <p className="text-gray-500">{dateCalculator(data.createdAt)}</p>
+                  <p className="text-gray-500">
+                    {dateCalculator(postData.createdAt)}
+                  </p>
                 </div>
               </div>
-              <p className="my-4">{data.description}</p>
+              <p className="my-4">{postData.description}</p>
             </section>
             <Box sx={{ width: "100%", typography: "body1" }}>
               <TabContext value={tabIndex}>
@@ -162,92 +184,52 @@ const Home = ({ address }: HomeProps) => {
                     aria-label="secondary tabs example"
                   >
                     <Tab
-                      label={`Comments (${data.comments.length})`}
+                      label={`Comments (${postData.comments.length})`}
                       value="1"
                     />
-                    <Tab
-                      label="Sales"
-                      value="2"
-                    />
-                    <Tab
-                      label="Additional Info"
-                      value="3"
-                    />
+                    <Tab label="Sales" value="2" />
+                    <Tab label="Additional Info" value="3" />
                   </Tabs>
                 </Box>
-                <TabPanel
-                  value="1"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="1" sx={{ padding: 0 }}>
                   {/* comments section */}
                   <div className="mt-4 pt-4">
                     <ul>
-                      {comments.isLoading || comments.data === undefined
-                        ? null
-                        : comments.data.map((comment) => (
+                      {commentsIsLoading ||
+                        (commentsData &&
+                          commentsData.map((comment) => (
                             <li
                               key={comment.id}
                               className="flex justify-between px-5 flex-col pb-4"
                             >
                               <Comment comment={comment} />
                             </li>
-                          ))}
+                          )))}
                     </ul>
                   </div>
-                  {/* footer의 위치는 어차피 고정이기 때문에 어디 있어도 똑같아서 댓글 탭 안에 포함 시킴 */}
-                  <footer className="sticky bottom-0 bg-white z-10 border-b">
-                    <div>
-                      {/* comment form */}
-                      <form
-                        className="flex border-t border-neutral-300 p-3"
-                        onSubmit={handleSubmit((data) => {
-                          mutation.mutate(data);
-                          reset();
-                        })}
-                      >
-                        <input
-                          className="w-full ml-2 border-none outline-none focus:ring-0"
-                          type="text"
-                          placeholder="Add a comment..."
-                          {...register("content", {
-                            required: "댓글을 입력하세요.",
-                          })}
-                        />
-                        <button className="font-bold text-violet-300 ml-2 transition-colors duration-300 hover:text-violet-700">
-                          Post
-                        </button>
-                      </form>
-                    </div>
-                  </footer>
                 </TabPanel>
-                <TabPanel
-                  value="2"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="2" sx={{ padding: 0 }}>
                   {/* sales section */}
                   앙냥냥
                 </TabPanel>
-                <TabPanel
-                  value="3"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="3" sx={{ padding: 0 }}>
                   {/* additional information section */}
                   <section className="p-2 mt-4">
                     <div className="flex justify-between">
                       <p>author</p>
-                      <p>{data.author.username}</p>
+                      <p>{postData.author.username}</p>
                     </div>
                     <div className="flex justify-between">
                       <p>price</p>
-                      <p>{data.price}</p>
+                      <p>{postData.price}</p>
                     </div>
                     <div className="flex justify-between">
                       <p>copies</p>
-                      <p>{data.count}</p>
+                      <p>{postData.count}</p>
                     </div>
                     <div className="flex justify-between">
                       <p>contract</p>
-                      <p className="w-3/4">{data.contractAddress}</p>
+                      <p className="w-3/4">{postData.contractAddress}</p>
                     </div>
                   </section>
                 </TabPanel>
@@ -256,6 +238,30 @@ const Home = ({ address }: HomeProps) => {
           </div>
         </Fragment>
       )}
+      {tabIndex === "1" ? (
+        <footer className="sticky bottom-0 bg-white z-10 border-b">
+          {/* comment form */}
+          <form
+            className="flex border-t border-neutral-300 p-3"
+            onSubmit={handleSubmit((data) => {
+              mutation.mutate(data);
+              reset();
+            })}
+          >
+            <input
+              className="w-full ml-2 border-none outline-none focus:ring-0"
+              type="text"
+              placeholder="Add a comment..."
+              {...register("content", {
+                required: "댓글을 입력하세요.",
+              })}
+            />
+            <button className="font-bold text-violet-300 ml-2 transition-colors duration-300 hover:text-violet-700">
+              Post
+            </button>
+          </form>
+        </footer>
+      ) : null}
     </Layout>
   );
 };

@@ -7,9 +7,8 @@ import src from "@public/exam2.png";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
-import { User, Post } from "@libs/client/types";
-import { error } from "console";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { Post, User } from "@libs/client/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import MypageLoading from "@/components/MypageLoading";
 import { GetServerSideProps } from "next";
 
@@ -31,13 +30,15 @@ interface HomeProps {
 
 const Home = ({ address }: HomeProps) => {
   const queryClient = useQueryClient();
-  const { isLoading, data, error } = useQuery<userInfo>("userInfo", () =>
-    axios.get(`/api/users/${address}`).then((response) => response.data.data)
-  );
+  const { isLoading, data, error } = useQuery<userInfo>({
+    queryKey: ["users", address!],
+    queryFn: () =>
+      axios.get(`/api/users/${address}`).then((response) => response.data.data),
+  });
 
   const [userPost, setUserPost] = useState<Post[]>([]);
   const [follow, setFollow] = useState<string>("FOLLOW");
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState<Tab>(Tab.POST);
 
   useEffect(() => {
     axios
@@ -59,7 +60,7 @@ const Home = ({ address }: HomeProps) => {
     {
       onSuccess: () => {
         setFollow("UNFOLLOW");
-        queryClient.invalidateQueries("userInfo");
+        await queryClient.invalidateQueries(["users", address!]);
       },
     }
   );
@@ -68,7 +69,7 @@ const Home = ({ address }: HomeProps) => {
     {
       onSuccess: () => {
         setFollow("FOLLOW");
-        queryClient.invalidateQueries("userInfo");
+        await queryClient.invalidateQueries(["users", address!]);
       },
     }
   );
@@ -107,10 +108,10 @@ const Home = ({ address }: HomeProps) => {
           </button>
         </div>
         <UserAvatar
-          size="Xlarge"
-          UserImage={data.avatar || ""}
-          UserName={data.username || ""}
-          UserAddr={data.address || ""}
+          size="XLarge"
+          UserImage={data.avatar}
+          UserName={data.username}
+          UserAddr={data.address}
         />
         <div className="w-full">
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
@@ -126,36 +127,34 @@ const Home = ({ address }: HomeProps) => {
           <div className="mx-auto my-5">
             <button
               className={`px-4 py-2 ${
-                activeTab === 1 ? "text-violet-500" : "text-violet-300"
+                activeTab === Tab.POST ? "text-violet-500" : "text-violet-300"
               }`}
               onClick={() => customTabChange(1)}
             >
-              내가만든NFT
+              생성한 NFT
               <p
                 className={`${
-                  activeTab === 1
-                    ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
-                    : ""
+                  activeTab === Tab.POST &&
+                  "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
                 }`}
               ></p>
             </button>
             <button
               className={`px-4 py-2 ${
-                activeTab === 2 ? "text-violet-500" : "text-violet-300"
+                activeTab === Tab.OWNED ? "text-violet-500" : "text-violet-300"
               }`}
               onClick={() => customTabChange(2)}
             >
-              구매한NFT
+              구매한 NFT
               <p
                 className={`${
-                  activeTab === 2
-                    ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
-                    : ""
+                  activeTab === Tab.OWNED &&
+                  "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
                 }`}
               ></p>
             </button>
           </div>
-          {activeTab === 1 && (
+          {activeTab === Tab.POST && (
             <div>
               {data.posts.length === 0 ? (
                 // react auery 사용해서 isloagin 구현예정
@@ -181,7 +180,7 @@ const Home = ({ address }: HomeProps) => {
               )}
             </div>
           )}
-          {activeTab === 2 && (
+          {activeTab === Tab.OWNED && (
             <div className="grid grid-cols-3 gap-1">
               <Thumbnail
                 thumbnail={src}
