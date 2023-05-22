@@ -12,12 +12,14 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
 import axios from "axios";
+import useWeb3 from "@/hooks/useWeb3";
 
 interface Props {
   userFollower: string[];
 }
 
 export default function FollowerModal({ userFollower }: Props) {
+  const { account } = useWeb3();
   // console.log("팔로워목록 = ", userFollower);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
@@ -83,6 +85,7 @@ export default function FollowerModal({ userFollower }: Props) {
                       UserImage={follower?.avatar!}
                       UserName={follower?.username!}
                       UserAddr={follower.address}
+                      isMine={account === follower.address}
                     />
                   </div>
                 </li>

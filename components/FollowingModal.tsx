@@ -6,7 +6,8 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import UserAvatar from "./UserAvatar";
 import axios from "axios";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useWeb3 from "@/hooks/useWeb3";
 
 interface Props {
   userFollowing: string[];
@@ -17,6 +18,7 @@ export default function FollowingModal({
   userFollowing,
   delBtn = true,
 }: Props) {
+  const { account } = useWeb3();
   // console.log("팔로잉목록 = ", userFollowing);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
@@ -96,6 +98,7 @@ export default function FollowingModal({
                       UserImage={following.avatar}
                       UserName={following.username}
                       UserAddr={following.address}
+                      isMine={account === following.address}
                     />
                     {delBtn ? (
                       <button
