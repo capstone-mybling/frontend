@@ -2,7 +2,6 @@ import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import src from "@public/exam2.png";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
@@ -10,6 +9,7 @@ import FollowingModal from "@/components/FollowingModal";
 import { Post, User } from "@libs/client/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import MypageLoading from "@/components/MypageLoading";
+import { GetServerSideProps } from "next";
 
 interface userInfo extends User {
   followings: string[];
@@ -21,10 +21,19 @@ enum Tab {
   OWNED = 2,
 }
 
-export default function UserPage() {
-  const router = useRouter();
-  const { address } = router.query;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      address: context.query.address,
+    },
+  };
+};
 
+interface UserPageProps {
+  address: string;
+}
+
+export default function UserPage({ address }: UserPageProps) {
   const queryClient = useQueryClient();
   const { isLoading, data, error } = useQuery<userInfo>({
     queryKey: ["users", address!],
@@ -56,7 +65,7 @@ export default function UserPage() {
     {
       onSuccess: () => {
         setFollow("UNFOLLOW");
-        await queryClient.invalidateQueries(["users", address!]);
+        queryClient.invalidateQueries(["users", address!]);
       },
     }
   );
@@ -65,7 +74,7 @@ export default function UserPage() {
     {
       onSuccess: () => {
         setFollow("FOLLOW");
-        await queryClient.invalidateQueries(["users", address!]);
+        queryClient.invalidateQueries(["users", address!]);
       },
     }
   );

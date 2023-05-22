@@ -41,6 +41,12 @@ interface CommentDetail extends PostComment {
   isLiked: boolean;
 }
 
+enum TabType {
+  COMMENTS = "comments",
+  SALES = "sales",
+  ADDITIONAL = "additional",
+}
+
 // issue:
 // -> 라우터로 쿼리를 불러오기전에 클라이언트에서 API요청과 렌더링을 진행하여 에러가 발생 (like 모래없이 모래성 만들기)
 // solution:
@@ -79,8 +85,8 @@ const Home = ({ address }: HomeProps) => {
   });
 
   // MUI tabs
-  const [tabIndex, setTabIndex] = useState("1");
-  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+  const [tabIndex, setTabIndex] = useState<TabType>(TabType.COMMENTS);
+  const handleTabChange = (event: React.SyntheticEvent, newValue: TabType) => {
     setTabIndex(newValue);
   };
 
@@ -106,7 +112,6 @@ const Home = ({ address }: HomeProps) => {
         value: ethers.parseEther(`${0.001 * 1.01}`),
       })
     ).wait();
-    console.log(response);
   };
 
   return (
@@ -185,13 +190,13 @@ const Home = ({ address }: HomeProps) => {
                   >
                     <Tab
                       label={`Comments (${postData.comments.length})`}
-                      value="1"
+                      value={TabType.COMMENTS}
                     />
-                    <Tab label="Sales" value="2" />
-                    <Tab label="Additional Info" value="3" />
+                    <Tab label="Sales" value={TabType.SALES} />
+                    <Tab label="Additional Info" value={TabType.ADDITIONAL} />
                   </Tabs>
                 </Box>
-                <TabPanel value="1" sx={{ padding: 0 }}>
+                <TabPanel value={TabType.COMMENTS} sx={{ padding: 0 }}>
                   {/* comments section */}
                   <div className="mt-4 pt-4">
                     <ul>
@@ -208,11 +213,11 @@ const Home = ({ address }: HomeProps) => {
                     </ul>
                   </div>
                 </TabPanel>
-                <TabPanel value="2" sx={{ padding: 0 }}>
+                <TabPanel value={TabType.SALES} sx={{ padding: 0 }}>
                   {/* sales section */}
                   앙냥냥
                 </TabPanel>
-                <TabPanel value="3" sx={{ padding: 0 }}>
+                <TabPanel value={TabType.ADDITIONAL} sx={{ padding: 0 }}>
                   {/* additional information section */}
                   <section className="p-2 mt-4">
                     <div className="flex justify-between">
@@ -238,7 +243,7 @@ const Home = ({ address }: HomeProps) => {
           </div>
         </Fragment>
       )}
-      {tabIndex === "1" ? (
+      {tabIndex === TabType.COMMENTS && (
         <footer className="sticky bottom-0 bg-white z-10 border-b">
           {/* comment form */}
           <form
@@ -261,7 +266,7 @@ const Home = ({ address }: HomeProps) => {
             </button>
           </form>
         </footer>
-      ) : null}
+      )}
     </Layout>
   );
 };
