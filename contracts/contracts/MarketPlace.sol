@@ -85,14 +85,14 @@ contract Marketplace is ReentrancyGuard {
         item.sold = true;
 
         item.nft.transferFrom(address(this), msg.sender, item.tokenId);
-        
+
         emit Bought(
-            _itemId,
-            address(item.nft),
-            item.tokenId,
-            item.price,
-            item.seller,
-            msg.sender
+        _itemId, git
+        address(item.nft),
+    item.tokenId,
+        item.price,
+        item.seller,
+        msg.sender
         );
     }
 

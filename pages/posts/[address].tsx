@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Contract, Post, PostComment, User } from "@/libs/client/types";
 import { GetServerSideProps } from "next";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -25,9 +25,11 @@ interface DetailPost extends Post {
   author: User;
   comments: PostComment[];
 }
+
 interface commentPostForm {
   content: string;
 }
+
 interface CommentDetail extends PostComment {
   author: {
     address: string;
@@ -37,6 +39,7 @@ interface CommentDetail extends PostComment {
   isMine: boolean;
   likes: number;
 }
+
 // issue:
 // -> 라우터로 쿼리를 불러오기전에 클라이언트에서 API요청과 렌더링을 진행하여 에러가 발생 (like 모래없이 모래성 만들기)
 // solution:
@@ -48,6 +51,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
+
 interface HomeProps {
   address: string;
 }
@@ -59,11 +63,8 @@ const Home = ({ address }: HomeProps) => {
   //calling API and handling data
   const { data, status } = useQuery<DetailPost>(
     "post",
-    async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
-  );
-  const comments = useQuery<CommentDetail[]>(
-    "comments",
-    async () => await axios.get(`/api/posts/${address}/comments`).then((res) => res.data.data)
+    async () =>
+      await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
   );
 
   // MUI tabs
@@ -79,7 +80,10 @@ const Home = ({ address }: HomeProps) => {
       return axios.post(`/api/posts/${address}/comments`, data);
     },
     onSuccess: (newComment) => {
-      queryClient.setQueryData("comments", () => [...comments.data!, newComment.data.data]);
+      queryClient.setQueryData("comments", () => [
+        ...comments.data!,
+        newComment.data.data,
+      ]);
     },
   });
   // new comment form
@@ -139,7 +143,9 @@ const Home = ({ address }: HomeProps) => {
             <section className="flex justify-between mb-4">
               <div className="px-1 flex space-x-2 items-center">
                 <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
-                <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
+                <span className="text-sm font-extrabold text-gray-500">
+                  Current Owner
+                </span>
                 <span className="text-sm font-extrabold">hazzun</span>
               </div>
               <div className="flex items-center justify-end my-3">
@@ -157,7 +163,9 @@ const Home = ({ address }: HomeProps) => {
                   <h1 className="font-bold text-2xl">{data.name}</h1>
                 </div>
                 <div>
-                  <p className="text-gray-500">{dateCalculator(data.createdAt)}</p>
+                  <p className="text-gray-500">
+                    {dateCalculator(data.createdAt)}
+                  </p>
                 </div>
               </div>
               <p className="my-4">{data.description}</p>
@@ -176,20 +184,11 @@ const Home = ({ address }: HomeProps) => {
                       label={`Comments (${data.comments.length})`}
                       value="1"
                     />
-                    <Tab
-                      label="Sales"
-                      value="2"
-                    />
-                    <Tab
-                      label="Additional Info"
-                      value="3"
-                    />
+                    <Tab label="Sales" value="2" />
+                    <Tab label="Additional Info" value="3" />
                   </Tabs>
                 </Box>
-                <TabPanel
-                  value="1"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="1" sx={{ padding: 0 }}>
                   {/* comments section */}
                   <div className="mt-4 pt-4">
                     <ul>
@@ -231,17 +230,11 @@ const Home = ({ address }: HomeProps) => {
                     </div>
                   </footer>
                 </TabPanel>
-                <TabPanel
-                  value="2"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="2" sx={{ padding: 0 }}>
                   {/* sales section */}
                   앙냥냥
                 </TabPanel>
-                <TabPanel
-                  value="3"
-                  sx={{ padding: 0 }}
-                >
+                <TabPanel value="3" sx={{ padding: 0 }}>
                   {/* additional information section */}
                   <section className="p-2 mt-4">
                     <div className="flex justify-between">
