@@ -75,8 +75,13 @@ export default function MyPage() {
     setUploadImg(null);
   };
 
-  const editProfileMutation = useMutation((formData: FormData) =>
-    axios.patch("api/users/me", formData)
+  const editProfileMutation = useMutation(
+    (formData: FormData) => axios.patch("api/users/me", formData),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("userInfo");
+      },
+    }
   );
 
   const onNotValid = (errors: FieldErrors) => console.log(errors);
@@ -91,7 +96,6 @@ export default function MyPage() {
 
     resetForm();
     handleProfileEditSave();
-    queryClient.invalidateQueries("userInfo");
   };
 
   const customTabChange = (tabIndex: number) => {

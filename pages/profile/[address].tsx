@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import src from "@public/exam2.png";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
@@ -15,12 +16,6 @@ interface userInfo extends User {
   followings: string[];
   followers: string[];
 }
-
-enum Tab {
-  POST = 1,
-  OWNED = 2,
-}
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -29,11 +24,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-interface UserPageProps {
+interface HomeProps {
   address: string;
 }
 
-export default function UserPage({ address }: UserPageProps) {
+const Home = ({ address }: HomeProps) => {
   const queryClient = useQueryClient();
   const { isLoading, data, error } = useQuery<userInfo>({
     queryKey: ["users", address!],
@@ -207,4 +202,6 @@ export default function UserPage({ address }: UserPageProps) {
       </section>
     </Layout>
   );
-}
+};
+
+export default Home;
