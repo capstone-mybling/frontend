@@ -106,7 +106,7 @@ const useWeb3 = () => {
 
   const setLogin = async (address: string) => {
     try {
-      await axios.post("/api/users/login", { address: address.toLowerCase() });
+      await axios.post("/api/users/login", { address: address });
     } catch (error) {
       console.log(error);
     } finally {
