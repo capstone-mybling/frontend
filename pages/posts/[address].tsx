@@ -28,6 +28,15 @@ interface DetailPost extends Post {
 interface commentPostForm {
   content: string;
 }
+interface CommentDetail extends PostComment {
+  author: {
+    address: string;
+    avatar: string;
+    username: string;
+  };
+  isMine: boolean;
+  likes: number;
+}
 // issue:
 // -> 라우터로 쿼리를 불러오기전에 클라이언트에서 API요청과 렌더링을 진행하여 에러가 발생 (like 모래없이 모래성 만들기)
 // solution:
@@ -52,7 +61,7 @@ const Home = ({ address }: HomeProps) => {
     "post",
     async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data)
   );
-  const comments = useQuery<PostComment[]>(
+  const comments = useQuery<CommentDetail[]>(
     "comments",
     async () => await axios.get(`/api/posts/${address}/comments`).then((res) => res.data.data)
   );
@@ -61,6 +70,7 @@ const Home = ({ address }: HomeProps) => {
   const [tabIndex, setTabIndex] = useState("1");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabIndex(newValue);
+    console.log(comments);
   };
 
   // comments mutation using react-query
