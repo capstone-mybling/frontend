@@ -131,6 +131,17 @@ export default function Upload() {
       setValue("image", files.item(0)!);
     }
   };
+  const [defaultValue, setDefaultValue] = useState<number>();
+  const handleDisableValue = () => {
+    if (defaultValue === undefined) setDefaultValue(1);
+    else setDefaultValue(undefined);
+  };
+
+  const [priceValue, setPriceValue] = useState<number>();
+  const handleValueChange = (event: any) => {
+    const value = event.target.value;
+    setPriceValue(value);
+  };
 
   return (
     <Layout>
@@ -220,9 +231,11 @@ export default function Upload() {
           </label>
           <input
             {...register("count", { required: true })}
-            className="border-2 border-gray-300 rounded-xl w-full"
+            className="border-2 border-gray-300 rounded-xl w-full appearance-none"
             id="input-price"
             type="number"
+            value={defaultValue}
+            onFocus={handleDisableValue}
             placeholder="Enter number of copies you want to create"
           />
         </div>
@@ -233,14 +246,24 @@ export default function Upload() {
           >
             Price
           </label>
-          <input
-            {...register("price", { required: true })}
-            className="border-2 border-gray-300 rounded-xl w-full"
-            id="input-price"
-            type="number"
-            step={0.000001}
-            placeholder="Enter price for one piece.         ex) 0.000134"
-          />
+          <div className="relative">
+            <input
+              {...register("price", { required: true })}
+              className="border-2 border-gray-300 rounded-xl w-full appearance-none"
+              id="input-price"
+              type="number"
+              step={0.000001}
+              placeholder="Enter price for one piece.         ex) 0.000134"
+              onChange={handleValueChange}
+            />
+            {priceValue ? (
+              <span className="absolute top-0 right-0 mt-[10px] mr-3 text-violet-500">
+                GoerliETH
+              </span>
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
         <input
           className={cls(

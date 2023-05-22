@@ -27,7 +27,7 @@ export default function Thumbnail({
         alt={address}
         width={1980}
         height={0}
-        className={"h-full x-auto block object-contain m-0"}
+        className={"h-full x-auto block object-cover m-0"}
       ></Image>
     </Link>
   );

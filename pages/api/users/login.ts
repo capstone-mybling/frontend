@@ -33,13 +33,12 @@ const handler = async (
 
   const findUser = await client.user.upsert({
     where: {
-      address: lowerCaseAddress,
+      address: address,
     },
     update: {},
     create: {
-      address: lowerCaseAddress,
-      avatar: generateIdenticon(lowerCaseAddress),
-      username: lowerCaseAddress,
+      address: address,
+      avatar: generateIdenticon(address),
     },
   });
 
