@@ -2,7 +2,6 @@ import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import src from "@public/exam2.png";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
@@ -16,6 +15,7 @@ interface userInfo extends User {
   followings: string[];
   followers: string[];
 }
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -28,6 +28,11 @@ interface HomeProps {
   address: string;
 }
 
+enum TabType {
+  POST = "post",
+  OWNED = "owned",
+}
+
 const Home = ({ address }: HomeProps) => {
   const queryClient = useQueryClient();
   const { isLoading, data, error } = useQuery<userInfo>({
@@ -38,7 +43,7 @@ const Home = ({ address }: HomeProps) => {
 
   const [userPost, setUserPost] = useState<Post[]>([]);
   const [follow, setFollow] = useState<string>("FOLLOW");
-  const [activeTab, setActiveTab] = useState<Tab>(Tab.POST);
+  const [activeTab, setActiveTab] = useState<TabType>(TabType.POST);
 
   useEffect(() => {
     axios
@@ -90,7 +95,7 @@ const Home = ({ address }: HomeProps) => {
     }
   };
 
-  const customTabChange = (tabIndex: number) => {
+  const customTabChange = (tabIndex: TabType) => {
     setActiveTab(tabIndex);
   };
 
@@ -127,34 +132,38 @@ const Home = ({ address }: HomeProps) => {
           <div className="mx-auto my-5">
             <button
               className={`px-4 py-2 ${
-                activeTab === Tab.POST ? "text-violet-500" : "text-violet-300"
+                activeTab === TabType.POST
+                  ? "text-violet-500"
+                  : "text-violet-300"
               }`}
-              onClick={() => customTabChange(1)}
+              onClick={() => customTabChange(TabType.POST)}
             >
               생성한 NFT
               <p
                 className={`${
-                  activeTab === Tab.POST &&
+                  activeTab === TabType.POST &&
                   "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
                 }`}
               ></p>
             </button>
             <button
               className={`px-4 py-2 ${
-                activeTab === Tab.OWNED ? "text-violet-500" : "text-violet-300"
+                activeTab === TabType.OWNED
+                  ? "text-violet-500"
+                  : "text-violet-300"
               }`}
-              onClick={() => customTabChange(2)}
+              onClick={() => customTabChange(TabType.OWNED)}
             >
               구매한 NFT
               <p
                 className={`${
-                  activeTab === Tab.OWNED &&
+                  activeTab === TabType.OWNED &&
                   "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
                 }`}
               ></p>
             </button>
           </div>
-          {activeTab === Tab.POST && (
+          {activeTab === TabType.POST && (
             <div>
               {data.posts.length === 0 ? (
                 // react auery 사용해서 isloagin 구현예정
@@ -180,7 +189,7 @@ const Home = ({ address }: HomeProps) => {
               )}
             </div>
           )}
-          {activeTab === Tab.OWNED && (
+          {activeTab === TabType.OWNED && (
             <div className="grid grid-cols-3 gap-1">
               <Thumbnail
                 thumbnail={src}
