@@ -1,146 +1,75 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Layout from "@/components/Layout";
-import { useRouter } from "next/navigation";
-import src from "@public/exam2.png";
+import React, { useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Post, PostComment, User } from "@libs/client/types";
+import Image from "next/image";
+
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/effect-cards";
+// import required modules
+import { EffectCards } from "swiper";
+import Thumbnail from "@/components/Thumbnail";
 import PostViewer from "@/components/PostViewer";
+
+interface DetailPost extends Post {
+  likes: number;
+  isLiked: boolean;
+  author: User;
+  comments: PostComment[];
+}
+
 const Explore: NextPage = () => {
+  const { isLoading, data, error } = useQuery<DetailPost>({
+    queryKey: ["posts", "users"],
+    queryFn: () =>
+      axios.get("api/posts/explore").then((response) => response.data.data),
+  });
   return (
     <Layout>
-      <div className="flex flex-wrap mx-auto p-1">
-        {/* left side */}
-        <div className="flex w-1/2 flex-col mt-14 space-y-4">
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-        </div>
-        {/* right side */}
-        <div className="flex w-1/2 flex-col space-y-4">
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
-          <PostViewer
-            small
-            content="hello"
-            likes={2}
-            isLiked
-            thumbnail={src}
-            address={`posts/${2}`}
-          ></PostViewer>
+      {/* <div className="flex flex-wrap mx-auto p-1"></div> */}
+      <div className="flex justify-center items-center h-screen">
+        <div>
+          <Swiper
+            effect={"cards"}
+            grabCursor={true}
+            modules={[EffectCards]}
+            className="w-[340px]"
+          >
+            {data?.map((post) => (
+              <SwiperSlide key={post.id} className="bg-white shadow-xl border">
+                {/* <Thumbnail
+                thumbnail={post.thumbnail}
+                address={post.address}
+                option="Thumnail"
+                link={post.address}
+              />
+              <div className="flex gap-2 items-end p-4">
+                <div className="text-xl font-semibold">{post.name}</div>
+                <div className="text-sm text-gray-500">{post.price} GOETH</div>
+              </div> */}
+                <div className="py-4 px-[1px]">
+                  <PostViewer
+                    key={post.id}
+                    thumbnail={post.thumbnail}
+                    address={post.address}
+                    UserAddr={post.authorAddress}
+                    content={post.description}
+                    UserName={post.author.username}
+                    UserImage={post.author.avatar}
+                    likes={post.likes}
+                    ownerName="KKKSSSGGG"
+                    ownerImage=""
+                    isLiked={post.isLiked}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
       </div>
     </Layout>

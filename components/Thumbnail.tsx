@@ -10,7 +10,13 @@ type Props = {
   link?: string;
 };
 
-export default function Thumbnail({ thumbnail, address, option = "Post", link, ...rest }: Props) {
+export default function Thumbnail({
+  thumbnail,
+  address,
+  option = "Post",
+  link,
+  ...rest
+}: Props) {
   return (
     <Link
       className={`m-0 ${getOptionStyle(option).style}`}
@@ -21,7 +27,7 @@ export default function Thumbnail({ thumbnail, address, option = "Post", link, .
         alt={address}
         width={1980}
         height={0}
-        className={"h-full x-auto block object-contain m-0"}
+        className={"h-full x-auto block object-cover m-0"}
       ></Image>
     </Link>
   );
@@ -37,7 +43,8 @@ function getOptionStyle(option: OptionStyle) {
       };
     case "Thumnail":
       return {
-        style: "flex items-center justify-center aspect-square bg-gray-100 hover:cursor-pointer",
+        style:
+          "flex items-center justify-center aspect-square bg-gray-100 hover:cursor-pointer",
       };
   }
 }
