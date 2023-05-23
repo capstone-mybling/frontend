@@ -171,85 +171,99 @@ const Home = ({ address }: HomeProps) => {
               </div>
               <p className="my-4">{postData.description}</p>
             </section>
-            <Box sx={{ width: "100%", typography: "body1" }}>
-              <TabContext value={tabIndex}>
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                  <Tabs
-                    value={tabIndex}
-                    onChange={handleTabChange}
-                    textColor="secondary"
-                    indicatorColor="secondary"
-                    aria-label="secondary tabs example"
-                  >
-                    <Tab
-                      label={`Comments (${postData.comments.length})`}
-                      value={TabType.COMMENTS}
-                    />
-                    <Tab
-                      label="Sales"
-                      value={TabType.SALES}
-                    />
-                    <Tab
-                      label="Additional Info"
-                      value={TabType.ADDITIONAL}
-                    />
-                  </Tabs>
-                </Box>
-                <TabPanel
-                  value={TabType.COMMENTS}
-                  sx={{ padding: 0 }}
-                >
-                  {/* comments section */}
-                  <div className="mt-4 pt-4">
-                    <ul>
-                      {commentsIsLoading ||
-                        (commentsData &&
-                          commentsData.map((comment) => (
-                            <li
-                              key={comment.id}
-                              className="flex justify-between px-5 flex-col pb-4"
-                            >
-                              <Comment comment={comment} />
-                            </li>
-                          )))}
-                    </ul>
-                  </div>
-                </TabPanel>
-                <TabPanel
-                  value={TabType.SALES}
-                  sx={{ padding: 0 }}
-                >
-                  {/* sales section */}
-                  앙냥냥
-                </TabPanel>
-                <TabPanel
-                  value={TabType.ADDITIONAL}
-                  sx={{ padding: 0 }}
-                >
-                  {/* additional information section */}
-                  <section className="p-2 mt-4">
-                    <div className="flex justify-between">
-                      <p>author</p>
-                      <p>{postData.author.username}</p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p>price</p>
-                      <p>{postData.price}</p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p>copies</p>
-                      <p>{postData.count}</p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p>contract</p>
-                      <p className="w-3/4">{postData.contractAddress}</p>
-                    </div>
-                  </section>
-                </TabPanel>
-              </TabContext>
-            </Box>
-          </div>
-        </Fragment>
+          <div className="w-full">
+            <div className="w-full my-5 flex justify-around align-middle">
+              <button
+                className={`px-4 py-2 ${
+                  tabIndex === TabType.COMMENTS ? "text-violet-500" : "text-violet-300"
+                }`}
+                onClick={() => setTabIndex(TabType.COMMENTS)}
+              >
+                댓글
+                <p
+                  className={`${
+                    tabIndex === TabType.COMMENTS
+                      ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
+                      : ""
+                  }`}
+                ></p>
+              </button>
+              <button
+                className={`px-4 py-2 ${
+                  tabIndex === TabType.SALES ? "text-violet-500" : "text-violet-300"
+                }`}
+                onClick={() => setTabIndex(TabType.SALES)}
+              >
+                판매 정보
+                <p
+                  className={`${
+                    tabIndex === TabType.SALES
+                      ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
+                      : ""
+                  }`}
+                ></p>
+              </button>
+              <button
+                className={`px-4 py-2 ${
+                  tabIndex === TabType.ADDITIONAL ? "text-violet-500" : "text-violet-300"
+                }`}
+                onClick={() => setTabIndex(TabType.ADDITIONAL)}
+              >
+                추가 정보
+                <p
+                  className={`${
+                    tabIndex === TabType.ADDITIONAL
+                      ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
+                      : ""
+                  }`}
+                ></p>
+              </button>
+            </div>
+            {tabIndex === TabType.COMMENTS && (
+              //  {/* comments section */}
+              <div className="mt-4 pt-4">
+              <ul>
+                {commentsIsLoading ||
+                  (commentsData &&
+                    commentsData.map((comment) => (
+                      <li
+                        key={comment.id}
+                        className="flex justify-between px-5 flex-col pb-4"
+                      >
+                        <Comment comment={comment} />
+                      </li>
+                    )))}
+              </ul>
+            </div>
+            )}
+            {tabIndex === TabType.SALES && (
+              <p>
+                판매정보
+              </p>
+            )}
+            {tabIndex === TabType.ADDITIONAL && (
+              <section className="p-2 mt-4">
+              <div className="flex justify-between">
+                <p>author</p>
+                <p>{postData.author.username}</p>
+              </div>
+              <div className="flex justify-between">
+                <p>price</p>
+                <p>{postData.price}</p>
+              </div>
+              <div className="flex justify-between">
+                <p>copies</p>
+                <p>{postData.count}</p>
+              </div>
+              <div className="flex justify-between">
+                <p>contract</p>
+                <p className="w-3/4">{postData.contractAddress}</p>
+              </div>
+            </section>
+            )}
+          </div>      
+        </div>
+      </Fragment>
       )}
       {tabIndex === TabType.COMMENTS && (
         <footer className="sticky bottom-0 bg-white z-10 border-b">
