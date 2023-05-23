@@ -22,7 +22,7 @@ interface DetailPost extends Post {
 }
 
 const Explore: NextPage = () => {
-  const { isLoading, data, error } = useQuery<DetailPost>({
+  const { isLoading, data, error } = useQuery<DetailPost[]>({
     queryKey: ["posts", "users"],
     queryFn: () =>
       axios.get("api/posts/explore").then((response) => response.data.data),
@@ -47,7 +47,7 @@ const Explore: NextPage = () => {
                     address={post.address}
                     UserAddr={post.authorAddress}
                     content={post.description}
-                    UserName={post.author.username}
+                    UserName={post.author.username || ""}
                     UserImage={post.author.avatar}
                     likes={post.likes}
                     ownerName="KKKSSSGGG"

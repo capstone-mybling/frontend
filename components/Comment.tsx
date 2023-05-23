@@ -23,11 +23,12 @@ interface CommentProps {
 export default function Comment({ comment }: CommentProps) {
   const queryClient = useQueryClient();
   const deleteMutation = useMutation(
-    () => axios.delete(`/api/posts/${comment.postAddress}/comments/${comment.id}`),
+    () =>
+      axios.delete(`/api/posts/${comment.postAddress}/comments/${comment.id}`),
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         console.log("댓글 삭제 성공!");
-        queryClient.invalidateQueries("comments");
+        await queryClient.invalidateQueries(["comments"]);
       },
     }
   );

@@ -39,9 +39,9 @@ export default function FollowingModal({
   const deleteMutation = useMutation(
     (delAddr: string) => axios.delete(`api/users/follows/${delAddr}`),
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         console.log("following 삭제 성공!");
-        queryClient.invalidateQueries("userInfo");
+        await queryClient.invalidateQueries(["userInfo"]);
       },
     }
   );

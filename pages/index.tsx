@@ -42,7 +42,7 @@ const Home: NextPage = () => {
               address={post.address}
               UserAddr={post.authorAddress}
               content={post.description}
-              UserName={post.author.username}
+              UserName={post.author.username || ""}
               UserImage={post.author.avatar}
               likes={post.likes}
               ownerName="KKKSSSGGG"

@@ -17,8 +17,9 @@ import { cls } from "@/libs/client/utils";
 import useWeb3 from "@/hooks/useWeb3";
 import axios from "axios";
 import { ethers } from "ethers";
-import { router } from "next/client";
+
 import ProgressLoading from "@/components/ProgressLoading";
+import { useRouter } from "next/router";
 
 enum FileType {
   IMAGE = "image",
@@ -43,6 +44,8 @@ interface UploadForm {
 export default function Upload() {
   const [uploadImg, setUploadImg] = useState<File | null>();
   const [showProgress, setShowProgress] = useState<boolean>(false);
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -181,7 +184,8 @@ export default function Upload() {
                 <br />
                 Max upload size 30MB
               </p>
-              <span className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
+              <span
+                className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
                 + Add File
               </span>
             </label>

@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { cls } from "@libs/client/utils";
 import UserAvatar from "@components/UserAvatar";
 import Thumbnail from "./Thumbnail";
 import LikeButton from "./LikeButton";
+import useWeb3 from "@/hooks/useWeb3";
 
 interface PostProps {
   thumbnail: any;
@@ -10,7 +11,7 @@ interface PostProps {
   content: string;
   UserName?: string;
   UserAddr: string;
-  UserImage?: string;
+  UserImage?: string | null;
   likes: number;
   small?: boolean;
   ownerName?: string;
@@ -36,6 +37,7 @@ export default function PostViewer({
 }: PostProps) {
   const postContentRef = useRef<HTMLDivElement>(null);
   const [shouldSummarize, setShouldSummarize] = useState<boolean>(false);
+  const { account } = useWeb3();
   useEffect(() => {
     if (postContentRef.current) {
       const lineCount =
@@ -63,22 +65,15 @@ export default function PostViewer({
                 UserName={UserName!}
                 UserImage={UserImage!}
                 UserAddr={UserAddr}
+                isMine={account === UserAddr}
               />
             </div>
             {/* 좋아요 수 */}
-            <LikeButton
-              isLiked={isLiked}
-              likes={likes}
-              address={address}
-            />
+            <LikeButton isLiked={isLiked} likes={likes} address={address} />
           </div>
         )}
         {/* 썸네일 */}
-        <Thumbnail
-          thumbnail={thumbnail}
-          address={address}
-          link={address}
-        />
+        <Thumbnail thumbnail={thumbnail} address={address} link={address} />
         {small ? null : (
           <>
             {/* 게시글 내용(bottom) */}
@@ -105,7 +100,9 @@ export default function PostViewer({
             {/* current owner */}
             <div className="px-1 flex space-x-2 items-center">
               <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
-              <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
+              <span className="text-sm font-extrabold text-gray-500">
+                Current Owner
+              </span>
               <span className="text-sm font-extrabold">{ownerName}</span>
             </div>
           </>

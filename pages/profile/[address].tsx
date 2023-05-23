@@ -14,6 +14,7 @@ import { GetServerSideProps } from "next";
 interface userInfo extends User {
   followings: string[];
   followers: string[];
+  posts: any[];
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -99,9 +100,11 @@ const Home = ({ address }: HomeProps) => {
     setActiveTab(tabIndex);
   };
 
-  return isLoading || data == undefined ? (
-    <MypageLoading />
-  ) : (
+  if (isLoading || !data) {
+    return <MypageLoading />;
+  }
+
+  return (
     <Layout>
       <section className="flex flex-col justify-center items-center pb-12 border-b border-neutral-300 px-6">
         <div className="flex flex-row justify-end w-[115%] pt-2 pb-10">
@@ -114,14 +117,15 @@ const Home = ({ address }: HomeProps) => {
         </div>
         <UserAvatar
           size="XLarge"
-          UserImage={data.avatar}
-          UserName={data.username}
+          UserImage={data.avatar || ""}
+          UserName={data.username || ""}
           UserAddr={data.address}
+          isMine={address === data.address}
         />
         <div className="w-full">
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
-            <FollowerModal userFollower={data?.followers} delBtn={false} />
-            <FollowingModal userFollowing={data?.followings} delBtn={false} />
+            <FollowerModal userFollower={data.followers} />
+            <FollowingModal userFollowing={data.followings} />
           </div>
           <div className="text-gray-500">
             <div className="py-4 font-extrabold">About</div>
