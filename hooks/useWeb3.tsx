@@ -116,7 +116,6 @@ const useWeb3 = () => {
 
   const setupContracts = async (signer: any, networkName: string) => {
     if (!networkName) {
-      // TODO: error
       return false;
     }
     const marketplaceContract = new ethers.Contract(

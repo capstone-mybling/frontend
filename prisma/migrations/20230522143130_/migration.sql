@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Contract" ADD COLUMN     "mintId" INTEGER NOT NULL DEFAULT 0;

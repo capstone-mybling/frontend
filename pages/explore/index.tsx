@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
 import Layout from "@/components/Layout";
-import React, { useRef, useState } from "react";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Post, PostComment, User } from "@libs/client/types";
-import Image from "next/image";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -13,7 +12,6 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 // import required modules
 import { EffectCards } from "swiper";
-import Thumbnail from "@/components/Thumbnail";
 import PostViewer from "@/components/PostViewer";
 
 interface DetailPost extends Post {
@@ -32,26 +30,16 @@ const Explore: NextPage = () => {
   return (
     <Layout>
       {/* <div className="flex flex-wrap mx-auto p-1"></div> */}
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-full">
         <div>
           <Swiper
-            effect={"cards"}
+            effect="cards"
             grabCursor={true}
             modules={[EffectCards]}
             className="w-[340px]"
           >
             {data?.map((post) => (
-              <SwiperSlide key={post.id} className="bg-white shadow-xl border">
-                {/* <Thumbnail
-                thumbnail={post.thumbnail}
-                address={post.address}
-                option="Thumnail"
-                link={post.address}
-              />
-              <div className="flex gap-2 items-end p-4">
-                <div className="text-xl font-semibold">{post.name}</div>
-                <div className="text-sm text-gray-500">{post.price} GOETH</div>
-              </div> */}
+              <SwiperSlide key={post.id} className="bg-white shadow-xl">
                 <div className="py-4 px-[1px]">
                   <PostViewer
                     key={post.id}

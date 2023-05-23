@@ -17,6 +17,7 @@ import { cls } from "@/libs/client/utils";
 import useWeb3 from "@/hooks/useWeb3";
 import axios from "axios";
 import { ethers } from "ethers";
+import { router } from "next/client";
 
 enum FileType {
   IMAGE = "image",
@@ -64,13 +65,16 @@ export default function Upload() {
         "Content-Type": "multipart/form-data",
       },
     });
+
     const { imageHash, ipfsHash } = response.data.data;
 
     if (!nftContract) return;
     const mintResponse = await nftContract.mint(
       `https://gateway.pinata.cloud/ipfs/${ipfsHash}`
     );
+
     const mintId = await nftContract.tokenCount();
+
     await (
       await nftContract.setApprovalForAll(
         process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
@@ -112,7 +116,10 @@ export default function Upload() {
       }
     );
 
-    resetForm();
+    if (postResponse.data.success) {
+      resetForm();
+      await router.push(`/posts/${ipfsHash}`);
+    }
   };
 
   const resetForm = () => {

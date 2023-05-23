@@ -33,8 +33,6 @@ const handler = async (
   if (request.method === "GET") {
     const redis = await getRedisClient();
 
-    console.log(user);
-
     const followings = await redis.sMembers(`user:${user!.address}:followings`);
 
     const findPosts = await client.post.findMany({
@@ -43,7 +41,7 @@ const handler = async (
           author: {
             is: {
               address: {
-                in: [...followings, user.address],
+                in: [...followings, user!.address],
               },
             },
           },
