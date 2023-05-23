@@ -54,7 +54,6 @@ export default function MyPage() {
   // image 업로드 시 동작하는 함수
   const uploadNewImg = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target?.files;
-    console.log(files);
     if (files && files.length > 0) {
       setUploadImg(files.item(0));
       setValue("image", files.item(0)!);

@@ -51,8 +51,6 @@ const handler = async (
     })
   );
 
-  console.log(posts);
-
   return baseResponse(response, {
     success: true,
     data: posts,

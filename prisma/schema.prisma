@@ -14,6 +14,7 @@ model User {
   username    String?
   avatar      String?
   description String?
+  isApproved  Boolean @default(false)
   lastLoginIP String  @default("127.0.0.1")
 
   following    UserFollow[]      @relation("follows")
