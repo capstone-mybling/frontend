@@ -6,12 +6,16 @@ import { useForm } from "react-hook-form";
 import { dateCalculator } from "@libs/client/dateCalculator";
 import axios from "axios";
 import Image from "next/image";
+import EtheriumIcon from "@public/etherium_icon.svg";
+import Etherscan from "@public/etherscan.png";
+import Opensea from "@public/opensea.png";
 import Layout from "@components/Layout";
 import UserAvatar from "@/components/UserAvatar";
 import LikeButton from "@/components/LikeButton";
 import Comment from "@/components/Comment";
 import useWeb3 from "@/hooks/useWeb3";
 import { ethers } from "ethers";
+import Link from "next/link";
 
 interface DetailPost extends Post {
   contract: Contract;
@@ -65,25 +69,17 @@ const Home = ({ address }: HomeProps) => {
   //calling API and handling data
   const { data: postData, isLoading: postIsLoading } = useQuery<DetailPost>({
     queryKey: ["post", address],
-    queryFn: async () =>
-      await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
+    queryFn: async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
   });
 
-  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<
-    CommentDetail[]
-  >({
+  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<CommentDetail[]>({
     queryKey: ["postComments", address],
     queryFn: async () =>
-      await axios
-        .get(`/api/posts/${address}/comments`)
-        .then((res) => res.data.data),
+      await axios.get(`/api/posts/${address}/comments`).then((res) => res.data.data),
   });
 
   // MUI tabs
   const [tabIndex, setTabIndex] = useState<TabType>(TabType.COMMENTS);
-  const handleTabChange = (event: React.SyntheticEvent, newValue: TabType) => {
-    setTabIndex(newValue);
-  };
 
   // comments mutation using react-query
   const mutation = useMutation({
@@ -134,7 +130,7 @@ const Home = ({ address }: HomeProps) => {
             </button>
           </div>
         </div>
-        <div className="flex justify-center align-middle py-6 ">
+        <div className="flex justify-center align-middle mb-3 ">
           <Image
             className="h-full x-auto block object-cover m-0"
             src={`${postData!.thumbnail}`}
@@ -144,13 +140,18 @@ const Home = ({ address }: HomeProps) => {
           />
         </div>
         {/* post info : 좋아요, 댓글 */}
-        <div className="flex flex-col px-2 py-4 justify-center">
+        <div className="flex flex-col px-2 justify-center">
+          <div className="flex items-center space-x-2 ml-1">
+            <EtheriumIcon />
+            <div className="flex">
+              <span>{postData!.price}</span>
+              <span className=" text-cyan-950 font-extrabold">&nbsp;GeorliETH</span>
+            </div>
+          </div>
           <section className="flex justify-between mb-4">
             <div className="px-1 flex space-x-2 items-center">
               <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
-              <span className="text-sm font-extrabold text-gray-500">
-                Current Owner
-              </span>
+              <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
               <span className="text-sm font-extrabold">hazzun</span>
             </div>
             <div className="flex items-center justify-end my-3">
@@ -168,9 +169,7 @@ const Home = ({ address }: HomeProps) => {
                 <h1 className="font-bold text-2xl">{postData!.name}</h1>
               </div>
               <div>
-                <p className="text-gray-500">
-                  {dateCalculator(postData!.createdAt)}
-                </p>
+                <p className="text-gray-500">{dateCalculator(postData!.createdAt)}</p>
               </div>
             </div>
             <p className="my-4">{postData!.description}</p>
@@ -179,9 +178,7 @@ const Home = ({ address }: HomeProps) => {
             <div className="w-full my-5 flex justify-around align-middle">
               <button
                 className={`px-4 py-2 ${
-                  tabIndex === TabType.COMMENTS
-                    ? "text-violet-500"
-                    : "text-violet-300"
+                  tabIndex === TabType.COMMENTS ? "text-violet-500" : "text-violet-300"
                 }`}
                 onClick={() => setTabIndex(TabType.COMMENTS)}
               >
@@ -196,9 +193,7 @@ const Home = ({ address }: HomeProps) => {
               </button>
               <button
                 className={`px-4 py-2 ${
-                  tabIndex === TabType.SALES
-                    ? "text-violet-500"
-                    : "text-violet-300"
+                  tabIndex === TabType.SALES ? "text-violet-500" : "text-violet-300"
                 }`}
                 onClick={() => setTabIndex(TabType.SALES)}
               >
@@ -213,9 +208,7 @@ const Home = ({ address }: HomeProps) => {
               </button>
               <button
                 className={`px-4 py-2 ${
-                  tabIndex === TabType.ADDITIONAL
-                    ? "text-violet-500"
-                    : "text-violet-300"
+                  tabIndex === TabType.ADDITIONAL ? "text-violet-500" : "text-violet-300"
                 }`}
                 onClick={() => setTabIndex(TabType.ADDITIONAL)}
               >
@@ -229,49 +222,108 @@ const Home = ({ address }: HomeProps) => {
                 ></p>
               </button>
             </div>
-            {tabIndex === TabType.COMMENTS && (
-              //  {/* comments section */}
-              <div className="mt-4 pt-4">
-                <ul>
-                  {commentsIsLoading ||
-                    (commentsData &&
-                      commentsData.map((comment) => (
-                        <li
-                          key={comment.id}
-                          className="flex justify-between px-5 flex-col pb-4"
-                        >
-                          <Comment comment={comment} />
-                        </li>
-                      )))}
-                </ul>
-              </div>
-            )}
-            {tabIndex === TabType.SALES && <p>판매정보</p>}
-            {tabIndex === TabType.ADDITIONAL && (
-              <section className="p-2 mt-4">
-                <div className="flex justify-between">
-                  <p>author</p>
-                  <p>{postData!.author.username}</p>
+            <div className="pb-20">
+              {tabIndex === TabType.COMMENTS && (
+                //  {/* comments section */}
+                <div className="mt-4 pt-4">
+                  <ul>
+                    {commentsIsLoading ||
+                      (commentsData &&
+                        commentsData.map((comment) => (
+                          <li
+                            key={comment.id}
+                            className="flex justify-between px-5 flex-col pb-4"
+                          >
+                            <Comment comment={comment} />
+                          </li>
+                        )))}
+                  </ul>
                 </div>
-                <div className="flex justify-between">
-                  <p>price</p>
-                  <p>{postData!.price}</p>
-                </div>
-                <div className="flex justify-between">
-                  <p>copies</p>
-                  <p>{postData!.count}</p>
-                </div>
-                <div className="flex justify-between">
-                  <p>contract</p>
-                  <p className="w-3/4">{postData!.contractAddress}</p>
-                </div>
-              </section>
-            )}
+              )}
+              {tabIndex === TabType.SALES && <p>판매정보</p>}
+              {tabIndex === TabType.ADDITIONAL && (
+                <section className="p-2 mt-4">
+                  <div className="flex justify-between items-center">
+                    <p className="font-bold text-[17px]">author</p>
+                    <p>{postData!.author.username}</p>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between items-center">
+                    <p className="font-bold text-[17px]">price</p>
+                    <div className="flex space-x-2 items-center">
+                      <EtheriumIcon className="w-4" />
+                      <p>{postData!.price}&nbsp;GeorliETH</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between items-center">
+                    <p className="font-bold text-[17px]">copies</p>
+                    <p>{postData!.count}</p>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between items-center my-1">
+                    <p className="font-bold text-[17px]">tracnsaction</p>
+                    <Link
+                      passHref
+                      legacyBehavior
+                      href={`https://goerli.etherscan.io/tx/${postData!.contractAddress}`}
+                    >
+                      <a target="_blank">
+                        <Image
+                          src={Etherscan}
+                          alt="Link to contract information about this NFT contract"
+                          width={250}
+                          height={1}
+                        />
+                      </a>
+                    </Link>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between items-center my-1">
+                    <p className="font-bold text-[17px]">minting contract</p>
+                    <Link
+                      passHref
+                      legacyBehavior
+                      href={`https://goerli.etherscan.io/address/0x7d56062dd1c44c6cb784a1c2ab1ec3d14ea84e13`}
+                    >
+                      <a target="_blank">
+                        <Image
+                          src={Etherscan}
+                          alt="Link to contract information about this NFT contract"
+                          width={250}
+                          height={1}
+                        />
+                      </a>
+                    </Link>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between items-center my-1">
+                    <p className="font-bold text-[17px]">see more</p>
+                    <Link
+                      passHref
+                      legacyBehavior
+                      href={`https://testnets.opensea.io/assets/goerli/0x7d56062dd1c44c6cb784a1c2ab1ec3d14ea84e13/${
+                        postData!.contract.mintId + 1
+                      }`}
+                    >
+                      <a target="_blank">
+                        <Image
+                          src={Opensea}
+                          alt="Link to contract information about this NFT"
+                          width={250}
+                          height={1}
+                        />
+                      </a>
+                    </Link>
+                  </div>
+                </section>
+              )}
+            </div>
           </div>
         </div>
       </Fragment>
       {tabIndex === TabType.COMMENTS && (
-        <footer className="sticky bottom-0 bg-white z-10 border-b">
+        <footer className="fixed w-[500px] bottom-0 bg-white z-10 border-b">
           {/* comment form */}
           <form
             className="flex border-t border-neutral-300 p-3"
