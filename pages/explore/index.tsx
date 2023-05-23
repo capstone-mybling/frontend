@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
 import Layout from "@/components/Layout";
-import React, { useRef, useState } from "react";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Post, PostComment, User } from "@libs/client/types";
-import Image from "next/image";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";

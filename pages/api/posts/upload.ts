@@ -52,7 +52,6 @@ const handler = async (
 
   const formData = await parsedFormData(request);
   const uploadedFile = fs.createReadStream(formData.files.image.filepath);
-  console.log(uploadedFile);
 
   if (!uploadedFile || !formData.fields.name) {
     return baseResponse(response, {

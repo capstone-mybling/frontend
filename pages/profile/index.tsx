@@ -15,6 +15,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 interface UserWithFollow extends User {
   followings: string[];
   followers: string[];
+  posts: any[];
 }
 
 enum FileType {
@@ -54,7 +55,6 @@ export default function MyPage() {
   // image 업로드 시 동작하는 함수
   const uploadNewImg = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target?.files;
-    console.log(files);
     if (files && files.length > 0) {
       setUploadImg(files.item(0));
       setValue("image", files.item(0)!);
@@ -79,7 +79,7 @@ export default function MyPage() {
     (formData: FormData) => axios.patch("api/users/me", formData),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("userInfo");
+        queryClient.invalidateQueries(["userInfo"]);
       },
     }
   );
@@ -197,6 +197,7 @@ export default function MyPage() {
               UserImage={data?.avatar || ""}
               UserName={data?.username || ""}
               UserAddr={data?.address || ""}
+              isMine={true}
             />
             <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl ">
               <FollowerModal userFollower={data?.followers} />

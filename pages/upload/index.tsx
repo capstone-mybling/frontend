@@ -18,6 +18,9 @@ import useWeb3 from "@/hooks/useWeb3";
 import axios from "axios";
 import { ethers } from "ethers";
 
+import ProgressLoading from "@/components/ProgressLoading";
+import { useRouter } from "next/router";
+
 enum FileType {
   IMAGE = "image",
   VIDEO = "video",
@@ -40,6 +43,9 @@ interface UploadForm {
 
 export default function Upload() {
   const [uploadImg, setUploadImg] = useState<File | null>();
+  const [showProgress, setShowProgress] = useState<boolean>(false);
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -51,6 +57,7 @@ export default function Upload() {
 
   // handlesubmit 시 작동하는 함수 두가지
   const onValid = async (data: UploadForm) => {
+    setShowProgress(true);
     const { name, description, count, price } = data;
     const form = new FormData();
     form.append("image", data.image);
@@ -64,13 +71,14 @@ export default function Upload() {
         "Content-Type": "multipart/form-data",
       },
     });
+
     const { imageHash, ipfsHash } = response.data.data;
 
     if (!nftContract) return;
-    const mintResponse = await nftContract.mint(
-      `https://gateway.pinata.cloud/ipfs/${ipfsHash}`
-    );
+    const mintResponse = await nftContract.mint(`https://gateway.pinata.cloud/ipfs/${ipfsHash}`);
+
     const mintId = await nftContract.tokenCount();
+
     await (
       await nftContract.setApprovalForAll(
         process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
@@ -112,7 +120,10 @@ export default function Upload() {
       }
     );
 
-    resetForm();
+    if (postResponse.data.success) {
+      resetForm();
+      await router.push(`/posts/${ipfsHash}`);
+    }
   };
 
   const resetForm = () => {
@@ -145,6 +156,7 @@ export default function Upload() {
 
   return (
     <Layout>
+      {showProgress && <ProgressLoading />}
       <form
         onSubmit={handleSubmit(onValid, onNotValid)}
         className="px-5 grid-cols-1 grid w-full mx-auto space-y-8 my-8"
@@ -172,7 +184,8 @@ export default function Upload() {
                 <br />
                 Max upload size 30MB
               </p>
-              <span className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
+              <span
+                className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
                 + Add File
               </span>
             </label>

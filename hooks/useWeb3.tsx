@@ -116,16 +116,15 @@ const useWeb3 = () => {
 
   const setupContracts = async (signer: any, networkName: string) => {
     if (!networkName) {
-      // TODO: error
       return false;
     }
     const marketplaceContract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
+      process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS!,
       Marketplace.abi,
       signer
     );
     const nftContract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS,
+      process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS!,
       NFT.abi,
       signer
     );
