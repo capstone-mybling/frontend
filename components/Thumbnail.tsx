@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-type OptionStyle = "Thumnail" | "Post";
+type OptionStyle = "Thumnail" | "Post" | "Explore";
 
 type Props = {
   thumbnail: any;
@@ -45,6 +45,11 @@ function getOptionStyle(option: OptionStyle) {
       return {
         style:
           "flex items-center justify-center aspect-square bg-gray-100 hover:cursor-pointer",
+      };
+    case "Explore":
+      return {
+        style:
+          "flex items-center justify-center aspect-[2/3] bg-gray-400 hover:cursor-pointer",
       };
   }
 }

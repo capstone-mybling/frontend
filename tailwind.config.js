@@ -16,6 +16,10 @@ module.exports = {
         "pantone-darkest": "#1A1A2E",
         "purchase-button": "#009ff6",
       },
+      aspectRatio: {
+        "9/16": "9 / 16",
+        "2/3": "2/3",
+      },
     },
   },
   darkMode: "media", // class
