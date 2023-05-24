@@ -42,6 +42,9 @@ const useWeb3 = () => {
   const [account, setAccount] = useState<string>(Web3DefaultValues.account);
   const [balance, setBalance] = useState<number>(Web3DefaultValues.balance);
   const [network, setNetwork] = useState<string>(Web3DefaultValues.network);
+  const [accountOrigin, setAccountOrigin] = useState<string>(
+    Web3DefaultValues.account
+  );
   const [marketplaceContract, setMarketplaceContract] = useState<any>(
     Web3DefaultValues.marketplaceContract
   );
@@ -90,8 +93,9 @@ const useWeb3 = () => {
   };
 
   const getAndSetAccountAndBalance = async (provider: any, address: string) => {
-    setAccount(address);
-    await setLogin(address);
+    setAccountOrigin(address);
+    setAccount(address.toLowerCase());
+    await setLogin(address.toLowerCase());
     const signerBalance = await provider.getBalance(address);
     const balance = ethers.formatEther(signerBalance);
     setBalance(Number(balance));
@@ -138,6 +142,7 @@ const useWeb3 = () => {
     isConnected,
     IsReady,
     account,
+    accountOrigin,
     balance,
     network,
     marketplaceContract,

@@ -151,6 +151,18 @@ model PostCommentLike {
   @@id([commentId, userAddress])
 }
 
+model Transfer {
+  id Int @id @default(autoincrement())
+
+  contract        Contract @relation(fields: [contractAddress], references: [hash])
+  contractAddress String   @unique
+
+  fromAddress String
+  toAddress   String
+
+  createdAt DateTime @default(now())
+}
+
 enum StorageType {
   LOCAL
   S3

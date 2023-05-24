@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,9 +12,8 @@ import Logo from "@public/logo.png";
 import MetaMask from "@public/metamask.svg";
 import Copyright from "@public/copyright.svg";
 import { cls } from "@/libs/client/utils";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import useWeb3 from "@/hooks/useWeb3";
-import EtherIcon from "@public/etherium_icon.svg";
 import Backdrop from "@mui/material/Backdrop";
 import { User } from "@libs/client/types";
 
@@ -24,6 +23,8 @@ interface UserResponse extends User {
 }
 
 function ResponsiveAppBar() {
+  const router = useRouter();
+
   const [searchBar, setSearchBar] = useState<boolean>(false);
   const handleSearchBar = () => {
     setMenuBar(false);
@@ -45,12 +46,12 @@ function ResponsiveAppBar() {
       console.log(searchText);
     }
   };
-  const Onclick = () => {
-    Router.push("/");
+  const Onclick = async () => {
+    await router.push("/");
   };
   const [logined, setLogined] = useState<boolean>();
   const { isConnected, balance, account, network } = useWeb3();
-  // getAccount()를 통해 서버에 유저정보가 담기면 그걸 다시 긁어오는 코드
+  // getAccount() 를 통해 서버에 유저정보가 담기면 그걸 다시 긁어오는 코드
   const handleLogin = () => {
     axios
       .post("/api/users/login", {
@@ -85,10 +86,7 @@ function ResponsiveAppBar() {
         className="w-[500px] inset-x-0 mx-auto shadow drop-shadow-[0_10px_3px_-2px_rgba(100,100,100,0.25)] h-16 z-20 justify-center"
       >
         <Container className="pr-3 pl-3">
-          <Toolbar
-            disableGutters
-            className="flex justify-between"
-          >
+          <Toolbar disableGutters className="flex justify-between">
             {/* 로고버튼 */}
             <Box>
               <Image
@@ -149,7 +147,9 @@ function ResponsiveAppBar() {
         )}
       >
         <div className="flex-cols-1 items-center justify-center">
-          <div className="w-full bg-white h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)]">1</div>
+          <div className="w-full bg-white h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)]">
+            1
+          </div>
           <button onClick={handleSearchBar}>Close</button>
         </div>
       </div>
@@ -175,7 +175,9 @@ function ResponsiveAppBar() {
                   onClick={handleLogin}
                 >
                   <MetaMask></MetaMask>
-                  <button className=" text-center text-xl font-semibold ">Connect wallet</button>
+                  <button className=" text-center text-xl font-semibold ">
+                    Connect wallet
+                  </button>
                 </div>
               ) : (
                 <div className=" flex-1 text-center align-middle my-10">
