@@ -4,6 +4,7 @@ import { GetServerSideProps } from "next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { dateCalculator } from "@libs/client/dateCalculator";
+import { cls } from "@libs/client/utils";
 import axios from "axios";
 import Image from "next/image";
 import EtheriumIcon from "@public/etherium_icon.svg";
@@ -135,7 +136,12 @@ const Home = ({ address }: HomeProps) => {
             </button>
             <button
               onClick={purchase}
-              className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70"
+              className={cls(
+                "bg-black opacity-30 px-6 py-1 rounded-2xl text-white",
+                saleInfo > 0
+                  ? "pointer-events-none disabled"
+                  : "hover:opacity-70 hover:bg-violet-800 transition duration-300"
+              )}
             >
               구매하기
             </button>
