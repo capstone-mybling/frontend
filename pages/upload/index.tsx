@@ -11,7 +11,7 @@
 
 import { FieldErrors, useForm } from "react-hook-form";
 import Layout from "@/components/Layout";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
 import useWeb3 from "@/hooks/useWeb3";
@@ -53,7 +53,29 @@ export default function Upload() {
     setValue,
     formState: { isValid },
   } = useForm<UploadForm>({ mode: "onChange" });
-  const { marketplaceContract, nftContract } = useWeb3();
+  const { marketplaceContract, nftContract, accountOrigin } = useWeb3();
+  console.log(nftContract);
+
+  const checkApproval = async () => {
+    // const isApproved = await nftContract.isApprovedForAll(
+    //   accountOrigin,
+    //   process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS
+    // );
+    //
+    // if (!isApproved) {
+    //   await (
+    //     await nftContract.setApprovalForAll(
+    //       process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
+    //       true
+    //     )
+    //   ).wait();
+    // }
+  };
+
+  useEffect(() => {
+    if (!nftContract) return;
+    checkApproval().then();
+  }, [nftContract]);
 
   // handlesubmit 시 작동하는 함수 두가지
   const onValid = async (data: UploadForm) => {
@@ -75,14 +97,15 @@ export default function Upload() {
     const { imageHash, ipfsHash } = response.data.data;
 
     if (!nftContract) return;
-    const mintResponse = await nftContract.mint(`https://gateway.pinata.cloud/ipfs/${ipfsHash}`);
+    const mintResponse = await nftContract.mint(
+      `https://gateway.pinata.cloud/ipfs/${ipfsHash}`
+    );
 
     const mintId = await nftContract.tokenCount();
-
     await (
-      await nftContract.setApprovalForAll(
+      await nftContract.approve(
         process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
-        true
+        mintId
       )
     ).wait();
 
@@ -184,8 +207,7 @@ export default function Upload() {
                 <br />
                 Max upload size 30MB
               </p>
-              <span
-                className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
+              <span className="mx-auto bg-violet-300 px-6 py-1 rounded-2xl text-white hover:bg-violet-600 hover:cursor-pointer">
                 + Add File
               </span>
             </label>
