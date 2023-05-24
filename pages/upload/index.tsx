@@ -61,7 +61,7 @@ export default function Upload() {
     formState: { isValid },
   } = useForm<UploadForm>({ mode: "onChange" });
   const { marketplaceContract, nftContract, accountOrigin } = useWeb3();
-  console.log(nftContract);
+  // console.log(nftContract);
 
   const checkApproval = async () => {
     // const isApproved = await nftContract.isApprovedForAll(
@@ -353,22 +353,59 @@ export default function Upload() {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">
+          <DialogTitle
+            id="alert-dialog-title"
+            sx={{
+              opacity: "75%",
+              paddingLeft: "54px",
+              backgroundColor: "rgb(150 60 250)",
+              color: "white",
+            }}
+          >
             {"continue minting"}
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              <p>name : {getValues("name")}</p>
-              <p>description : {getValues("description")}</p>
-              <p>count : {getValues("count")}</p>
-              <p>price : {getValues("price")}</p>
+            <DialogContentText
+              id="alert-dialog-description"
+              sx={{ paddingTop: "20px", marginX: "20px" }}
+            >
+              <div className="flex justify-between">
+                <span className="font-medium">name :</span>
+                <span className="text-violet-400">{getValues("name")}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium">description : </span>
+                <span className="text-violet-400">
+                  {getValues("description")}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium">count : </span>
+                <span className="text-violet-400">{getValues("count")}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium">price : </span>
+                <span className="text-violet-400">
+                  {getValues("price")} GoerliETH
+                </span>
+              </div>
               <br />
               해당 정보로 민팅을 진행하시겠습니까?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <button onClick={() => handleClose(true)}>아니요</button>
-            <button onClick={() => handleClose(false)}>네</button>
+            <button
+              className="shadow-xl px-4 py-1 font-semibold"
+              onClick={() => handleClose(true)}
+            >
+              취소하기
+            </button>
+            <button
+              onClick={() => handleClose(false)}
+              className="shadow-xl px-4 py-1 font-semibold bg-violet-500 text-white "
+            >
+              민팅하기
+            </button>
           </DialogActions>
         </Dialog>
       )}
