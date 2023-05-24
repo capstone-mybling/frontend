@@ -6,5 +6,6 @@ declare module "@contracts/build/contracts/NFT.json" {
     address: string,
     approved: boolean
   ) => Promise<void>;
+  const approve: (address: string, tokenId: BigInt) => Promise<void>;
   export default value;
 }

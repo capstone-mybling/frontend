@@ -8,6 +8,7 @@ export type User = {
   username: string | null;
   avatar: string | null;
   description: string | null;
+  isApproved: boolean;
   lastLoginIP: string;
   createdAt: Date;
   updatedAt: Date;
@@ -63,6 +64,7 @@ export type Contract = {
   id: number;
   authorAddress: string;
   hash: string;
+  mintId: number;
   itemId: number;
   fromAddress: string;
   toAddress: string;
