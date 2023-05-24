@@ -19,6 +19,7 @@ import Comment from "@/components/Comment";
 import useWeb3 from "@/hooks/useWeb3";
 import { ethers } from "ethers";
 import Link from "next/link";
+import { cls } from "@/libs/client/utils";
 
 interface DetailPost extends Post {
   contract: Contract;
@@ -134,7 +135,12 @@ const Home = ({ address }: HomeProps) => {
             </button>
             <button
               onClick={purchase}
-              className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70"
+              className={cls(
+                "bg-black opacity-30 px-6 py-1 rounded-2xl text-white",
+                saleInfo > 0
+                  ? "pointer-events-none disabled"
+                  : "hover:opacity-70 hover:bg-violet-800 transition duration-300"
+              )}
             >
               구매하기
             </button>
