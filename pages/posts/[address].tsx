@@ -19,6 +19,7 @@ import Comment from "@/components/Comment";
 import useWeb3 from "@/hooks/useWeb3";
 import { ethers } from "ethers";
 import Link from "next/link";
+import DetailLoading from "@/components/DetailLoading";
 
 interface DetailPost extends Post {
   contract: Contract;
@@ -111,7 +112,7 @@ const Home = ({ address }: HomeProps) => {
   const [saleInfo, setSaleInfo] = useState<number>(0);
 
   if (postIsLoading || commentsIsLoading) {
-    return <div>Loading...</div>;
+    return <DetailLoading />;
   }
   return (
     <Layout disableFooter>
