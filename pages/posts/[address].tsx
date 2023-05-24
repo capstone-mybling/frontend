@@ -9,6 +9,9 @@ import Image from "next/image";
 import EtheriumIcon from "@public/etherium_icon.svg";
 import Etherscan from "@public/etherscan.png";
 import Opensea from "@public/opensea.png";
+import OnSale from "@public/onsale.svg";
+import NotForSale from "@public/notforsale.svg";
+import SoldOut from "@public/soldout.svg";
 import Layout from "@components/Layout";
 import UserAvatar from "@/components/UserAvatar";
 import LikeButton from "@/components/LikeButton";
@@ -104,11 +107,12 @@ const Home = ({ address }: HomeProps) => {
       })
     ).wait();
   };
+  //only for test
+  const [saleInfo, setSaleInfo] = useState<number>(0);
 
   if (postIsLoading || commentsIsLoading) {
     return <div>Loading...</div>;
   }
-
   return (
     <Layout disableFooter>
       <Fragment>
@@ -123,6 +127,12 @@ const Home = ({ address }: HomeProps) => {
               isMine={account === postData!.authorAddress}
             />
             <button
+              className=" bg-amber-800  rounded-full px-1 text-white"
+              onClick={() => setSaleInfo((saleInfo + 1) % 3)}
+            >
+              change saleInfo
+            </button>
+            <button
               onClick={purchase}
               className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70"
             >
@@ -130,7 +140,7 @@ const Home = ({ address }: HomeProps) => {
             </button>
           </div>
         </div>
-        <div className="flex justify-center align-middle mb-3 ">
+        <div className="relative flex justify-center align-middle mb-3 ">
           <Image
             className="h-full x-auto block object-cover m-0"
             src={`${postData!.thumbnail}`}
@@ -138,6 +148,9 @@ const Home = ({ address }: HomeProps) => {
             width="2000"
             height="2000"
           />
+          <div className="absolute right-0 translate-x-[3px] -translate-y-[9px]">
+            {saleInfo === 0 ? <OnSale /> : saleInfo === 1 ? <SoldOut /> : <NotForSale />}
+          </div>
         </div>
         {/* post info : 좋아요, 댓글 */}
         <div className="flex flex-col px-2 justify-center">
