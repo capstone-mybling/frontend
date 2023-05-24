@@ -175,10 +175,12 @@ const Home = ({ address }: HomeProps) => {
             <p className="my-4">{postData!.description}</p>
           </section>
           <div className="w-full">
-            <div className="w-full my-5 flex justify-around align-middle">
+            <div className="w-full my-5 flex justify-evenly align-middle">
               <button
                 className={`px-4 py-2 ${
-                  tabIndex === TabType.COMMENTS ? "text-violet-500" : "text-violet-300"
+                  tabIndex === TabType.COMMENTS
+                    ? "text-violet-500 font-extrabold"
+                    : "text-violet-300  font-base"
                 }`}
                 onClick={() => setTabIndex(TabType.COMMENTS)}
               >
@@ -193,7 +195,9 @@ const Home = ({ address }: HomeProps) => {
               </button>
               <button
                 className={`px-4 py-2 ${
-                  tabIndex === TabType.SALES ? "text-violet-500" : "text-violet-300"
+                  tabIndex === TabType.SALES
+                    ? "text-violet-500 font-extrabold"
+                    : "text-violet-300 font-base"
                 }`}
                 onClick={() => setTabIndex(TabType.SALES)}
               >
@@ -208,7 +212,9 @@ const Home = ({ address }: HomeProps) => {
               </button>
               <button
                 className={`px-4 py-2 ${
-                  tabIndex === TabType.ADDITIONAL ? "text-violet-500" : "text-violet-300"
+                  tabIndex === TabType.ADDITIONAL
+                    ? "text-violet-500 font-extrabold"
+                    : "text-violet-300 "
                 }`}
                 onClick={() => setTabIndex(TabType.ADDITIONAL)}
               >
