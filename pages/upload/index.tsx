@@ -21,6 +21,12 @@ import { ethers } from "ethers";
 import ProgressLoading from "@/components/ProgressLoading";
 import { useRouter } from "next/router";
 
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 enum FileType {
   IMAGE = "image",
   VIDEO = "video",
@@ -51,6 +57,7 @@ export default function Upload() {
     handleSubmit,
     reset,
     setValue,
+    getValues,
     formState: { isValid },
   } = useForm<UploadForm>({ mode: "onChange" });
   const { marketplaceContract, nftContract, accountOrigin } = useWeb3();
@@ -177,6 +184,20 @@ export default function Upload() {
     setPriceValue(value);
   };
 
+  const [open, setOpen] = useState<boolean>(false);
+  const [isModal, setIsModal] = useState<boolean>(false);
+  const [modalButton, setModalButton] = useState<boolean>(true);
+
+  const handleClose = (answer: boolean) => {
+    setOpen(false);
+    setModalButton(answer);
+  };
+
+  const openModal = () => {
+    setIsModal(true);
+    setOpen(true);
+  };
+
   return (
     <Layout>
       {showProgress && <ProgressLoading />}
@@ -300,16 +321,57 @@ export default function Upload() {
             )}
           </div>
         </div>
-        <input
-          className={cls(
-            "px-6 py-1 rounded-full text-white transition-colors duration-500 w-2/3 mx-auto h-10",
-            isValid
-              ? "bg-violet-600 cursor-pointer opacity-70"
-              : "pointer-events-none bg-gray-500 opacity-50"
-          )}
-          type="submit"
-        />
+        {modalButton ? (
+          <span
+            className={cls(
+              "flex items-center justify-center px-6 py-1 rounded-full text-white transition-colors duration-500 w-2/3 mx-auto h-10",
+              isValid
+                ? "bg-violet-600 cursor-pointer opacity-70"
+                : "pointer-events-none bg-gray-500 opacity-50"
+            )}
+            onClick={openModal}
+          >
+            Upload
+          </span>
+        ) : (
+          <input
+            className={cls(
+              "px-6 py-1 rounded-full text-white transition-colors duration-500 w-2/3 mx-auto h-10",
+              isValid
+                ? "bg-violet-600 cursor-pointer opacity-70"
+                : "pointer-events-none bg-gray-500 opacity-50"
+            )}
+            type="submit"
+            value="Minting"
+          />
+        )}
       </form>
+      {isModal && (
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"continue minting"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <p>name : {getValues("name")}</p>
+              <p>description : {getValues("description")}</p>
+              <p>count : {getValues("count")}</p>
+              <p>price : {getValues("price")}</p>
+              <br />
+              해당 정보로 민팅을 진행하시겠습니까?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <button onClick={() => handleClose(true)}>아니요</button>
+            <button onClick={() => handleClose(false)}>네</button>
+          </DialogActions>
+        </Dialog>
+      )}
     </Layout>
   );
 }

@@ -4,6 +4,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Post, PostComment, User } from "@libs/client/types";
+import Image from "next/image";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -73,26 +74,11 @@ const Explore: NextPage = () => {
                     {post.name}
                   </div>
                 </div>
-                <div className="text-sm text-neutral-200">
+                <div className="text-[15px] text-neutral-100">
                   {post.price} GoerliETH
                 </div>
               </div>
             </div>
-            {/* <div className="py-4 px-[1px]">
-                <PostViewer
-                  key={post.id}
-                  thumbnail={post.thumbnail}
-                  address={post.address}
-                  UserAddr={post.authorAddress}
-                  content={post.description}
-                  UserName={post.author.username}
-                  UserImage={post.author.avatar}
-                  likes={post.likes}
-                  ownerName="KKKSSSGGG"
-                  ownerImage=""
-                  isLiked={post.isLiked}
-                />
-              </div> */}
           </SwiperSlide>
         ))}
       </Swiper>
