@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Post, PostComment, User } from "@libs/client/types";
 import Image from "next/image";
+import Link from "next/link";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -17,6 +18,7 @@ import { EffectCards, EffectCreative } from "swiper";
 import { EffectCube, Pagination } from "swiper";
 import Thumbnail from "@/components/Thumbnail";
 import PostViewer from "@/components/PostViewer";
+import ExploreLoading from "@/components/ExploreLoading";
 
 interface DetailPost extends Post {
   likes: number;
@@ -31,7 +33,9 @@ const Explore: NextPage = () => {
     queryFn: () =>
       axios.get("api/posts/explore").then((response) => response.data.data),
   });
-  return (
+  return isLoading || data == undefined ? (
+    <ExploreLoading />
+  ) : (
     <Layout>
       {/* <div className="flex justify-center items-center flex-1"> */}
       <Swiper
@@ -63,16 +67,20 @@ const Explore: NextPage = () => {
               />
               <div className="flex gap-1 flex-col absolute bottom-3 left-3">
                 <div className="flex gap-2 items-center">
-                  <Image
-                    className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
-                    src={post.author.avatar!}
-                    alt="profile image"
-                    width={32}
-                    height={32}
-                  />
-                  <div className="text-2xl font-semibold text-white">
-                    {post.name}
-                  </div>
+                  <Link href={`/profile/${post.author.address}`}>
+                    <Image
+                      className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
+                      src={post.author.avatar!}
+                      alt="profile image"
+                      width={32}
+                      height={32}
+                    />
+                  </Link>
+                  <Link href={`/posts/${post.address}`}>
+                    <div className="text-2xl font-semibold text-white">
+                      {post.name}
+                    </div>
+                  </Link>
                 </div>
                 <div className="text-[15px] text-neutral-100">
                   {post.price} GoerliETH

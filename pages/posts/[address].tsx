@@ -16,6 +16,7 @@ import Comment from "@/components/Comment";
 import useWeb3 from "@/hooks/useWeb3";
 import { ethers } from "ethers";
 import Link from "next/link";
+import DetailLoading from "@/components/DetailLoading";
 
 interface DetailPost extends Post {
   contract: Contract;
@@ -69,13 +70,18 @@ const Home = ({ address }: HomeProps) => {
   //calling API and handling data
   const { data: postData, isLoading: postIsLoading } = useQuery<DetailPost>({
     queryKey: ["post", address],
-    queryFn: async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
+    queryFn: async () =>
+      await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
   });
 
-  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<CommentDetail[]>({
+  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<
+    CommentDetail[]
+  >({
     queryKey: ["postComments", address],
     queryFn: async () =>
-      await axios.get(`/api/posts/${address}/comments`).then((res) => res.data.data),
+      await axios
+        .get(`/api/posts/${address}/comments`)
+        .then((res) => res.data.data),
   });
 
   // MUI tabs
@@ -106,7 +112,7 @@ const Home = ({ address }: HomeProps) => {
   };
 
   if (postIsLoading || commentsIsLoading) {
-    return <div>Loading...</div>;
+    return <DetailLoading />;
   }
 
   return (
@@ -145,13 +151,17 @@ const Home = ({ address }: HomeProps) => {
             <EtheriumIcon />
             <div className="flex">
               <span>{postData!.price}</span>
-              <span className=" text-cyan-950 font-extrabold">&nbsp;GeorliETH</span>
+              <span className=" text-cyan-950 font-extrabold">
+                &nbsp;GeorliETH
+              </span>
             </div>
           </div>
           <section className="flex justify-between mb-4">
             <div className="px-1 flex space-x-2 items-center">
               <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
-              <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
+              <span className="text-sm font-extrabold text-gray-500">
+                Current Owner
+              </span>
               <span className="text-sm font-extrabold">hazzun</span>
             </div>
             <div className="flex items-center justify-end my-3">
@@ -169,7 +179,9 @@ const Home = ({ address }: HomeProps) => {
                 <h1 className="font-bold text-2xl">{postData!.name}</h1>
               </div>
               <div>
-                <p className="text-gray-500">{dateCalculator(postData!.createdAt)}</p>
+                <p className="text-gray-500">
+                  {dateCalculator(postData!.createdAt)}
+                </p>
               </div>
             </div>
             <p className="my-4">{postData!.description}</p>
@@ -178,7 +190,9 @@ const Home = ({ address }: HomeProps) => {
             <div className="w-full my-5 flex justify-around align-middle">
               <button
                 className={`px-4 py-2 ${
-                  tabIndex === TabType.COMMENTS ? "text-violet-500" : "text-violet-300"
+                  tabIndex === TabType.COMMENTS
+                    ? "text-violet-500"
+                    : "text-violet-300"
                 }`}
                 onClick={() => setTabIndex(TabType.COMMENTS)}
               >
@@ -193,7 +207,9 @@ const Home = ({ address }: HomeProps) => {
               </button>
               <button
                 className={`px-4 py-2 ${
-                  tabIndex === TabType.SALES ? "text-violet-500" : "text-violet-300"
+                  tabIndex === TabType.SALES
+                    ? "text-violet-500"
+                    : "text-violet-300"
                 }`}
                 onClick={() => setTabIndex(TabType.SALES)}
               >
@@ -208,7 +224,9 @@ const Home = ({ address }: HomeProps) => {
               </button>
               <button
                 className={`px-4 py-2 ${
-                  tabIndex === TabType.ADDITIONAL ? "text-violet-500" : "text-violet-300"
+                  tabIndex === TabType.ADDITIONAL
+                    ? "text-violet-500"
+                    : "text-violet-300"
                 }`}
                 onClick={() => setTabIndex(TabType.ADDITIONAL)}
               >
@@ -266,7 +284,9 @@ const Home = ({ address }: HomeProps) => {
                     <Link
                       passHref
                       legacyBehavior
-                      href={`https://goerli.etherscan.io/tx/${postData!.contractAddress}`}
+                      href={`https://goerli.etherscan.io/tx/${
+                        postData!.contractAddress
+                      }`}
                     >
                       <a target="_blank">
                         <Image

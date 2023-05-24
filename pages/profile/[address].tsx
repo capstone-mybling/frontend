@@ -125,7 +125,7 @@ const Home = ({ address }: HomeProps) => {
         <div className="w-full">
           <div className="w-2/3 flex gap-6 justify-around my-6 mx-auto px-10 py-2 rounded-xl bg-gray-100">
             <FollowerModal userFollower={data.followers} />
-            <FollowingModal userFollowing={data.followings} />
+            <FollowingModal userFollowing={data.followings} delBtn={false} />
           </div>
           <div className="text-gray-500">
             <div className="py-4 font-extrabold">About</div>
