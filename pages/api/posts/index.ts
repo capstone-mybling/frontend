@@ -55,6 +55,24 @@ const handler = async (
 
     const posts = await Promise.all(
       findPosts.map(async (post) => {
+        let currentOwner = null;
+
+        if (post.transfers) {
+          const owner = await client.user.findUnique({
+            where: {
+              address: post.transfers.pop().toAddress.toLowerCase(),
+            },
+          });
+
+          if (owner) {
+            currentOwner = {
+              address: owner.address,
+              username: owner.username,
+              avatar: owner.avatar,
+            };
+          }
+        }
+
         return {
           ...post,
           likes: await redis.sCard(`posts:${post.address}:likes`),
@@ -64,6 +82,7 @@ const handler = async (
               `posts:${post.address}:likes`,
               user!.address
             )),
+          currentOwner,
         };
       })
     );
