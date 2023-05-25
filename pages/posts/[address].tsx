@@ -262,7 +262,7 @@ const Home = ({ address }: HomeProps) => {
           </div>
           <section className="flex justify-between mb-4">
             <div className="px-1 flex space-x-2 items-center">
-              <div className="inline-block rounded-full ring-1 ring-gray-400 w-7 h-7">
+              <div className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6">
                 {postData!.currentOwner?.avatar && (
                   <Image
                     width={40}
@@ -272,9 +272,14 @@ const Home = ({ address }: HomeProps) => {
                   />
                 )}
               </div>
-              <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
+              <span className="text-sm font-extrabold text-pantone">Current Owner</span>
               {postData!.currentOwner?.username !== null ? (
-                <span className="text-sm font-extrabold">{postData!.currentOwner?.username}</span>
+                <Link
+                  className="text-sm font-bold text-pantone-darker"
+                  href={`/profile/${postData!.currentOwner?.address}`}
+                >
+                  {postData!.currentOwner?.username}
+                </Link>
               ) : (
                 <Image
                   width={40}
