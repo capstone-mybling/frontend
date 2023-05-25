@@ -5,17 +5,17 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import SearchIcon from "@mui/icons-material/Search";
 import Logo from "@public/logo.png";
-import MetaMask from "@public/metamask.svg";
-import Copyright from "@public/copyright.svg";
 import { cls } from "@/libs/client/utils";
-import axios from "axios";
-import useWeb3 from "@/hooks/useWeb3";
-import Backdrop from "@mui/material/Backdrop";
 import { User } from "@libs/client/types";
+// import axios from "axios";
+// import MenuIcon from "@mui/icons-material/Menu";
+// import MetaMask from "@public/metamask.svg";
+// import Copyright from "@public/copyright.svg";
+// import useWeb3 from "@/hooks/useWeb3";
+// import Backdrop from "@mui/material/Backdrop";
 
 interface UserResponse extends User {
   followings: number[];
@@ -27,15 +27,15 @@ function ResponsiveAppBar() {
 
   const [searchBar, setSearchBar] = useState<boolean>(false);
   const handleSearchBar = () => {
-    setMenuBar(false);
+    // setMenuBar(false);
     setSearchBar(!searchBar);
     if (!searchBar) setSearchText("");
   };
-  const [menuBar, setMenuBar] = useState<boolean>(false);
-  const handleMenuBar = () => {
-    setSearchBar(false);
-    setMenuBar(!menuBar);
-  };
+  // const [menuBar, setMenuBar] = useState<boolean>(false);
+  // const handleMenuBar = () => {
+  //   setSearchBar(false);
+  //   setMenuBar(!menuBar);
+  // };
   const [searchText, setSearchText] = useState<string>("");
   const handleSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -49,35 +49,35 @@ function ResponsiveAppBar() {
   const Onclick = async () => {
     await router.push("/");
   };
-  const [logined, setLogined] = useState<boolean>();
-  const { isConnected, balance, account, network } = useWeb3();
+  // const [logined, setLogined] = useState<boolean>();
+  // const { isConnected, balance, account, network } = useWeb3();
   // getAccount() 를 통해 서버에 유저정보가 담기면 그걸 다시 긁어오는 코드
-  const handleLogin = () => {
-    axios
-      .post("/api/users/login", {
-        address: account,
-      })
-      .then((res) => {
-        console.log("로그인이 정상적으로 처리되었습니다.");
-        setLogined(true);
-      })
-      .catch((e) => {
-        if (e.response.status == 400) {
-          alert("이미 로그인 되어있습니다.");
-          setLogined(true);
-        } else console.log(e);
-      });
-  };
-  const [user, setUser] = useState<UserResponse>();
-  useEffect(() => {
-    axios
-      .get("/api/users/me")
-      .then((res) => {
-        setLogined(true);
-        setUser(res.data.data);
-      })
-      .catch((e) => console.log(e));
-  }, []);
+  // const handleLogin = () => {
+  //   axios
+  //     .post("/api/users/login", {
+  //       address: account,
+  //     })
+  //     .then((res) => {
+  //       console.log("로그인이 정상적으로 처리되었습니다.");
+  //       setLogined(true);
+  //     })
+  //     .catch((e) => {
+  //       if (e.response.status == 400) {
+  //         alert("이미 로그인 되어있습니다.");
+  //         setLogined(true);
+  //       } else console.log(e);
+  //     });
+  // };
+  // const [user, setUser] = useState<UserResponse>();
+  // useEffect(() => {
+  //   axios
+  //     .get("/api/users/me")
+  //     .then((res) => {
+  //       setLogined(true);
+  //       setUser(res.data.data);
+  //     })
+  //     .catch((e) => console.log(e));
+  // }, []);
 
   return (
     <>
@@ -126,7 +126,7 @@ function ResponsiveAppBar() {
               </IconButton>
 
               {/* 메뉴버튼 */}
-              <IconButton
+              {/* <IconButton
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -135,7 +135,7 @@ function ResponsiveAppBar() {
                 color="inherit"
               >
                 <MenuIcon />
-              </IconButton>
+              </IconButton> */}
             </div>
           </Toolbar>
         </Container>
@@ -155,7 +155,7 @@ function ResponsiveAppBar() {
         </div>
       </div>
       {/* 메뉴 박스 */}
-      <Backdrop
+      {/* <Backdrop
         sx={{ color: "#ffffff", zIndex: 10 }}
         open={menuBar}
         onClick={() => setMenuBar(false)}
@@ -168,8 +168,6 @@ function ResponsiveAppBar() {
         >
           <div className="flex-cols-1 items-center justify-center mx-auto z-20">
             <div className="w-full bg-white h-full shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] grid grid-cols-1">
-              {/* 지갑 연결 버튼  : 연결 성공시, 콘솔창에 자신의 지갑 Address가 출력 됨.*/}
-              {/* TODO: 연결된 지갑의 정보 보여주기 */}
               {!logined ? (
                 <div
                   className="flex bg-sky-400 w-auto h-14 items-center mx-auto my-8 mt-10 px-10 space-x-7 rounded-full hover:cursor-pointer text-amber-600 transition-colors hover:text-amber-50 hover:bg-sky-600 shadow-md duration-500"
@@ -204,7 +202,7 @@ function ResponsiveAppBar() {
             </div>
           </div>
         </div>
-      </Backdrop>
+      </Backdrop> */}
     </>
   );
 }

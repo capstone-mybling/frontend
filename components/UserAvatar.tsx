@@ -1,3 +1,4 @@
+import { cls } from "@/libs/client/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -38,9 +39,7 @@ export default function UserAvatar({
   return (
     <div>
       <Link href={isMine ? "/profile" : `/profile/${UserAddr}`}>
-        <div
-          className={`flex items-center space-x-3 ${getAvatarSize(size)?.flex}`}
-        >
+        <div className={`flex items-center space-x-3 ${getAvatarSize(size)?.flex}`}>
           <Image
             className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
             src={setDefaultAvatar(UserImage)}
@@ -49,7 +48,7 @@ export default function UserAvatar({
             height={parseInt(getAvatarSize(size).height)}
             unoptimized={false}
           />
-          <span className={`${getAvatarSize(size).textSize}`}>{UserName}</span>
+          <span className={cls(`${getAvatarSize(size).textSize}`, "font-bold")}>{UserName}</span>
         </div>
       </Link>
     </div>
