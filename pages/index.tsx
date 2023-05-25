@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Layout from "@/components/Layout";
 import PostViewer from "@/components/PostViewer";
-import { Post, PostComment, User } from "@libs/client/types";
+import { Post, PostComment, User, Transfer } from "@libs/client/types";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import MainLoading from "@/components/icons/MainLoading";
@@ -12,6 +12,11 @@ interface PostResponse extends Post {
   isLiked: boolean;
   author: User;
   comments: PostComment;
+  currentOwner?: {
+    address: string;
+    username: string;
+    avatar: string;
+  };
 }
 
 const Home: NextPage = () => {
@@ -20,7 +25,7 @@ const Home: NextPage = () => {
     queryFn: () => axios.get("api/posts").then((res) => res.data.data),
     staleTime: 1000 * 60 * 5,
   });
-
+  console.log(data);
   return isLoading ? (
     <MainLoading />
   ) : (
@@ -49,8 +54,9 @@ const Home: NextPage = () => {
               UserName={post.author.username || ""}
               UserImage={post.author.avatar}
               likes={post.likes}
-              ownerName="KKKSSSGGG"
-              ownerImage=""
+              ownerName={post.currentOwner?.username}
+              ownerImage={post.currentOwner?.avatar}
+              ownerAddress={post.currentOwner?.address}
               isLiked={post.isLiked}
             />
           ))
