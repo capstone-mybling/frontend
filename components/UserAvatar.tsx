@@ -41,7 +41,7 @@ export default function UserAvatar({
       <Link href={isMine ? "/profile" : `/profile/${UserAddr}`}>
         <div className={`flex items-center space-x-3 ${getAvatarSize(size)?.flex}`}>
           <Image
-            className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
+            className="inline-block rounded-full ring-2 ring-gray-200 aspect-square bg-white"
             src={setDefaultAvatar(UserImage)}
             alt="user profile image"
             width={parseInt(getAvatarSize(size).width)}

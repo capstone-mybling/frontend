@@ -10,7 +10,10 @@ import Container from "@mui/material/Container";
 import SearchIcon from "@mui/icons-material/Search";
 import Logo from "@public/logo.png";
 import { cls } from "@/libs/client/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import UserAvatar from "./UserAvatar";
+import useWeb3 from "@/hooks/useWeb3";
 
 interface SearchForm {
   username: string;
@@ -28,20 +31,46 @@ interface SearchResponse {
 
 function ResponsiveAppBar() {
   const router = useRouter();
-
+  const { account } = useWeb3();
   const [searchBar, setSearchBar] = useState<boolean>(false);
+  const [searchData, setSearchData] = useState<SearchResponse | null>(null);
   const { register, reset, handleSubmit } = useForm<SearchForm>();
-  const handleSearchBar = () => {
-    setSearchBar(!searchBar);
-    if (!searchBar) reset();
-  };
 
   const Onclick = async () => {
     await router.push("/");
   };
 
+  const handleSearchBar = () => {
+    setSearchBar(!searchBar);
+    if (!searchBar) reset();
+  };
+
   const onSubmit = async (data: SearchForm) => {
     console.log(data.username);
+    mutate(data);
+    console.log(searchData);
+  };
+
+  const { mutate, isLoading } = useMutation({
+    mutationFn: (data: SearchForm) => {
+      return axios.get(`/api/users/search/${data.username}`);
+    },
+    onSuccess: (newSearchResponse) => {
+      setSearchData(newSearchResponse.data);
+    },
+  });
+
+  const showSearchResult = () => {
+    if (!searchData) return;
+    return searchData.data.map((user) => {
+      <UserAvatar
+        UserAddr={user.address}
+        UserName={user.username}
+        UserImage={user.avatar}
+        size="medium"
+        isMine={account === user.address}
+      />;
+    });
   };
 
   return (
@@ -69,6 +98,7 @@ function ResponsiveAppBar() {
             <form
               className="w-full"
               onSubmit={handleSubmit(onSubmit)}
+              onChange={handleSubmit(onSubmit)}
             >
               <input
                 className={cls(
@@ -77,7 +107,7 @@ function ResponsiveAppBar() {
                     ? "translate-x-0 opacity-100"
                     : "opacity-0 -translate-y-full pointer-events-none"
                 )}
-                {...register("username")}
+                {...register("username", { required: true, maxLength: 25 })}
               ></input>
             </form>
             {/* 검색 버튼 */}
@@ -102,9 +132,23 @@ function ResponsiveAppBar() {
             : "-translate-y-full bg-opacity-0 pointer-events-none"
         )}
       >
-        <div className="flex-cols-1 items-center justify-center">
-          <div className="w-full bg-white h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)]">1</div>
-          <button onClick={handleSearchBar}>Close</button>
+        <div className="flex-cols-1 items-center justify-center mt-5 mx-4 h-screen space-y-3">
+          {isLoading ? (
+            <h1>loading</h1>
+          ) : (
+            !searchData ||
+            (searchData.data.length > 0 &&
+              searchData.data.map((user) => (
+                <UserAvatar
+                  key={user.address}
+                  UserAddr={user.address}
+                  UserName={user.username}
+                  UserImage={user.avatar}
+                  size="medium"
+                  isMine={account === user.address}
+                />
+              )))
+          )}
         </div>
       </div>
     </>
