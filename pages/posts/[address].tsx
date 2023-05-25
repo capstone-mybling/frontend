@@ -1,11 +1,12 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Contract, Post, PostComment, User, PostStatus } from "@/libs/client/types";
+import { Contract, Post, PostComment, User, PostStatus, Transfer } from "@/libs/client/types";
 import { GetServerSideProps } from "next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { dateCalculator } from "@libs/client/dateCalculator";
 import axios from "axios";
 import Image from "next/image";
+import Logo from "@public/logo.png";
 import EtheriumIcon from "@public/etherium_icon.svg";
 import Etherscan from "@public/etherscan.png";
 import Opensea from "@public/opensea.png";
@@ -26,9 +27,14 @@ interface DetailPost extends Post {
   likes: number;
   isLiked: boolean;
   author: User;
+  transfer: Transfer;
   comments: PostComment[];
+  currentOwner?: {
+    address: string;
+    username: string;
+    avatar: string;
+  };
 }
-
 interface commentPostForm {
   content: string;
 }
@@ -79,7 +85,7 @@ interface HomeProps {
 
 const Home = ({ address }: HomeProps) => {
   const queryClient = useQueryClient();
-  const { account, marketplaceContract, nftContract } = useWeb3();
+  const { account, marketplaceContract, nftContract, accountOrigin } = useWeb3();
 
   //calling API and handling data
   const { data: postData, isLoading: postIsLoading } = useQuery<DetailPost>({
@@ -122,14 +128,11 @@ const Home = ({ address }: HomeProps) => {
       })
     ).wait();
 
-    const patchResponse = await axios.patch(
-      `/api/posts/${postData!.address}/purchase`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const patchResponse = await axios.patch(`/api/posts/${postData!.address}/purchase`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (patchResponse.status === 200) {
       setSaleInfo(PostStatus.SOLD_OUT);
@@ -171,6 +174,7 @@ const Home = ({ address }: HomeProps) => {
   };
   //only for test
   const [saleInfo, setSaleInfo] = useState<PostStatus>(PostStatus.NOT_FOR_SALE);
+  console.log(postData);
 
   if (postIsLoading || commentsIsLoading) {
     return <DetailLoading />;
@@ -258,9 +262,27 @@ const Home = ({ address }: HomeProps) => {
           </div>
           <section className="flex justify-between mb-4">
             <div className="px-1 flex space-x-2 items-center">
-              <div className="inline-block rounded-full ring-1 ring-gray-200 bg-gray-300 w-6 h-6"></div>
+              <div className="inline-block rounded-full ring-1 ring-gray-400 w-7 h-7">
+                {postData!.currentOwner?.avatar && (
+                  <Image
+                    width={40}
+                    height={40}
+                    src={postData!.currentOwner.avatar}
+                    alt="owner avatar"
+                  />
+                )}
+              </div>
               <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
-              <span className="text-sm font-extrabold">hazzun</span>
+              {postData!.currentOwner?.username !== null ? (
+                <span className="text-sm font-extrabold">{postData!.currentOwner?.username}</span>
+              ) : (
+                <Image
+                  width={40}
+                  height={40}
+                  src={Logo}
+                  alt="MFT"
+                />
+              )}
             </div>
             <div className="flex items-center justify-end my-2">
               <LikeButton
@@ -287,8 +309,8 @@ const Home = ({ address }: HomeProps) => {
               <button
                 className={`px-4 py-2 ${
                   tabIndex === TabType.COMMENTS
-                    ? "text-violet-500 font-extrabold"
-                    : "text-violet-300  font-base"
+                    ? "text-pantone font-extrabold"
+                    : "text-pantone-light  font-base"
                 }`}
                 onClick={() => setTabIndex(TabType.COMMENTS)}
               >
@@ -296,7 +318,7 @@ const Home = ({ address }: HomeProps) => {
                 <p
                   className={`${
                     tabIndex === TabType.COMMENTS
-                      ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
+                      ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-pantone"
                       : ""
                   }`}
                 ></p>
@@ -304,8 +326,8 @@ const Home = ({ address }: HomeProps) => {
               <button
                 className={`px-4 py-2 ${
                   tabIndex === TabType.SALES
-                    ? "text-violet-500 font-extrabold"
-                    : "text-violet-300 font-base"
+                    ? "text-pantone font-extrabold"
+                    : "text-pantone-light font-base"
                 }`}
                 onClick={() => setTabIndex(TabType.SALES)}
               >
@@ -313,7 +335,7 @@ const Home = ({ address }: HomeProps) => {
                 <p
                   className={`${
                     tabIndex === TabType.SALES
-                      ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
+                      ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-pantone"
                       : ""
                   }`}
                 ></p>
@@ -321,8 +343,8 @@ const Home = ({ address }: HomeProps) => {
               <button
                 className={`px-4 py-2 ${
                   tabIndex === TabType.ADDITIONAL
-                    ? "text-violet-500 font-extrabold"
-                    : "text-violet-300 "
+                    ? "text-pantone font-extrabold"
+                    : "text-pantone-light "
                 }`}
                 onClick={() => setTabIndex(TabType.ADDITIONAL)}
               >
@@ -330,7 +352,7 @@ const Home = ({ address }: HomeProps) => {
                 <p
                   className={`${
                     tabIndex === TabType.ADDITIONAL
-                      ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-violet-500"
+                      ? "mt-1 mx-auto border-b w-2 h-2 rounded-full bg-pantone"
                       : ""
                   }`}
                 ></p>
@@ -346,7 +368,7 @@ const Home = ({ address }: HomeProps) => {
                         commentsData.map((comment) => (
                           <li
                             key={comment.id}
-                            className="flex justify-between px-5 flex-col pb-4"
+                            className="flex justify-between px-2 flex-col pb-4"
                           >
                             <Comment comment={comment} />
                           </li>
@@ -356,27 +378,32 @@ const Home = ({ address }: HomeProps) => {
               )}
               {tabIndex === TabType.SALES && <p>판매정보</p>}
               {tabIndex === TabType.ADDITIONAL && (
-                <section className="p-2 mt-4">
-                  <div className="flex justify-between items-center">
-                    <p className="font-bold text-[17px]">author</p>
+                <section className="p-2 mt-4 flex-col">
+                  <div className="flex justify-between items-center h-14 text-[18px]">
+                    <p className="font-bold text-pantone-dark">작가 명</p>
                     <p>{postData!.author.username}</p>
                   </div>
                   <hr />
-                  <div className="flex justify-between items-center">
-                    <p className="font-bold text-[17px]">price</p>
+                  <div className="flex justify-between items-center h-14 text-[18px]">
+                    <p className="font-bold text-pantone-dark">작가 주소</p>
+                    <p className="text-[14px]">{accountOrigin}</p>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between items-center h-14 text-[18px]">
+                    <p className="font-bold text-pantone-dark">가격</p>
                     <div className="flex space-x-2 items-center">
                       <EtheriumIcon className="w-4" />
-                      <p>{postData!.price}&nbsp;GETH</p>
+                      <p className="text-[18px]">{postData!.price}&nbsp;GETH</p>
                     </div>
                   </div>
                   <hr />
-                  <div className="flex justify-between items-center">
-                    <p className="font-bold text-[17px]">copies</p>
+                  <div className="flex justify-between items-center h-14 text-[18px]">
+                    <p className="font-bold text-pantone-dark">개수</p>
                     <p>{postData!.count}</p>
                   </div>
                   <hr />
-                  <div className="flex justify-between items-center my-1">
-                    <p className="font-bold text-[17px]">tracnsaction</p>
+                  <div className="flex justify-between items-center h-14">
+                    <p className="font-bold text-pantone-dark">트랜잭션</p>
                     <Link
                       passHref
                       legacyBehavior
@@ -386,15 +413,15 @@ const Home = ({ address }: HomeProps) => {
                         <Image
                           src={Etherscan}
                           alt="Link to contract information about this NFT contract"
-                          width={250}
+                          width={150}
                           height={1}
                         />
                       </a>
                     </Link>
                   </div>
                   <hr />
-                  <div className="flex justify-between items-center my-1">
-                    <p className="font-bold text-[17px]">minting contract</p>
+                  <div className="flex justify-between items-center h-14">
+                    <p className="font-bold text-pantone-dark">민팅 컨트랙트</p>
                     <Link
                       passHref
                       legacyBehavior
@@ -404,15 +431,15 @@ const Home = ({ address }: HomeProps) => {
                         <Image
                           src={Etherscan}
                           alt="Link to contract information about this NFT contract"
-                          width={250}
+                          width={150}
                           height={1}
                         />
                       </a>
                     </Link>
                   </div>
                   <hr />
-                  <div className="flex justify-between items-center my-1">
-                    <p className="font-bold text-[17px]">see more</p>
+                  <div className="flex justify-between items-center h-14">
+                    <p className="font-bold text-pantone-dark">OpenSea 마켓플레이스</p>
                     <Link
                       passHref
                       legacyBehavior
@@ -424,7 +451,7 @@ const Home = ({ address }: HomeProps) => {
                         <Image
                           src={Opensea}
                           alt="Link to contract information about this NFT"
-                          width={250}
+                          width={150}
                           height={1}
                         />
                       </a>

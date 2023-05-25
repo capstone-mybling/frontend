@@ -23,8 +23,7 @@ interface CommentProps {
 export default function Comment({ comment }: CommentProps) {
   const queryClient = useQueryClient();
   const deleteMutation = useMutation(
-    () =>
-      axios.delete(`/api/posts/${comment.postAddress}/comments/${comment.id}`),
+    () => axios.delete(`/api/posts/${comment.postAddress}/comments/${comment.id}`),
     {
       onSuccess: async () => {
         console.log("댓글 삭제 성공!");
@@ -45,7 +44,7 @@ export default function Comment({ comment }: CommentProps) {
           />
         </div>
         <div className="flex-row justify-self-stretch pr-3 ">
-          <p className="">{comment.content}</p>
+          <p className="text-gray-600">{comment.content}</p>
           <div className="text-gray-500 text-xs">
             <span>{dateCalculator(comment.createdAt)}</span>
             <span>&nbsp; &nbsp; </span>
