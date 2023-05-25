@@ -145,26 +145,20 @@ export type Transfer = {
 // Based on
 // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
-export enum FileTypeEnum {
+export enum FileType {
   IMAGE = "IMAGE",
   VIDEO = "VIDEO",
   METADATA = "METADATA",
 }
 
-export type FileType = (typeof FileTypeEnum)[keyof typeof FileTypeEnum];
-
-export enum StorageTypeEnum {
+export enum StorageType {
   LOCAL = "LOCAL",
   S3 = "S3",
   IPFS = "IPFS",
 }
 
-export type StorageType = (typeof StorageTypeEnum)[keyof typeof StorageTypeEnum];
-
-export enum PostStatusEnum {
+export enum PostStatus {
   ON_SALE = "ON_SALE",
   SOLD_OUT = "SOLD_OUT",
   NOT_FOR_SALE = "NOT_FOR_SALE",
 }
-
-export type PostStatus = (typeof PostStatusEnum)[keyof typeof PostStatusEnum];

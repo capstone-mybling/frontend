@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Contract, Post, PostComment, User } from "@/libs/client/types";
+import { Contract, Post, PostComment, User, PostStatus } from "@/libs/client/types";
 import { GetServerSideProps } from "next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -20,7 +20,6 @@ import useWeb3 from "@/hooks/useWeb3";
 import { ethers } from "ethers";
 import Link from "next/link";
 import DetailLoading from "@/components/DetailLoading";
-import { PostStatus } from "@prisma/client";
 
 interface DetailPost extends Post {
   contract: Contract;
