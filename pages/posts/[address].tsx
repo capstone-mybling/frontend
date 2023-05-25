@@ -98,9 +98,6 @@ const Home = ({ address }: HomeProps) => {
   // new comment form
   const { register, handleSubmit, reset } = useForm<commentPostForm>();
 
-  /* ********************************************** */
-  //TODO: 자신의 댓글 삭제, 댓글마다 독립적인 좋아요 기능 연결
-  /* ********************************************** */
   const purchase = async () => {
     const itemId = postData!.contract.itemId;
     const response = await (
@@ -155,17 +152,37 @@ const Home = ({ address }: HomeProps) => {
             width="2000"
             height="2000"
           />
-          <div className="absolute right-0 translate-x-[3px] -translate-y-[9px]">
+          <div className="absolute right-0 translate-x-[3px] -translate-y-[9px] opacity-90">
             {saleInfo === 0 ? <OnSale /> : saleInfo === 1 ? <SoldOut /> : <NotForSale />}
           </div>
         </div>
         {/* post info : 좋아요, 댓글 */}
         <div className="flex flex-col px-2 justify-center">
-          <div className="flex items-center space-x-2 ml-1">
-            <EtheriumIcon />
-            <div className="flex">
-              <span>{postData!.price}</span>
-              <span className=" text-cyan-950 font-extrabold">&nbsp;GeorliETH</span>
+          <div className="flex felx-row justify-between">
+            <span className="ml-1 font-bold text-sm">
+              MyBling NFT #&#91;&nbsp;
+              <Link
+                passHref
+                legacyBehavior
+                href={`https://goerli.etherscan.io/token/0x7d56062dd1c44c6cb784a1c2ab1ec3d14ea84e13?a=${
+                  postData!.contract.mintId
+                }`}
+              >
+                <a
+                  target="_blank"
+                  className="hover:text-blue-500 text-sky-500 hover:underline"
+                >
+                  {postData!.contract.mintId}
+                </a>
+              </Link>
+              &nbsp;&#93;
+            </span>
+            <div className="flex items-center space-x-2 ml-1">
+              <EtheriumIcon />
+              <div className="flex">
+                <span>{postData!.price}</span>
+                <span className=" text-cyan-950 font-extrabold">&nbsp;GeorliETH</span>
+              </div>
             </div>
           </div>
           <section className="flex justify-between mb-4">
@@ -174,7 +191,7 @@ const Home = ({ address }: HomeProps) => {
               <span className="text-sm font-extrabold text-gray-500">Current Owner</span>
               <span className="text-sm font-extrabold">hazzun</span>
             </div>
-            <div className="flex items-center justify-end my-3">
+            <div className="flex items-center justify-end my-2">
               <LikeButton
                 isLiked={postData!.isLiked}
                 likes={postData!.likes}

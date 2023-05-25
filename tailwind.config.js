@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./pages/**/*.{js,jsx,ts,tsx}",
-    "./components/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./pages/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -19,6 +16,9 @@ module.exports = {
       aspectRatio: {
         "9/16": "9 / 16",
         "2/3": "2/3",
+      },
+      fontFamily: {
+        nanumGothic: ["var(--nanum)"],
       },
     },
   },

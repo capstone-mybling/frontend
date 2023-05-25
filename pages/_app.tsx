@@ -1,14 +1,15 @@
 import "@/styles/globals.css";
 import { cls } from "@/libs/client/utils";
 import type { AppProps } from "next/app";
-import { Nanum_Gothic } from "next/font/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Fragment } from "react";
+import { Nanum_Gothic } from "next/font/google";
 
 const nanum = Nanum_Gothic({
-  subsets: ["latin"],
+  preload: false,
   weight: ["400", "700", "800"],
+  style: ["normal"],
 });
 export default function App({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient();
@@ -22,7 +23,6 @@ export default function App({ Component, pageProps }: AppProps) {
           )}
         >
           <Component {...pageProps} />
-
         </div>
         <ReactQueryDevtools initialIsOpen={false} />
       </Fragment>
