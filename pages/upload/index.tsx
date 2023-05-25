@@ -11,12 +11,11 @@
 
 import { FieldErrors, useForm } from "react-hook-form";
 import Layout from "@/components/Layout";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
 import useWeb3 from "@/hooks/useWeb3";
 import axios from "axios";
-import { ethers } from "ethers";
 
 import ProgressLoading from "@/components/ProgressLoading";
 import { useRouter } from "next/router";
@@ -79,11 +78,6 @@ export default function Upload() {
     // }
   };
 
-  useEffect(() => {
-    if (!nftContract) return;
-    checkApproval().then();
-  }, [nftContract]);
-
   // handlesubmit 시 작동하는 함수 두가지
   const onValid = async (data: UploadForm) => {
     setShowProgress(true);
@@ -109,23 +103,7 @@ export default function Upload() {
     );
 
     const mintId = await nftContract.tokenCount();
-    await (
-      await nftContract.approve(
-        process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
-        mintId
-      )
-    ).wait();
 
-    // TODO: price 를 입력 값으로 고치기
-    const listingPrice = ethers.parseEther(price.toString());
-    await (
-      await marketplaceContract.makeItem(
-        process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS,
-        mintId,
-        listingPrice
-      )
-    ).wait();
-    const itemId = await marketplaceContract.itemCount();
     const { from, to, hash } = mintResponse;
 
     const postResponse = await axios.post(
@@ -141,7 +119,6 @@ export default function Upload() {
         count,
         price,
         mintId: Number(mintId),
-        itemId: Number(itemId),
       },
       {
         headers: {

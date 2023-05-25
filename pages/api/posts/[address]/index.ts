@@ -31,6 +31,7 @@ const handler = async (
     },
     include: {
       author: true,
+      transfers: true,
       comments: {
         include: {
           author: {
@@ -75,18 +76,42 @@ const handler = async (
   if (request.method === "GET") {
     const redis = await getRedisClient();
 
+    const post = {
+      ...findPost,
+      likes: await redis.sCard(`posts:${findPost.address}:likes`),
+      isLiked: await redis.sIsMember(
+        `posts:${findPost.address}:likes`,
+        user!.address
+      ),
+    }
+
+    if (findPost.transfers.length === 0) {
+      return baseResponse(response, {
+        statusCode: 200,
+        success: true,
+        data: findPost
+      });
+    }
+
+    const owner = await client.user.findUnique({
+      where: {
+        address: findPost.transfers.pop().toAddress.toLowerCase(),
+      },
+    });
+
     return baseResponse(response, {
       statusCode: 200,
       success: true,
       data: {
-        ...findPost,
-        likes: await redis.sCard(`posts:${findPost.address}:likes`),
-        isLiked: await redis.sIsMember(
-          `posts:${findPost.address}:likes`,
-          user!.address
-        ),
+        ...post,
+        currentOwner: {
+          address: owner.address,
+          username: owner.username,
+          avatar: owner.avatar,
+        }
       },
     });
+
   } else if (request.method === "PATCH") {
     // 수정이 필요한지 확인
   } else if (request.method === "DELETE") {
