@@ -85,29 +85,22 @@ const handler = async (
       ),
     };
 
-    let currentOwner = null;
-    if (post.transfers) {
-      const owner = await client.user.findUnique({
-        where: {
-          address: post?.transfers?.pop()?.toAddress?.toLowerCase() ?? "",
-        },
-      });
-
-      if (owner) {
-        currentOwner = {
-          address: owner.address,
-          username: owner.username,
-          avatar: owner.avatar,
-        };
-      }
-    }
+    const owner = await client.user.findUnique({
+      where: {
+        address: findPost.currentOwnerAddress ?? "",
+      },
+    });
 
     return baseResponse(response, {
       statusCode: 200,
       success: true,
       data: {
         ...post,
-        currentOwner,
+        currentOwner: owner && {
+          address: owner.address,
+          username: owner.username,
+          avatar: owner.avatar,
+        },
       },
     });
   } else if (request.method === "PATCH") {

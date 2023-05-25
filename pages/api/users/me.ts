@@ -33,6 +33,12 @@ const handler = async (
     },
   });
 
+  const ownedPosts = await client.post.findMany({
+    where: {
+      currentOwnerAddress: address as string,
+    },
+  });
+
   if (!findUser) {
     return baseResponse(response, {
       success: false,
@@ -63,6 +69,7 @@ const handler = async (
       };
     })
   );
+
   const userFollowingWithInfo = await Promise.all(
     userFollowings.map(async (userAddress) => {
       const user = await client.user.findUnique({
@@ -83,6 +90,7 @@ const handler = async (
     ...findUser,
     followers: userFollowerWithInfo,
     followings: userFollowingWithInfo,
+    ownedPosts: ownedPosts,
   };
 
   if (request.method === "GET") {
@@ -113,8 +121,6 @@ const handler = async (
       fs.unlinkSync(formData.files.avatar.filepath);
       userData.avatar = avatarPath;
     }
-
-    const { username, description } = formData.fields;
 
     const updatedUser = await client.user.update({
       where: {

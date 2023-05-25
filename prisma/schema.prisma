@@ -107,6 +107,8 @@ model Post {
   status      PostStatus @default(NOT_FOR_SALE)
   isSold      Boolean    @default(false)
 
+  currentOwnerAddress String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   isDeleted Boolean  @default(false)

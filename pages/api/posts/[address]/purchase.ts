@@ -68,6 +68,7 @@ const handler = async (
     data: {
       status: PostStatus.SOLD_OUT,
       isSold: true,
+      currentOwnerAddress: userAddress as string,
     },
   });
 

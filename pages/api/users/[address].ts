@@ -38,6 +38,12 @@ const handler = async (
     },
   });
 
+  const ownedPosts = await client.post.findMany({
+    where: {
+      currentOwnerAddress: address as string,
+    },
+  });
+
   if (!findUser) {
     return baseResponse(response, {
       success: false,
@@ -89,6 +95,7 @@ const handler = async (
       ...findUser,
       followers: userFollowerWithInfo,
       followings: userFollowingWithInfo,
+      ownedPosts: ownedPosts,
     },
   });
 };
