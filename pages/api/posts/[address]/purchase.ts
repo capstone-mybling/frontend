@@ -53,11 +53,11 @@ const handler = async (
 
   await client.transfer.create({
     data: {
-      fromAddress: process.env.MARKET_PLACE_CONTRACT_ADDRESS,
-      toAddress: userAddress,
-      contractAddress: process.env.MARKET_PLACE_CONTRACT_ADDRESS,
+      fromAddress: process.env.MARKET_PLACE_CONTRACT_ADDRESS || "",
+      toAddress: userAddress || "",
+      contractAddress: process.env.MARKET_PLACE_CONTRACT_ADDRESS || "",
       method: "purchase",
-      postAddress: postAddress,
+      postAddress: postAddress as string,
     },
   });
 

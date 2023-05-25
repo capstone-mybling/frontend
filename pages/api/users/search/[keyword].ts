@@ -4,6 +4,7 @@ import withHandler from "@libs/server/withHandler";
 import baseResponse from "@libs/server/response";
 import ErrorCode from "@libs/server/error_code";
 import getRedisClient from "@libs/server/redis";
+import client from "@libs/server/client";
 
 const handler = async (
   request: NextApiRequest,
@@ -26,7 +27,7 @@ const handler = async (
   const users = await client.user.findMany({
     where: {
       username: {
-        contains: keyword,
+        contains: keyword as string,
       },
     },
     select: {

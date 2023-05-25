@@ -32,6 +32,7 @@ const handler = async (
     include: {
       author: true,
       transfers: true,
+      contract: true,
       comments: {
         include: {
           author: {
@@ -43,7 +44,6 @@ const handler = async (
           },
         },
       },
-      contract: true,
     },
   });
 
@@ -73,9 +73,9 @@ const handler = async (
       },
     });
   }
+
   if (request.method === "GET") {
     const redis = await getRedisClient();
-
     const post = {
       ...findPost,
       likes: await redis.sCard(`posts:${findPost.address}:likes`),
@@ -83,27 +83,22 @@ const handler = async (
         `posts:${findPost.address}:likes`,
         user!.address
       ),
-    }
+    };
 
-    if (findPost.transfers.length === 0) {
-      return baseResponse(response, {
-        statusCode: 200,
-        success: true,
-        data: findPost
-      });
-    }
     let currentOwner = null;
-    const owner = await client.user.findUnique({
-      where: {
-        address: findPost.transfers.pop().toAddress.toLowerCase(),
-      },
-    });
+    if (post.transfers) {
+      const owner = await client.user.findUnique({
+        where: {
+          address: post?.transfers?.pop()?.toAddress?.toLowerCase() ?? "",
+        },
+      });
 
-    if (owner) {
-      currentOwner = {
-        address: owner.address,
-        username: owner.username,
-        avatar: owner.avatar,
+      if (owner) {
+        currentOwner = {
+          address: owner.address,
+          username: owner.username,
+          avatar: owner.avatar,
+        };
       }
     }
 
@@ -115,7 +110,6 @@ const handler = async (
         currentOwner,
       },
     });
-
   } else if (request.method === "PATCH") {
     // 수정이 필요한지 확인
   } else if (request.method === "DELETE") {

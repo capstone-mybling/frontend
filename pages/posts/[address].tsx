@@ -28,6 +28,8 @@ interface DetailPost extends Post {
   isLiked: boolean;
   author: User;
   comments: PostComment[];
+  status: PostStatus;
+  isSold: true;
 }
 
 interface commentPostForm {

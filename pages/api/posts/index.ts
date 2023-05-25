@@ -50,6 +50,7 @@ const handler = async (
       include: {
         author: true,
         comments: true,
+        transfers: true,
       },
     });
 
@@ -60,7 +61,7 @@ const handler = async (
         if (post.transfers) {
           const owner = await client.user.findUnique({
             where: {
-              address: post.transfers.pop().toAddress.toLowerCase(),
+              address: post?.transfers?.pop()?.toAddress?.toLowerCase() ?? "",
             },
           });
 
