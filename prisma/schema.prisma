@@ -104,13 +104,16 @@ model Post {
   thumbnail   String
   price       Float
   count       Int
+  status      PostStatus @default(NOT_FOR_SALE)
+  isSold      Boolean    @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   isDeleted Boolean  @default(false)
 
-  comments PostComment[]
-  likes    PostLike[]
+  comments  PostComment[]
+  likes     PostLike[]
+  transfers Transfer[]
 }
 
 model PostLike {
@@ -154,8 +157,12 @@ model PostCommentLike {
 model Transfer {
   id Int @id @default(autoincrement())
 
-  contract        Contract @relation(fields: [contractAddress], references: [hash])
-  contractAddress String   @unique
+  post        Post   @relation(fields: [postAddress], references: [address])
+  postAddress String
+
+  contractAddress String
+
+  method String @default("mint")
 
   fromAddress String
   toAddress   String
@@ -173,4 +180,10 @@ enum FileType {
   IMAGE
   VIDEO
   METADATA
+}
+
+enum PostStatus {
+  ON_SALE
+  SOLD_OUT
+  NOT_FOR_SALE
 }

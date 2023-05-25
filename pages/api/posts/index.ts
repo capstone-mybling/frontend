@@ -86,6 +86,7 @@ const handler = async (
       mintId,
       itemId,
     } = request.body;
+
     const contract = await client.contract.create({
       data: {
         fromAddress: from,
@@ -125,6 +126,16 @@ const handler = async (
         thumbnail: "https://gateway.pinata.cloud/ipfs/" + imageHash,
         price: +price,
         count: +count,
+      },
+    });
+
+    await client.transfer.create({
+      data: {
+        fromAddress: "0x0000000000000000000000000000000000000000",
+        toAddress: user!.address,
+        contractAddress: hash,
+        method: "mint",
+        postAddress: post.address,
       },
     });
 

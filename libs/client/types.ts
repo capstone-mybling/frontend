@@ -85,6 +85,8 @@ export type Post = {
   thumbnail: string;
   price: number;
   count: number;
+  status: PostStatus;
+  isSold: boolean;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
@@ -123,6 +125,20 @@ export type PostCommentLike = {
 };
 
 /**
+ * Model Transfer
+ *
+ */
+export type Transfer = {
+  id: number;
+  postAddress: string;
+  contractAddress: string;
+  method: string;
+  fromAddress: string;
+  toAddress: string;
+  createdAt: Date;
+};
+
+/**
  * Enums
  */
 
@@ -144,3 +160,11 @@ export enum StorageTypeEnum {
 }
 
 export type StorageType = (typeof StorageTypeEnum)[keyof typeof StorageTypeEnum];
+
+export enum PostStatusEnum {
+  ON_SALE = "ON_SALE",
+  SOLD_OUT = "SOLD_OUT",
+  NOT_FOR_SALE = "NOT_FOR_SALE",
+}
+
+export type PostStatus = (typeof PostStatusEnum)[keyof typeof PostStatusEnum];

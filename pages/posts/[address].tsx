@@ -1,10 +1,9 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Contract, Post, PostComment, User } from "@/libs/client/types";
 import { GetServerSideProps } from "next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { dateCalculator } from "@libs/client/dateCalculator";
-import { cls } from "@libs/client/utils";
 import axios from "axios";
 import Image from "next/image";
 import EtheriumIcon from "@public/etherium_icon.svg";
@@ -21,6 +20,7 @@ import useWeb3 from "@/hooks/useWeb3";
 import { ethers } from "ethers";
 import Link from "next/link";
 import DetailLoading from "@/components/DetailLoading";
+import { PostStatus } from "@prisma/client";
 
 interface DetailPost extends Post {
   contract: Contract;
@@ -51,6 +51,17 @@ enum TabType {
   ADDITIONAL = "additional",
 }
 
+const SaleTypeIcon = ({ type }: { type: PostStatus }) => {
+  switch (type) {
+    case PostStatus.ON_SALE:
+      return <OnSale />;
+    case PostStatus.NOT_FOR_SALE:
+      return <NotForSale />;
+    case PostStatus.SOLD_OUT:
+      return <SoldOut />;
+  }
+};
+
 // issue:
 // -> 라우터로 쿼리를 불러오기전에 클라이언트에서 API요청과 렌더링을 진행하여 에러가 발생 (like 모래없이 모래성 만들기)
 // solution:
@@ -69,7 +80,7 @@ interface HomeProps {
 
 const Home = ({ address }: HomeProps) => {
   const queryClient = useQueryClient();
-  const { account, marketplaceContract } = useWeb3();
+  const { account, marketplaceContract, nftContract } = useWeb3();
 
   //calling API and handling data
   const { data: postData, isLoading: postIsLoading } = useQuery<DetailPost>({
@@ -82,6 +93,12 @@ const Home = ({ address }: HomeProps) => {
     queryFn: async () =>
       await axios.get(`/api/posts/${address}/comments`).then((res) => res.data.data),
   });
+
+  useEffect(() => {
+    if (postData) {
+      setSaleInfo(postData.status);
+    }
+  }, []);
 
   // MUI tabs
   const [tabIndex, setTabIndex] = useState<TabType>(TabType.COMMENTS);
@@ -105,9 +122,53 @@ const Home = ({ address }: HomeProps) => {
         value: ethers.parseEther((postData!.price * 1.01).toString()),
       })
     ).wait();
+
+    const patchResponse = await axios.patch("/api/posts/purchase", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (patchResponse.status === 200) {
+      setSaleInfo(PostStatus.SOLD_OUT);
+    }
+  };
+
+  const toMarketPlace = async () => {
+    const mintId = postData!.contract.mintId;
+    await (
+      await nftContract.approve(process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS, mintId)
+    ).wait();
+
+    const listingPrice = ethers.parseEther(postData!.price.toString());
+    await (
+      await marketplaceContract.makeItem(
+        process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS,
+        mintId,
+        listingPrice
+      )
+    ).wait();
+
+    const itemId = await marketplaceContract.itemCount();
+
+    const patchResponse = await axios.patch(
+      "/api/posts/contract",
+      {
+        itemId: Number(itemId),
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (patchResponse.status === 200) {
+      setSaleInfo(PostStatus.ON_SALE);
+    }
   };
   //only for test
-  const [saleInfo, setSaleInfo] = useState<number>(0);
+  const [saleInfo, setSaleInfo] = useState<PostStatus>(PostStatus.NOT_FOR_SALE);
 
   if (postIsLoading || commentsIsLoading) {
     return <DetailLoading />;
@@ -125,23 +186,31 @@ const Home = ({ address }: HomeProps) => {
               UserImage={postData!.author.avatar || ""}
               isMine={account === postData!.authorAddress}
             />
-            <button
-              className=" bg-amber-800  rounded-full px-1 text-white"
-              onClick={() => setSaleInfo((saleInfo + 1) % 3)}
-            >
-              change saleInfo
-            </button>
-            <button
-              onClick={purchase}
-              className={cls(
-                "bg-black opacity-30 px-6 py-1 rounded-2xl text-white",
-                saleInfo > 0
-                  ? "pointer-events-none disabled"
-                  : "hover:opacity-70 hover:bg-violet-800 transition duration-300"
-              )}
-            >
-              구매하기
-            </button>
+            {account === postData!.authorAddress ? (
+              !postData!.isSold && postData!.status === PostStatus.NOT_FOR_SALE ? (
+                <button
+                  onClick={toMarketPlace}
+                  className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70 hover:bg-violet-800 transition duration-300"
+                >
+                  판매하기
+                </button>
+              ) : (
+                <button className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white pointer-events-none disabled">
+                  {saleInfo === PostStatus.ON_SALE ? "판매중" : "판매완료"}
+                </button>
+              )
+            ) : postData!.isSold || postData!.status === PostStatus.NOT_FOR_SALE ? (
+              <button className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white pointer-events-none disabled">
+                {saleInfo === PostStatus.SOLD_OUT ? "판매완료" : "구매불가"}
+              </button>
+            ) : (
+              <button
+                onClick={purchase}
+                className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70 hover:bg-violet-800 transition duration-300"
+              >
+                구매하기
+              </button>
+            )}
           </div>
         </div>
         <div className="relative flex justify-center align-middle mb-3 ">
@@ -152,8 +221,8 @@ const Home = ({ address }: HomeProps) => {
             width="2000"
             height="2000"
           />
-          <div className="absolute right-0 translate-x-[3px] -translate-y-[9px] opacity-90">
-            {saleInfo === 0 ? <OnSale /> : saleInfo === 1 ? <SoldOut /> : <NotForSale />}
+          <div className="absolute right-0 translate-x-[3px] -translate-y-[9px]">
+            {SaleTypeIcon({ type: saleInfo })}
           </div>
         </div>
         {/* post info : 좋아요, 댓글 */}
@@ -295,7 +364,7 @@ const Home = ({ address }: HomeProps) => {
                     <p className="font-bold text-[17px]">price</p>
                     <div className="flex space-x-2 items-center">
                       <EtheriumIcon className="w-4" />
-                      <p>{postData!.price}&nbsp;GeorliETH</p>
+                      <p>{postData!.price}&nbsp;GETH</p>
                     </div>
                   </div>
                   <hr />
