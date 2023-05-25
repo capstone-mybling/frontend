@@ -50,28 +50,17 @@ const handler = async (
       include: {
         author: true,
         comments: true,
+        transfers: true,
       },
     });
 
     const posts = await Promise.all(
       findPosts.map(async (post) => {
-        let currentOwner = null;
-
-        if (post.transfers) {
-          const owner = await client.user.findUnique({
-            where: {
-              address: post.transfers.pop().toAddress.toLowerCase(),
-            },
-          });
-
-          if (owner) {
-            currentOwner = {
-              address: owner.address,
-              username: owner.username,
-              avatar: owner.avatar,
-            };
-          }
-        }
+        const owner = await client.user.findUnique({
+          where: {
+            address: post.currentOwnerAddress ?? "",
+          },
+        });
 
         return {
           ...post,
@@ -82,7 +71,11 @@ const handler = async (
               `posts:${post.address}:likes`,
               user!.address
             )),
-          currentOwner,
+          currentOwner: owner && {
+            address: owner.address,
+            username: owner.username,
+            avatar: owner.avatar,
+          },
         };
       })
     );
@@ -145,6 +138,7 @@ const handler = async (
         thumbnail: "https://gateway.pinata.cloud/ipfs/" + imageHash,
         price: +price,
         count: +count,
+        currentOwnerAddress: user!.address,
       },
     });
 

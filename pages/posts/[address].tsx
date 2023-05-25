@@ -29,6 +29,8 @@ interface DetailPost extends Post {
   author: User;
   transfer: Transfer;
   comments: PostComment[];
+  status: PostStatus;
+  isSold: true;
   currentOwner?: {
     address: string;
     username: string;
@@ -174,7 +176,6 @@ const Home = ({ address }: HomeProps) => {
   };
   //only for test
   const [saleInfo, setSaleInfo] = useState<PostStatus>(PostStatus.NOT_FOR_SALE);
-  console.log(postData);
 
   if (postIsLoading || commentsIsLoading) {
     return <DetailLoading />;
@@ -235,7 +236,7 @@ const Home = ({ address }: HomeProps) => {
         <div className="flex flex-col px-2 justify-center">
           <div className="flex felx-row justify-between">
             <span className="ml-1 font-bold text-sm">
-              MyBling NFT #&#91;&nbsp;
+              MFT #{postData!.contract.mintId}
               <Link
                 passHref
                 legacyBehavior
@@ -256,7 +257,7 @@ const Home = ({ address }: HomeProps) => {
               <EtheriumIcon />
               <div className="flex">
                 <span>{postData!.price}</span>
-                <span className=" text-cyan-950 font-extrabold">&nbsp;GeorliETH</span>
+                <span className=" text-cyan-950 font-extrabold">&nbsp;GETH</span>
               </div>
             </div>
           </div>

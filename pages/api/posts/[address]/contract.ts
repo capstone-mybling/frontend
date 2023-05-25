@@ -83,11 +83,11 @@ const handler = async (
 
   await client.transfer.create({
     data: {
-      fromAddress: userAddress,
-      toAddress: process.env.MARKET_PLACE_CONTRACT_ADDRESS,
-      contractAddress: process.env.MARKET_PLACE_CONTRACT_ADDRESS,
+      fromAddress: userAddress || "",
+      toAddress: process.env.MARKET_PLACE_CONTRACT_ADDRESS || "",
+      contractAddress: process.env.MARKET_PLACE_CONTRACT_ADDRESS || "",
       method: "upload",
-      postAddress: postAddress,
+      postAddress: postAddress as string,
     },
   });
 
