@@ -176,7 +176,7 @@ const Home = ({ address }: HomeProps) => {
   };
   //only for test
   const [saleInfo, setSaleInfo] = useState<PostStatus>(PostStatus.NOT_FOR_SALE);
-
+  console.log(postData);
   if (postIsLoading || commentsIsLoading) {
     return <DetailLoading />;
   }
@@ -236,7 +236,7 @@ const Home = ({ address }: HomeProps) => {
         <div className="flex flex-col px-2 justify-center">
           <div className="flex felx-row justify-between">
             <span className="ml-1 font-bold text-sm">
-              MFT #{postData!.contract.mintId}
+              MFT #
               <Link
                 passHref
                 legacyBehavior
@@ -251,7 +251,6 @@ const Home = ({ address }: HomeProps) => {
                   {postData!.contract.mintId}
                 </a>
               </Link>
-              &nbsp;&#93;
             </span>
             <div className="flex items-center space-x-2 ml-1">
               <EtheriumIcon />
@@ -263,18 +262,18 @@ const Home = ({ address }: HomeProps) => {
           </div>
           <section className="flex justify-between mb-4">
             <div className="px-1 flex space-x-2 items-center">
-              <div className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6">
-                {postData!.currentOwner?.avatar && (
+              {postData!.currentOwner?.avatar && (
+                <div className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6">
                   <Image
                     width={40}
                     height={40}
                     src={postData!.currentOwner.avatar}
                     alt="owner avatar"
                   />
-                )}
-              </div>
+                </div>
+              )}
               <span className="text-sm font-extrabold text-pantone">Current Owner</span>
-              {postData!.currentOwner?.username !== null ? (
+              {postData!.currentOwner !== null ? (
                 <Link
                   className="text-sm font-bold text-pantone-darker"
                   href={`/profile/${postData!.currentOwner?.address}`}
