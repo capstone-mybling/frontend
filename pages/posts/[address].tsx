@@ -95,9 +95,9 @@ const Home = ({ address }: HomeProps) => {
 
   useEffect(() => {
     if (postData) {
-      setSaleInfo(postData.status);
+      setSaleInfo(postData!.status);
     }
-  }, []);
+  }, [postData]);
 
   // MUI tabs
   const [tabIndex, setTabIndex] = useState<TabType>(TabType.COMMENTS);
@@ -122,11 +122,14 @@ const Home = ({ address }: HomeProps) => {
       })
     ).wait();
 
-    const patchResponse = await axios.patch("/api/posts/purchase", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const patchResponse = await axios.patch(
+      `/api/posts/${postData!.address}/purchase`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (patchResponse.status === 200) {
       setSaleInfo(PostStatus.SOLD_OUT);
@@ -151,7 +154,7 @@ const Home = ({ address }: HomeProps) => {
     const itemId = await marketplaceContract.itemCount();
 
     const patchResponse = await axios.patch(
-      "/api/posts/contract",
+      `/api/posts/${postData!.address}/contract`,
       {
         itemId: Number(itemId),
       },

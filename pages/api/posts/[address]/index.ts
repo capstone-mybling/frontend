@@ -92,23 +92,33 @@ const handler = async (
         data: findPost
       });
     }
-
+    let currentOwner;
     const owner = await client.user.findUnique({
       where: {
         address: findPost.transfers.pop().toAddress.toLowerCase(),
       },
     });
 
+    if (!owner) {
+      currentOwner = {
+        address: findPost.transfers.pop().toAddress.toLowerCase(),
+        username: "MFT",
+        avatar: "123"
+      }
+    } else {
+      currentOwner = {
+        address: owner.address,
+        username: owner.username,
+        avatar: owner.avatar,
+      }
+    }
+
     return baseResponse(response, {
       statusCode: 200,
       success: true,
       data: {
         ...post,
-        currentOwner: {
-          address: owner.address,
-          username: owner.username,
-          avatar: owner.avatar,
-        }
+        currentOwner,
       },
     });
 

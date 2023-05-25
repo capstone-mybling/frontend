@@ -13,12 +13,12 @@ const handler = async (
   if (!request.session.user) {
     return;
   }
-  const { postAddress } = request.query;
-  const { userAddress } = request.session.user;
+  const { address: postAddress } = request.query;
+  const { address: userAddress } = request.session.user;
 
   const findUser = await client.user.findUnique({
     where: {
-      userAddress,
+      address: userAddress,
     },
     include: {
       posts: true,
