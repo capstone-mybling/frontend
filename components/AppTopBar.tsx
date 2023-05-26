@@ -75,15 +75,12 @@ function ResponsiveAppBar() {
 
   return (
     <>
-      <AppBar
+      <div
         color="inherit"
-        className="w-[500px] inset-x-0 mx-auto shadow drop-shadow-[0_10px_3px_-2px_rgba(100,100,100,0.25)] h-16 z-20 justify-center"
+        className="w-full inset-x-0 mx-auto shadow drop-shadow-[0_10px_3px_-2px_rgba(100,100,100,0.25)] h-16 z-20 justify-center"
       >
         <Container className="pr-3 pl-3">
-          <Toolbar
-            disableGutters
-            className="flex justify-between"
-          >
+          <Toolbar disableGutters className="flex justify-between">
             {/* 로고버튼 */}
             <Box>
               <Image
@@ -122,7 +119,7 @@ function ResponsiveAppBar() {
             </div>
           </Toolbar>
         </Container>
-      </AppBar>
+      </div>
       {/* 검색 박스 */}
       <div
         className={cls(

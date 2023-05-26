@@ -12,9 +12,11 @@ interface LayoutProps {
 export default function Layout({ children, disableFooter }: LayoutProps) {
   return (
     <>
-      <ResponsiveAppBar />
+      <header className="sticky top-0 bg-white z-10">
+        <ResponsiveAppBar />
+      </header>
       {/* 본문 */}
-      <main className={"pt-16"}>{children}</main>
+      <main>{children}</main>
       {!disableFooter && (
         <footer className="sticky bottom-0 bg-white z-10 border-b">
           <BottomNavBar />

@@ -55,7 +55,7 @@ export default function BottomNavBar() {
               <li key={item.href}>
                 <Link href={item.href}>
                   <Image
-                    className="rounded-full border-[1px] border-gray-300 z-50"
+                    className="aspect-square rounded-full border-[1px] border-gray-300 z-50"
                     src={data?.avatar}
                     alt="프로필 이미지"
                     width={32}

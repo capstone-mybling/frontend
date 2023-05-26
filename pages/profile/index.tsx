@@ -122,6 +122,7 @@ export default function MyPage() {
                     " rounded-2xl text-violet-500 font-extrabold"
                   )}
                   type="submit"
+                  value="저장하기"
                 />
               </div>
               {/* 프로필사진 변경 업로드 전/후 */}
@@ -158,7 +159,7 @@ export default function MyPage() {
               <div className="mx-auto">
                 <input
                   {...register("name", { required: true })}
-                  className="border-2 border-violet-200 rounded-xl"
+                  className="border-2 border-violet-200 rounded-xl w-full"
                   id="input-name"
                   type="text"
                   placeholder="edit your name"
