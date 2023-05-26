@@ -18,17 +18,19 @@ interface CommentDetail extends PostComment {
 
 interface CommentProps {
   comment: CommentDetail;
+  address: string;
 }
 
-export default function Comment({ comment }: CommentProps) {
+export default function Comment({ comment, address }: CommentProps) {
   const queryClient = useQueryClient();
+  // console.log(address);
   const deleteMutation = useMutation(
     () =>
       axios.delete(`/api/posts/${comment.postAddress}/comments/${comment.id}`),
     {
       onSuccess: async () => {
-        console.log("댓글 삭제 성공!");
-        await queryClient.invalidateQueries(["comments"]);
+        // console.log("댓글 삭제 성공!");
+        await queryClient.invalidateQueries(["postComments", address]);
       },
     }
   );

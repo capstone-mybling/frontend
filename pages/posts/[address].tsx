@@ -194,7 +194,7 @@ const Home = ({ address }: HomeProps) => {
   };
   //only for test
   const [saleInfo, setSaleInfo] = useState<PostStatus>(PostStatus.NOT_FOR_SALE);
-  console.log(postData);
+  // console.log("test", postData);
   if (postIsLoading || commentsIsLoading) {
     return <DetailLoading />;
   }
@@ -396,7 +396,7 @@ const Home = ({ address }: HomeProps) => {
                             key={comment.id}
                             className="flex justify-between px-2 flex-col pb-4"
                           >
-                            <Comment comment={comment} />
+                            <Comment comment={comment} address={address} />
                           </li>
                         )))}
                   </ul>
