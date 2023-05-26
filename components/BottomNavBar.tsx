@@ -43,8 +43,9 @@ export default function BottomNavBar() {
   const { data } = useQuery({
     queryKey: ["users", "me"],
     queryFn: () =>
-      axios.get("api/users/me").then((response) => response.data.data),
+      axios.get("/api/users/me").then((response) => response.data.data),
   });
+  // console.log(data);
 
   return (
     <nav className="border-t-[3px] border-slate-100">
