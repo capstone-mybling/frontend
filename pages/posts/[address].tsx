@@ -120,7 +120,6 @@ const Home = ({ address }: HomeProps) => {
     }
   }, [postData]);
 
-  // MUI tabs
   const [tabIndex, setTabIndex] = useState<TabType>(TabType.COMMENTS);
 
   // comments mutation using react-query
@@ -411,9 +410,13 @@ const Home = ({ address }: HomeProps) => {
                     <p>{postData!.author.username}</p>
                   </div>
                   <hr />
-                  <div className="flex justify-between items-center h-14 text-[18px]">
-                    <p className="font-bold text-pantone-dark">작가 주소</p>
-                    <p className="text-[14px]">{accountOrigin}</p>
+                  <div className="w-full flex justify-center items-center h-14 text-[18px]">
+                    <p className="w-[20%] font-bold text-pantone-dark">
+                      작가 주소
+                    </p>
+                    <p className="w-[80%] text-[14px] text-right break-words">
+                      {accountOrigin}
+                    </p>
                   </div>
                   <hr />
                   <div className="flex justify-between items-center h-14 text-[18px]">
@@ -495,7 +498,7 @@ const Home = ({ address }: HomeProps) => {
         </div>
       </Fragment>
       {tabIndex === TabType.COMMENTS && (
-        <footer className="fixed w-[500px] bottom-0 bg-white z-10 border-b">
+        <footer className="sticky bottom-0 bg-white border-b">
           {/* comment form */}
           <form
             className="flex border-t border-neutral-300 p-3"
