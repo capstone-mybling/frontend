@@ -79,7 +79,8 @@ export default function MyPage() {
     (formData: FormData) => axios.patch("api/users/me", formData),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["userInfo"]);
+        console.log("프로필변경 성공!");
+        queryClient.invalidateQueries(["users", "me"]);
       },
     }
   );
