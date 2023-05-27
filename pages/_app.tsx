@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Fragment>
         <div
           className={cls(
-            "mx-auto my-auto flex-col min-h-screen bg-white flex justify-between",
+            "mx-auto my-auto flex-col min-h-screen bg-white flex",
             nanum.className
           )}
         >

@@ -16,7 +16,7 @@ export default function Layout({ children, disableFooter }: LayoutProps) {
         <ResponsiveAppBar />
       </header>
       {/* 본문 */}
-      <main>{children}</main>
+      <main className="flex-1">{children}</main>
       {!disableFooter && (
         <footer className="sticky bottom-0 bg-white z-10 border-b">
           <BottomNavBar />
