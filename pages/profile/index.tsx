@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, Fragment, useState } from "react";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
@@ -234,7 +234,7 @@ export default function MyPage() {
               }`}
               onClick={() => customTabChange(2)}
             >
-              구매한 NFT
+              소유한 NFT
               <p
                 className={`${
                   activeTab === 2
@@ -270,22 +270,28 @@ export default function MyPage() {
             </div>
           )}
           {activeTab === 2 && (
-            <div className="grid grid-cols-3 gap-1">
-              <Thumbnail
-                thumbnail={data?.avatar}
-                address={`posts/${2}`}
-                option="Thumnail"
-                link={data?.address}
-              />
-              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                test
-              </div>
-              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                test
-              </div>
-              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                test
-              </div>
+            <div>
+              {data.ownedPosts.length === 0 ? (
+                <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
+                  <h1 className="text-2xl">게시글이 없습니다.</h1>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-1">
+                  {data.ownedPosts
+                    .slice(0)
+                    .reverse()
+                    .map((post) => (
+                      <li key={post.id} className="list-none">
+                        <Thumbnail
+                          thumbnail={post.thumnail}
+                          address={post.address}
+                          option="Thumnail"
+                          link={post.address}
+                        />
+                      </li>
+                    ))}
+                </div>
+              )}
             </div>
           )}
         </div>

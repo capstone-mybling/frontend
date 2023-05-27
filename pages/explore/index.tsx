@@ -19,6 +19,7 @@ import { EffectCube, Pagination } from "swiper";
 import Thumbnail from "@/components/Thumbnail";
 import PostViewer from "@/components/PostViewer";
 import ExploreLoading from "@/components/ExploreLoading";
+import useWeb3 from "@/hooks/useWeb3";
 
 interface DetailPost extends Post {
   likes: number;
@@ -28,6 +29,7 @@ interface DetailPost extends Post {
 }
 
 const Explore: NextPage = () => {
+  const { account } = useWeb3();
   const { isLoading, data, error } = useQuery<DetailPost[]>({
     queryKey: ["posts", "users"],
     queryFn: () =>
@@ -67,15 +69,28 @@ const Explore: NextPage = () => {
                 />
                 <div className="flex gap-1 flex-col absolute bottom-3 left-3">
                   <div className="flex gap-2 items-center">
-                    <Link href={`/profile/${post.author.address}`}>
-                      <Image
-                        className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
-                        src={post.author.avatar!}
-                        alt="profile image"
-                        width={32}
-                        height={32}
-                      />
-                    </Link>
+                    {post.author.address === account ? (
+                      <Link href={`/profile`}>
+                        <Image
+                          className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
+                          src={post.author.avatar!}
+                          alt="profile image"
+                          width={32}
+                          height={32}
+                        />
+                      </Link>
+                    ) : (
+                      <Link href={`/profile/${post.author.address}`}>
+                        <Image
+                          className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
+                          src={post.author.avatar!}
+                          alt="profile image"
+                          width={32}
+                          height={32}
+                        />
+                      </Link>
+                    )}
+
                     <Link href={`/posts/${post.address}`}>
                       <div className="text-2xl font-semibold text-white">
                         {post.name}

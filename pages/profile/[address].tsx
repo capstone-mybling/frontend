@@ -194,21 +194,28 @@ const Home = ({ address }: HomeProps) => {
             </div>
           )}
           {activeTab === TabType.OWNED && (
-            <div className="grid grid-cols-3 gap-1">
-              <Thumbnail
-                thumbnail={src}
-                address={`posts/${2}`}
-                option="Thumnail"
-              />
-              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                test
-              </div>
-              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                test
-              </div>
-              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                test
-              </div>
+            <div>
+              {data.ownedPosts.length === 0 ? (
+                <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
+                  <h1 className="text-2xl">소유한 NFT가 없습니다.</h1>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-1">
+                  {data.ownedPosts
+                    .slice(0)
+                    .reverse()
+                    .map((post) => (
+                      <li key={post.id} className="list-none">
+                        <Thumbnail
+                          thumbnail={post.thumnail}
+                          address={post.address}
+                          option="Thumnail"
+                          link={post.address}
+                        />
+                      </li>
+                    ))}
+                </div>
+              )}
             </div>
           )}
         </div>
