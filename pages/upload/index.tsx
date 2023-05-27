@@ -11,7 +11,7 @@
 
 import { FieldErrors, useForm } from "react-hook-form";
 import Layout from "@/components/Layout";
-import { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
 import useWeb3 from "@/hooks/useWeb3";
@@ -60,26 +60,10 @@ export default function Upload() {
     formState: { isValid },
   } = useForm<UploadForm>({ mode: "onChange" });
   const { marketplaceContract, nftContract, accountOrigin } = useWeb3();
-  // console.log(nftContract);
-
-  const checkApproval = async () => {
-    // const isApproved = await nftContract.isApprovedForAll(
-    //   accountOrigin,
-    //   process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS
-    // );
-    //
-    // if (!isApproved) {
-    //   await (
-    //     await nftContract.setApprovalForAll(
-    //       process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
-    //       true
-    //     )
-    //   ).wait();
-    // }
-  };
 
   // handlesubmit 시 작동하는 함수 두가지
-  const onValid = async (data: UploadForm) => {
+  const onSubmit = async (data: UploadForm) => {
+    setIsModal(false);
     setShowProgress(true);
     const { name, description, count, price } = data;
     const form = new FormData();
@@ -161,25 +145,18 @@ export default function Upload() {
     setPriceValue(value);
   };
 
-  const [open, setOpen] = useState<boolean>(false);
   const [isModal, setIsModal] = useState<boolean>(false);
-  const [modalButton, setModalButton] = useState<boolean>(true);
 
-  const handleClose = (answer: boolean) => {
-    setOpen(false);
-    setModalButton(answer);
-  };
-
-  const openModal = () => {
+  const openModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setIsModal(true);
-    setOpen(true);
   };
 
   return (
     <Layout>
       {showProgress && <ProgressLoading />}
       <form
-        onSubmit={handleSubmit(onValid, onNotValid)}
+        // onSubmit={handleSubmit(onSubmit, onNotValid)}
         className="px-5 grid-cols-1 grid w-full mx-auto space-y-8 my-8"
       >
         <h1 className="text-4xl font-bold">Create New Item</h1>
@@ -245,7 +222,8 @@ export default function Upload() {
           </label>
           <p>
             {`The description will be included on the item's detail page
-            underneath its image.`}
+            underneath its image`}{" "}
+            <span className="text-sm text-gray-700">{`(maximum 50 characters allows)`}</span>
           </p>
           <input
             {...register("description", { required: true })}
@@ -253,6 +231,7 @@ export default function Upload() {
             id="input-desc"
             type="text"
             placeholder="Provide a detailed description of your item."
+            maxLength={50}
           />
         </div>
         <div>
@@ -298,94 +277,75 @@ export default function Upload() {
             )}
           </div>
         </div>
-        {modalButton ? (
-          <span
-            className={cls(
-              "flex items-center justify-center px-6 py-1 rounded-full text-white transition-colors duration-500 w-2/3 mx-auto h-10",
-              isValid
-                ? "bg-violet-600 cursor-pointer opacity-70"
-                : "pointer-events-none bg-gray-500 opacity-50"
-            )}
-            onClick={openModal}
-          >
-            Upload
-          </span>
-        ) : (
-          <input
-            className={cls(
-              "px-6 py-1 rounded-full text-white transition-colors duration-500 w-2/3 mx-auto h-10",
-              isValid
-                ? "bg-violet-600 cursor-pointer opacity-70"
-                : "pointer-events-none bg-gray-500 opacity-50"
-            )}
-            type="submit"
-            value="Minting"
-          />
+        <button
+          className={cls(
+            "flex items-center justify-center px-6 py-1 rounded-full text-white transition-colors duration-500 w-2/3 mx-auto h-10",
+            isValid
+              ? "bg-violet-600 cursor-pointer opacity-70"
+              : "pointer-events-none bg-gray-500 opacity-50"
+          )}
+          onClick={openModal}
+        >
+          Upload
+        </button>
+        {isModal && (
+          <div className="fixed top-0 left-0 flex justify-center items-center w-full h-full">
+            <div className="w-full h-full bg-black opacity-50"></div>
+            <div className="absolute w-[400px] h-[300px] bg-white shadow-lg border p-4 flex flex-col justify-between">
+              <h1 className="text-center text-xl font-black">
+                Continue Minting
+              </h1>
+              <div className="flex flex-col h-full justify-around text-gray-500">
+                <div>
+                  <div className="flex justify-between">
+                    <span className="font-semibold">name :</span>
+                    <span className="text-violet-400 font-semibold">
+                      {getValues("name")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-semibold">description : </span>
+                    <span className="text-violet-400 font-semibold text-right">
+                      {getValues("description")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-semibold">count : </span>
+                    <span className="text-violet-400 font-semibold">
+                      {getValues("count")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-semibold">price : </span>
+                    <span className="text-violet-400 font-semibold">
+                      {getValues("price")} GoerliETH
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <span className="text-black">
+                    해당 정보로 NFT를 생성하시겠습니까?
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  className="hover:shadow-xl px-4 py-1 font-semibold border-1"
+                  onClick={() => setIsModal(false)}
+                >
+                  취소하기
+                </button>
+                <button
+                  onClick={handleSubmit(onSubmit)}
+                  className="hover:shadow-xl hover:bg-violet-600 px-4 py-1 font-semibold bg-violet-400 text-white "
+                >
+                  민팅하기
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </form>
-      {isModal && (
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle
-            id="alert-dialog-title"
-            sx={{
-              opacity: "75%",
-              paddingLeft: "54px",
-              backgroundColor: "rgb(150 60 250)",
-              color: "white",
-            }}
-          >
-            {"continue minting"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText
-              id="alert-dialog-description"
-              sx={{ paddingTop: "20px", marginX: "20px" }}
-            >
-              <div className="flex justify-between">
-                <span className="font-medium">name :</span>
-                <span className="text-violet-400">{getValues("name")}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium">description : </span>
-                <span className="text-violet-400">
-                  {getValues("description")}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium">count : </span>
-                <span className="text-violet-400">{getValues("count")}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium">price : </span>
-                <span className="text-violet-400">
-                  {getValues("price")} GoerliETH
-                </span>
-              </div>
-              <br />
-              해당 정보로 민팅을 진행하시겠습니까?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <button
-              className="shadow-xl px-4 py-1 font-semibold"
-              onClick={() => handleClose(true)}
-            >
-              취소하기
-            </button>
-            <button
-              onClick={() => handleClose(false)}
-              className="shadow-xl px-4 py-1 font-semibold bg-violet-500 text-white "
-            >
-              민팅하기
-            </button>
-          </DialogActions>
-        </Dialog>
-      )}
     </Layout>
   );
 }
