@@ -81,7 +81,7 @@ export default function FollowerModal({ userFollower }: Props) {
               {userFollower.map((follower: any) => {
                 if (follower) {
                   return (
-                    <li key={follower.id} className="list-none mb-2">
+                    <li key={follower.id} className="list-none my-3">
                       <div className="flex justify-between">
                         <UserAvatar
                           size="small"

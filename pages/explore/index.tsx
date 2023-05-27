@@ -39,73 +39,72 @@ const Explore: NextPage = () => {
     <ExploreLoading />
   ) : (
     <Layout>
-      <div className=" object-contain">
-        <Swiper
-          grabCursor={true}
-          effect={"creative"}
-          creativeEffect={{
-            prev: {
-              shadow: true,
-              translate: ["-120%", 0, -500],
-            },
-            next: {
-              shadow: true,
-              translate: ["120%", 0, -500],
-            },
-          }}
-          modules={[EffectCreative]}
-          className="mySwiper2"
-        >
-          {data?.map((post) => (
-            <SwiperSlide key={post.id} className="shadow-2xl aspect-auto">
-              <div className="relative">
-                {/* <div className="absolute top-3 left-3"> */}
-                {/* </div> */}
-                <Thumbnail
-                  thumbnail={post.thumbnail}
-                  address={post.address}
-                  option="Explore"
-                  link={post.address}
-                />
-                <div className="flex gap-1 flex-col absolute bottom-3 left-3">
-                  <div className="flex gap-2 items-center">
-                    {post.author.address === account ? (
-                      <Link href={`/profile`}>
-                        <Image
-                          className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
-                          src={post.author.avatar!}
-                          alt="profile image"
-                          width={32}
-                          height={32}
-                        />
-                      </Link>
-                    ) : (
-                      <Link href={`/profile/${post.author.address}`}>
-                        <Image
-                          className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
-                          src={post.author.avatar!}
-                          alt="profile image"
-                          width={32}
-                          height={32}
-                        />
-                      </Link>
-                    )}
-
-                    <Link href={`/posts/${post.address}`}>
-                      <div className="text-2xl font-semibold text-white">
-                        {post.name}
-                      </div>
+      <Swiper
+        grabCursor={true}
+        effect={"creative"}
+        creativeEffect={{
+          prev: {
+            shadow: true,
+            translate: ["-120%", 0, -500],
+          },
+          next: {
+            shadow: true,
+            translate: ["120%", 0, -500],
+          },
+        }}
+        modules={[EffectCreative]}
+        className="mySwiper2"
+      >
+        {data?.map((post) => (
+          <SwiperSlide
+            key={post.id}
+            className="shadow-2xl h-screen aspect-auto"
+          >
+            <div className="relative">
+              <Thumbnail
+                thumbnail={post.thumbnail}
+                address={post.address}
+                option="Explore"
+                link={post.address}
+              />
+              <div className="flex gap-1 flex-col absolute bottom-3 left-3">
+                <div className="flex gap-2 items-center">
+                  {post.author.address === account ? (
+                    <Link href={`/profile`}>
+                      <Image
+                        className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
+                        src={post.author.avatar!}
+                        alt="profile image"
+                        width={32}
+                        height={32}
+                      />
                     </Link>
-                  </div>
-                  <div className="text-[15px] text-neutral-100">
-                    {post.price} GoerliETH
-                  </div>
+                  ) : (
+                    <Link href={`/profile/${post.author.address}`}>
+                      <Image
+                        className="inline-block rounded-full ring-2 ring-gray-200 aspect-square"
+                        src={post.author.avatar!}
+                        alt="profile image"
+                        width={32}
+                        height={32}
+                      />
+                    </Link>
+                  )}
+
+                  <Link href={`/posts/${post.address}`}>
+                    <div className="text-2xl font-semibold text-white">
+                      {post.name}
+                    </div>
+                  </Link>
+                </div>
+                <div className="text-[15px] text-neutral-100">
+                  {post.price} GoerliETH
                 </div>
               </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </Layout>
   );
 };
