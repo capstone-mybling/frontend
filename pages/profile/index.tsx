@@ -11,6 +11,7 @@ import { FieldErrors, useForm } from "react-hook-form";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 
 interface UserWithFollow extends User {
   followings: string[];
@@ -248,7 +249,10 @@ export default function MyPage() {
             <div>
               {data.posts.length === 0 ? (
                 <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
-                  <h1 className="text-2xl">게시글이 없습니다.</h1>
+                  <h1 className="text-2xl">생성한 NFT가 없습니다</h1>
+                  <p className="mt-6 underline ">
+                    <Link href={"/upload"}>NFT 생성하러가기</Link>
+                  </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-3 gap-1">
@@ -273,7 +277,10 @@ export default function MyPage() {
             <div>
               {data.ownedPosts.length === 0 ? (
                 <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
-                  <h1 className="text-2xl">게시글이 없습니다.</h1>
+                  <h1 className="text-2xl">소유한 NFT가 없습니다</h1>
+                  <p className="mt-6 underline ">
+                    <Link href={"/explore"}>NFT 둘러보기</Link>
+                  </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-3 gap-1">
