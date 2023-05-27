@@ -291,7 +291,7 @@ export default function Upload() {
         {isModal && (
           <div className="fixed top-0 left-0 flex justify-center items-center w-full h-full">
             <div className="w-full h-full bg-black opacity-50"></div>
-            <div className="absolute w-[400px] h-[300px] bg-white shadow-lg border p-4 flex flex-col justify-between">
+            <div className="absolute max-w-[400px] w-[80%] h-[300px] bg-white shadow-lg border p-4 flex flex-col justify-between">
               <h1 className="text-center text-xl font-black">
                 Continue Minting
               </h1>
