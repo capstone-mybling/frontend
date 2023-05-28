@@ -1,21 +1,24 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
 @media (min-width: 390px) {
-  html {
-    background-color: #fff;
-    width: 500px;
-    margin: auto;
-    min-height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    background-color: #c6cae3;
-  }
+    html {
+        background-color: #fff;
+        width: 100%;
+        max-width: 500px;
+        margin: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background-color: #c6cae3;
+    }
 }
+
 @layer base {
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 }
