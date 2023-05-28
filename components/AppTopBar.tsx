@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import AppBar from "@mui/material/AppBar";
@@ -83,13 +83,10 @@ function ResponsiveAppBar() {
     <>
       <AppBar
         color="inherit"
-        className="w-[500px] inset-x-0 mx-auto shadow drop-shadow-[0_10px_3px_-2px_rgba(100,100,100,0.25)] h-16 z-20 justify-center"
+        className=" inset-x-0 mx-auto shadow drop-shadow-[0_10px_3px_-2px_rgba(100,100,100,0.25)] h-16 z-20 justify-center"
       >
         <Container className="pr-3 pl-3">
-          <Toolbar
-            disableGutters
-            className="flex justify-between"
-          >
+          <Toolbar disableGutters className="flex justify-between">
             {/* 로고버튼 */}
             <Box>
               <Image
@@ -150,59 +147,13 @@ function ResponsiveAppBar() {
         )}
       >
         <div className="flex-cols-1 items-center justify-center">
-          <div className="w-full bg-white h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)]">1</div>
+          <div className="w-full bg-white h-15 shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)]">
+            1
+          </div>
           <button onClick={handleSearchBar}>Close</button>
         </div>
       </div>
       {/* 메뉴 박스 */}
-      {/* <Backdrop
-        sx={{ color: "#ffffff", zIndex: 10 }}
-        open={menuBar}
-        onClick={() => setMenuBar(false)}
-      >
-        <div
-          className={cls(
-            "fixed inset-0 mx-auto top-16 transition-all duration-500 transform z-20 w-[500px]",
-            menuBar ? "translate-y-0 " : " -translate-y-1/2 pointer-events-none"
-          )}
-        >
-          <div className="flex-cols-1 items-center justify-center mx-auto z-20">
-            <div className="w-full bg-white h-full shadow-[0_3px_20px_-10px_rgba(0,0,0,0.25)] grid grid-cols-1">
-              {!logined ? (
-                <div
-                  className="flex bg-sky-400 w-auto h-14 items-center mx-auto my-8 mt-10 px-10 space-x-7 rounded-full hover:cursor-pointer text-amber-600 transition-colors hover:text-amber-50 hover:bg-sky-600 shadow-md duration-500"
-                  onClick={handleLogin}
-                >
-                  <MetaMask></MetaMask>
-                  <button className=" text-center text-xl font-semibold ">Connect wallet</button>
-                </div>
-              ) : (
-                <div className=" flex-1 text-center align-middle my-10">
-                  <p className=" font-extrabold font-sans text-sm text-orange-500">
-                    블록체인 NET : {network} 이더리움 네트워크
-                    {isConnected ? " connnected" : " disconnected"}
-                  </p>
-                  <p className=" font-extrabold font-sans text-sm text-orange-500">
-                    최근 접속 IP : {user?.lastLoginIP}
-                  </p>
-                  <p className=" font-extrabold font-sans text-sm text-orange-500">
-                    이름 : {user?.username == null ? "미지정" : user.username}
-                  </p>
-                  <p className=" font-extrabold font-sans text-sm text-orange-500">
-                    지갑 주소 : {user?.address}
-                  </p>
-                  <p className=" font-extrabold font-sans text-sm text-orange-500">
-                    이더리움 : {balance.toFixed(5)} GoerliETH
-                  </p>
-                </div>
-              )}
-              <div className="flex justify-center py-4 bg-slate-200 border-t-[1px] border-gray-300 shadow-md">
-                <Copyright />
-              </div>
-            </div>
-          </div>
-        </div>
-      </Backdrop> */}
     </>
   );
 }

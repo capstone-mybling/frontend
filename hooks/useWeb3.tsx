@@ -53,7 +53,7 @@ const useWeb3 = () => {
   );
 
   useEffect(() => {
-    initializeWeb3();
+    initializeWeb3().then();
   }, []);
 
   const initializeWeb3WithoutSigner = async () => {
@@ -75,7 +75,7 @@ const useWeb3 = () => {
       }
 
       // provider 변경?
-      const provider = new ethers.BrowserProvider(connection, "any");
+      const provider = new ethers.BrowserProvider(connection, "goerli");
       await getAndSetWeb3ContextWithoutSigner(provider);
     } catch (e) {
       console.log(e);
@@ -122,19 +122,22 @@ const useWeb3 = () => {
     if (!networkName) {
       return false;
     }
-    const marketplaceContract = new ethers.Contract(
+
+    console.log(process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS!);
+    console.log(process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS!);
+
+    const marketplace = new ethers.Contract(
       process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS!,
       Marketplace.abi,
       signer
     );
-    const nftContract = new ethers.Contract(
+    const nft = new ethers.Contract(
       process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS!,
       NFT.abi,
       signer
     );
-    setMarketplaceContract(marketplaceContract);
-    setNftContract(nftContract);
-
+    setMarketplaceContract(marketplace);
+    setNftContract(nft);
     return true;
   };
 
