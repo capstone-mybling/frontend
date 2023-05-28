@@ -2,7 +2,6 @@ import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
 import { useEffect, useState } from "react";
-import src from "@public/exam2.png";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
@@ -197,7 +196,7 @@ const Home = ({ address }: HomeProps) => {
             <div>
               {data.ownedPosts.length === 0 ? (
                 <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
-                  <h1 className="text-2xl">소유한 NFT가 없습니다.</h1>
+                  <h1 className="text-2xl">구매한 NFT가 없습니다.</h1>
                 </div>
               ) : (
                 <div className="grid grid-cols-3 gap-1">

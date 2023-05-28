@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
-import { ChangeEvent, Fragment, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
@@ -235,7 +235,7 @@ export default function MyPage() {
               }`}
               onClick={() => customTabChange(2)}
             >
-              소유한 NFT
+              구매한 NFT
               <p
                 className={`${
                   activeTab === 2
@@ -277,7 +277,7 @@ export default function MyPage() {
             <div>
               {data.ownedPosts.length === 0 ? (
                 <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
-                  <h1 className="text-2xl">소유한 NFT가 없습니다</h1>
+                  <h1 className="text-2xl">구매한 NFT가 없습니다</h1>
                   <p className="mt-6 underline ">
                     <Link href={"/explore"}>NFT 둘러보기</Link>
                   </p>
@@ -290,7 +290,7 @@ export default function MyPage() {
                     .map((post) => (
                       <li key={post.id} className="list-none">
                         <Thumbnail
-                          thumbnail={post.thumnail}
+                          thumbnail={post.thumbnail}
                           address={post.address}
                           option="Thumnail"
                           link={post.address}
