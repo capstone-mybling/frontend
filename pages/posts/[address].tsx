@@ -389,7 +389,7 @@ const Home = ({ address }: HomeProps) => {
                 </div>
               )}
               {tabIndex === TabType.SALES && (
-                <div className="mt-4 flex-col-1 justify-center space-y-3 w-full">
+                <div className="mt-4 flex-col-1 justify-center w-full">
                   {postData!.transfers.map((transfer) => (
                     <TransferCard
                       key={transfer.id}
