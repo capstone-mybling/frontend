@@ -20,9 +20,6 @@ import Opensea from "@public/opensea.png";
 import OnSale from "@public/onsale.svg";
 import NotForSale from "@public/notforsale.svg";
 import SoldOut from "@public/soldout.svg";
-import MintCard from "@public/mint.png";
-import UploadCard from "@public/upload.png";
-import PurchaseCard from "@public/purchase.png";
 import Layout from "@components/Layout";
 import UserAvatar from "@components/UserAvatar";
 import LikeButton from "@components/LikeButton";
@@ -31,7 +28,7 @@ import DetailLoading from "@components/DetailLoading";
 import useWeb3 from "@/hooks/useWeb3";
 import { ethers } from "ethers";
 import Link from "next/link";
-import { Card, CardContent, CardMedia } from "@mui/material";
+import TransferCard from "@components/TransferCard";
 
 interface DetailPost extends Post {
   contract: Contract;
@@ -298,15 +295,14 @@ const Home = ({ address }: HomeProps) => {
                     src={postData!.currentOwner.avatar}
                     alt="owner avatar"
                   />
-                )}
-              </div>
+                </div>
+              )}
               <span className="text-sm font-extrabold text-pantone">
                 Current Owner
               </span>
-              {postData!.currentOwner?.username !== null ? (
-                </div>
-              )}
-              <span className="text-sm font-extrabold text-pantone">Current Owner</span>
+              <span className="text-sm font-extrabold text-pantone">
+                Current Owner
+              </span>
               {postData!.currentOwner !== null ? (
                 <Link
                   className="text-sm font-bold text-pantone-darker"
@@ -406,10 +402,7 @@ const Home = ({ address }: HomeProps) => {
                             key={comment.id}
                             className="flex justify-between px-2 flex-col pb-4"
                           >
-                            <Comment
-                              comment={comment}
-                              address={address}
-                            />
+                            <Comment comment={comment} address={address} />
                           </li>
                         )))}
                   </ul>
@@ -418,10 +411,7 @@ const Home = ({ address }: HomeProps) => {
               {tabIndex === TabType.SALES && (
                 <div className="mt-4 flex-col-1 justify-center w-full">
                   {postData!.transfers.map((transfer) => (
-                    <TransferCard
-                      key={transfer.id}
-                      transfer={transfer}
-                    />
+                    <TransferCard key={transfer.id} transfer={transfer} />
                   ))}
                 </div>
               )}
@@ -433,8 +423,12 @@ const Home = ({ address }: HomeProps) => {
                   </div>
                   <hr />
                   <div className="w-full flex justify-center items-center h-14 text-[18px]">
-                    <p className="w-[20%] font-bold text-pantone-dark">작가 주소</p>
-                    <p className="w-[80%] text-[14px] text-right break-words">{accountOrigin}</p>
+                    <p className="w-[20%] font-bold text-pantone-dark">
+                      작가 주소
+                    </p>
+                    <p className="w-[80%] text-[14px] text-right break-words">
+                      {accountOrigin}
+                    </p>
                   </div>
                   <hr />
                   <div className="flex justify-between items-center h-14 text-[18px]">
