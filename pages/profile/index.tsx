@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import Thumbnail from "@/components/Thumbnail";
 import UserAvatar from "@components/UserAvatar";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, Fragment, useState } from "react";
 import axios from "axios";
 import FollowerModal from "@/components/FollowerModal";
 import FollowingModal from "@/components/FollowingModal";
@@ -11,6 +11,7 @@ import { FieldErrors, useForm } from "react-hook-form";
 import Image from "next/image";
 import { cls } from "@/libs/client/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 
 interface UserWithFollow extends User {
   followings: string[];
@@ -79,7 +80,8 @@ export default function MyPage() {
     (formData: FormData) => axios.patch("api/users/me", formData),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["userInfo"]);
+        console.log("프로필변경 성공!");
+        queryClient.invalidateQueries(["users", "me"]);
       },
     }
   );
@@ -122,6 +124,7 @@ export default function MyPage() {
                     " rounded-2xl text-violet-500 font-extrabold"
                   )}
                   type="submit"
+                  value="저장하기"
                 />
               </div>
               {/* 프로필사진 변경 업로드 전/후 */}
@@ -158,7 +161,7 @@ export default function MyPage() {
               <div className="mx-auto">
                 <input
                   {...register("name", { required: true })}
-                  className="border-2 border-violet-200 rounded-xl"
+                  className="border-2 border-violet-200 rounded-xl w-full"
                   id="input-name"
                   type="text"
                   placeholder="edit your name"
@@ -232,7 +235,7 @@ export default function MyPage() {
               }`}
               onClick={() => customTabChange(2)}
             >
-              구매한 NFT
+              소유한 NFT
               <p
                 className={`${
                   activeTab === 2
@@ -246,7 +249,10 @@ export default function MyPage() {
             <div>
               {data.posts.length === 0 ? (
                 <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
-                  <h1 className="text-2xl">게시글이 없습니다.</h1>
+                  <h1 className="text-2xl">생성한 NFT가 없습니다</h1>
+                  <p className="mt-6 underline ">
+                    <Link href={"/upload"}>NFT 생성하러가기</Link>
+                  </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-3 gap-1">
@@ -268,22 +274,31 @@ export default function MyPage() {
             </div>
           )}
           {activeTab === 2 && (
-            <div className="grid grid-cols-3 gap-1">
-              <Thumbnail
-                thumbnail={data?.avatar}
-                address={`posts/${2}`}
-                option="Thumnail"
-                link={data?.address}
-              />
-              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                test
-              </div>
-              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                test
-              </div>
-              <div className="flex items-center justify-center aspect-square bg-gray-300 rounded-sm hover:cursor-pointer">
-                test
-              </div>
+            <div>
+              {data.ownedPosts.length === 0 ? (
+                <div className="text-center font-extrabold text-gray-400 mx-auto mt-10">
+                  <h1 className="text-2xl">소유한 NFT가 없습니다</h1>
+                  <p className="mt-6 underline ">
+                    <Link href={"/explore"}>NFT 둘러보기</Link>
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-1">
+                  {data.ownedPosts
+                    .slice(0)
+                    .reverse()
+                    .map((post) => (
+                      <li key={post.id} className="list-none">
+                        <Thumbnail
+                          thumbnail={post.thumnail}
+                          address={post.address}
+                          option="Thumnail"
+                          link={post.address}
+                        />
+                      </li>
+                    ))}
+                </div>
+              )}
             </div>
           )}
         </div>

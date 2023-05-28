@@ -13,6 +13,7 @@ export type User = {
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
+  ownedPosts: any[];
 };
 
 /**

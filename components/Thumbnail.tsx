@@ -49,7 +49,7 @@ function getOptionStyle(option: OptionStyle) {
     case "Explore":
       return {
         style:
-          "flex items-center justify-center aspect-[2/3] bg-gray-400 hover:cursor-pointer",
+          "flex items-center justify-center aspect-3/4 bg-gray-400 hover:cursor-pointer",
       };
   }
 }

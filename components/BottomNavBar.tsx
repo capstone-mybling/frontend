@@ -43,8 +43,9 @@ export default function BottomNavBar() {
   const { data } = useQuery({
     queryKey: ["users", "me"],
     queryFn: () =>
-      axios.get("api/users/me").then((response) => response.data.data),
+      axios.get("/api/users/me").then((response) => response.data.data),
   });
+  // console.log(data);
 
   return (
     <nav className="border-t-[3px] border-slate-100">
@@ -55,7 +56,7 @@ export default function BottomNavBar() {
               <li key={item.href}>
                 <Link href={item.href}>
                   <Image
-                    className="rounded-full border-[1px] border-gray-300 z-50"
+                    className="aspect-square rounded-full border-[1px] border-gray-300 z-50"
                     src={data?.avatar}
                     alt="프로필 이미지"
                     width={32}

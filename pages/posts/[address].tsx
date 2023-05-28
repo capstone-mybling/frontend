@@ -20,21 +20,25 @@ import Opensea from "@public/opensea.png";
 import OnSale from "@public/onsale.svg";
 import NotForSale from "@public/notforsale.svg";
 import SoldOut from "@public/soldout.svg";
+import MintCard from "@public/mint.png";
+import UploadCard from "@public/upload.png";
+import PurchaseCard from "@public/purchase.png";
 import Layout from "@components/Layout";
-import UserAvatar from "@/components/UserAvatar";
-import LikeButton from "@/components/LikeButton";
-import Comment from "@/components/Comment";
+import UserAvatar from "@components/UserAvatar";
+import LikeButton from "@components/LikeButton";
+import Comment from "@components/Comment";
+import DetailLoading from "@components/DetailLoading";
 import useWeb3 from "@/hooks/useWeb3";
 import { ethers } from "ethers";
 import Link from "next/link";
-import DetailLoading from "@/components/DetailLoading";
+import { Card, CardContent, CardMedia } from "@mui/material";
 
 interface DetailPost extends Post {
   contract: Contract;
   likes: number;
   isLiked: boolean;
   author: User;
-  transfer: Transfer;
+  transfers: Transfer[];
   comments: PostComment[];
   status: PostStatus;
   isSold: true;
@@ -121,7 +125,6 @@ const Home = ({ address }: HomeProps) => {
     }
   }, [postData]);
 
-  // MUI tabs
   const [tabIndex, setTabIndex] = useState<TabType>(TabType.COMMENTS);
 
   // comments mutation using react-query
@@ -287,8 +290,8 @@ const Home = ({ address }: HomeProps) => {
           </div>
           <section className="flex justify-between mb-4">
             <div className="px-1 flex space-x-2 items-center">
-              <div className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6">
-                {postData!.currentOwner?.avatar && (
+              {postData!.currentOwner?.avatar && (
+                <div className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6">
                   <Image
                     width={40}
                     height={40}
@@ -301,6 +304,10 @@ const Home = ({ address }: HomeProps) => {
                 Current Owner
               </span>
               {postData!.currentOwner?.username !== null ? (
+                </div>
+              )}
+              <span className="text-sm font-extrabold text-pantone">Current Owner</span>
+              {postData!.currentOwner !== null ? (
                 <Link
                   className="text-sm font-bold text-pantone-darker"
                   href={`/profile/${postData!.currentOwner?.address}`}
@@ -333,8 +340,8 @@ const Home = ({ address }: HomeProps) => {
             </div>
             <p className="my-4">{postData!.description}</p>
           </section>
-          <div className="w-full">
-            <div className="w-full my-5 flex justify-evenly align-middle">
+          <div className="w-full flex flex-col">
+            <div className="my-5 mx-auto ">
               <button
                 className={`px-4 py-2 ${
                   tabIndex === TabType.COMMENTS
@@ -353,7 +360,7 @@ const Home = ({ address }: HomeProps) => {
                 ></p>
               </button>
               <button
-                className={`px-4 py-2 ${
+                className={`px-4 py-2 ml-4 mr-2 ${
                   tabIndex === TabType.SALES
                     ? "text-pantone font-extrabold"
                     : "text-pantone-light font-base"
@@ -370,7 +377,7 @@ const Home = ({ address }: HomeProps) => {
                 ></p>
               </button>
               <button
-                className={`px-4 py-2 ${
+                className={`pl-4 py-2 ${
                   tabIndex === TabType.ADDITIONAL
                     ? "text-pantone font-extrabold"
                     : "text-pantone-light "
@@ -399,13 +406,25 @@ const Home = ({ address }: HomeProps) => {
                             key={comment.id}
                             className="flex justify-between px-2 flex-col pb-4"
                           >
-                            <Comment comment={comment} />
+                            <Comment
+                              comment={comment}
+                              address={address}
+                            />
                           </li>
                         )))}
                   </ul>
                 </div>
               )}
-              {tabIndex === TabType.SALES && <p>판매정보</p>}
+              {tabIndex === TabType.SALES && (
+                <div className="mt-4 flex-col-1 justify-center w-full">
+                  {postData!.transfers.map((transfer) => (
+                    <TransferCard
+                      key={transfer.id}
+                      transfer={transfer}
+                    />
+                  ))}
+                </div>
+              )}
               {tabIndex === TabType.ADDITIONAL && (
                 <section className="p-2 mt-4 flex-col">
                   <div className="flex justify-between items-center h-14 text-[18px]">
@@ -413,9 +432,9 @@ const Home = ({ address }: HomeProps) => {
                     <p>{postData!.author.username}</p>
                   </div>
                   <hr />
-                  <div className="flex justify-between items-center h-14 text-[18px]">
-                    <p className="font-bold text-pantone-dark">작가 주소</p>
-                    <p className="text-[14px]">{accountOrigin}</p>
+                  <div className="w-full flex justify-center items-center h-14 text-[18px]">
+                    <p className="w-[20%] font-bold text-pantone-dark">작가 주소</p>
+                    <p className="w-[80%] text-[14px] text-right break-words">{accountOrigin}</p>
                   </div>
                   <hr />
                   <div className="flex justify-between items-center h-14 text-[18px]">
@@ -497,7 +516,7 @@ const Home = ({ address }: HomeProps) => {
         </div>
       </Fragment>
       {tabIndex === TabType.COMMENTS && (
-        <footer className="fixed w-[500px] bottom-0 bg-white z-10 border-b">
+        <footer className="sticky bottom-0 bg-white border-b">
           {/* comment form */}
           <form
             className="flex border-t border-neutral-300 p-3"

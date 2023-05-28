@@ -112,18 +112,18 @@ export default function PostViewer({
             </div>
             {/* current owner */}
             <div className="px-1 flex space-x-2 items-center">
-              <div className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6">
-                {ownerImage && (
+              {ownerImage && (
+                <div className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6">
                   <Image
                     width={40}
                     height={40}
                     src={ownerImage}
                     alt="owner avatar"
                   />
-                )}
-              </div>
+                </div>
+              )}
               <span className="text-sm font-extrabold text-pantone">Current Owner</span>
-              {ownerName !== null ? (
+              {ownerName !== undefined ? (
                 <Link
                   className="text-sm font-bold text-pantone-darker"
                   href={`/profile/${ownerAddress}`}
