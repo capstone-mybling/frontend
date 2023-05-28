@@ -41,6 +41,7 @@ const handler = async (
   const ownedPosts = await client.post.findMany({
     where: {
       currentOwnerAddress: address as string,
+      isSold: true,
     },
   });
 

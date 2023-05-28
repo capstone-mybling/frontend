@@ -1,5 +1,12 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Contract, Post, PostComment, User, PostStatus, Transfer } from "@/libs/client/types";
+import {
+  Contract,
+  Post,
+  PostComment,
+  PostStatus,
+  Transfer,
+  User,
+} from "@/libs/client/types";
 import { GetServerSideProps } from "next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -21,7 +28,6 @@ import UserAvatar from "@components/UserAvatar";
 import LikeButton from "@components/LikeButton";
 import Comment from "@components/Comment";
 import DetailLoading from "@components/DetailLoading";
-import TransferCard from "@components/TransferCard";
 import useWeb3 from "@/hooks/useWeb3";
 import { ethers } from "ethers";
 import Link from "next/link";
@@ -42,6 +48,7 @@ interface DetailPost extends Post {
     avatar: string;
   };
 }
+
 interface commentPostForm {
   content: string;
 }
@@ -92,18 +99,24 @@ interface HomeProps {
 
 const Home = ({ address }: HomeProps) => {
   const queryClient = useQueryClient();
-  const { account, marketplaceContract, nftContract, accountOrigin } = useWeb3();
+  const { account, marketplaceContract, nftContract, accountOrigin } =
+    useWeb3();
 
   //calling API and handling data
   const { data: postData, isLoading: postIsLoading } = useQuery<DetailPost>({
     queryKey: ["post", address],
-    queryFn: async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
+    queryFn: async () =>
+      await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
   });
 
-  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<CommentDetail[]>({
+  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<
+    CommentDetail[]
+  >({
     queryKey: ["postComments", address],
     queryFn: async () =>
-      await axios.get(`/api/posts/${address}/comments`).then((res) => res.data.data),
+      await axios
+        .get(`/api/posts/${address}/comments`)
+        .then((res) => res.data.data),
   });
 
   useEffect(() => {
@@ -134,11 +147,14 @@ const Home = ({ address }: HomeProps) => {
       })
     ).wait();
 
-    const patchResponse = await axios.patch(`/api/posts/${postData!.address}/purchase`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const patchResponse = await axios.patch(
+      `/api/posts/${postData!.address}/purchase`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (patchResponse.status === 200) {
       setSaleInfo(PostStatus.SOLD_OUT);
@@ -148,7 +164,10 @@ const Home = ({ address }: HomeProps) => {
   const toMarketPlace = async () => {
     const mintId = postData!.contract.mintId;
     await (
-      await nftContract.approve(process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS, mintId)
+      await nftContract.approve(
+        process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
+        mintId
+      )
     ).wait();
 
     const listingPrice = ethers.parseEther(postData!.price.toString());
@@ -180,7 +199,7 @@ const Home = ({ address }: HomeProps) => {
   };
   //only for test
   const [saleInfo, setSaleInfo] = useState<PostStatus>(PostStatus.NOT_FOR_SALE);
-  console.log("test", postData);
+
   if (postIsLoading || commentsIsLoading) {
     return <DetailLoading />;
   }
@@ -198,7 +217,8 @@ const Home = ({ address }: HomeProps) => {
               isMine={account === postData!.authorAddress}
             />
             {account === postData!.authorAddress ? (
-              !postData!.isSold && postData!.status === PostStatus.NOT_FOR_SALE ? (
+              !postData!.isSold &&
+              postData!.status === PostStatus.NOT_FOR_SALE ? (
                 <button
                   onClick={toMarketPlace}
                   className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70 hover:bg-violet-800 transition duration-300"
@@ -210,7 +230,8 @@ const Home = ({ address }: HomeProps) => {
                   {saleInfo === PostStatus.ON_SALE ? "판매중" : "판매완료"}
                 </button>
               )
-            ) : postData!.isSold || postData!.status === PostStatus.NOT_FOR_SALE ? (
+            ) : postData!.isSold ||
+              postData!.status === PostStatus.NOT_FOR_SALE ? (
               <button className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white pointer-events-none disabled">
                 {saleInfo === PostStatus.SOLD_OUT ? "판매완료" : "구매불가"}
               </button>
@@ -240,7 +261,7 @@ const Home = ({ address }: HomeProps) => {
         <div className="flex flex-col px-2 justify-center">
           <div className="flex felx-row justify-between">
             <span className="ml-1 font-bold text-sm">
-              MFT #
+              MFT #{postData!.contract.mintId}
               <Link
                 passHref
                 legacyBehavior
@@ -255,12 +276,15 @@ const Home = ({ address }: HomeProps) => {
                   {postData!.contract.mintId}
                 </a>
               </Link>
+              &nbsp;&#93;
             </span>
             <div className="flex items-center space-x-2 ml-1">
               <EtheriumIcon />
               <div className="flex">
                 <span>{postData!.price}</span>
-                <span className=" text-cyan-950 font-extrabold">&nbsp;GETH</span>
+                <span className=" text-cyan-950 font-extrabold">
+                  &nbsp;GETH
+                </span>
               </div>
             </div>
           </div>
@@ -274,6 +298,12 @@ const Home = ({ address }: HomeProps) => {
                     src={postData!.currentOwner.avatar}
                     alt="owner avatar"
                   />
+                )}
+              </div>
+              <span className="text-sm font-extrabold text-pantone">
+                Current Owner
+              </span>
+              {postData!.currentOwner?.username !== null ? (
                 </div>
               )}
               <span className="text-sm font-extrabold text-pantone">Current Owner</span>
@@ -285,12 +315,7 @@ const Home = ({ address }: HomeProps) => {
                   {postData!.currentOwner?.username}
                 </Link>
               ) : (
-                <Image
-                  width={40}
-                  height={40}
-                  src={Logo}
-                  alt="MFT"
-                />
+                <Image width={40} height={40} src={Logo} alt="MFT" />
               )}
             </div>
             <div className="flex items-center justify-end my-2">
@@ -308,7 +333,9 @@ const Home = ({ address }: HomeProps) => {
                 <h1 className="font-bold text-2xl">{postData!.name}</h1>
               </div>
               <div>
-                <p className="text-gray-500">{dateCalculator(postData!.createdAt)}</p>
+                <p className="text-gray-500">
+                  {dateCalculator(postData!.createdAt)}
+                </p>
               </div>
             </div>
             <p className="my-4">{postData!.description}</p>
@@ -389,7 +416,7 @@ const Home = ({ address }: HomeProps) => {
                 </div>
               )}
               {tabIndex === TabType.SALES && (
-                <div className="mt-4 flex-col-1 justify-center space-y-3 w-full">
+                <div className="mt-4 flex-col-1 justify-center w-full">
                   {postData!.transfers.map((transfer) => (
                     <TransferCard
                       key={transfer.id}
@@ -428,7 +455,9 @@ const Home = ({ address }: HomeProps) => {
                     <Link
                       passHref
                       legacyBehavior
-                      href={`https://goerli.etherscan.io/tx/${postData!.contractAddress}`}
+                      href={`https://goerli.etherscan.io/tx/${
+                        postData!.contractAddress
+                      }`}
                     >
                       <a target="_blank">
                         <Image
@@ -460,7 +489,9 @@ const Home = ({ address }: HomeProps) => {
                   </div>
                   <hr />
                   <div className="flex justify-between items-center h-14">
-                    <p className="font-bold text-pantone-dark">OpenSea 마켓플레이스</p>
+                    <p className="font-bold text-pantone-dark">
+                      OpenSea 마켓플레이스
+                    </p>
                     <Link
                       passHref
                       legacyBehavior

@@ -1,6 +1,6 @@
 import React from "react";
-import ResponsiveAppBar from "./AppTopBar";
 import BottomNavBar from "./BottomNavBar";
+import ResponsiveAppBar from "@components/AppTopBar";
 
 interface LayoutProps {
   title?: string;
