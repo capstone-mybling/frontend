@@ -20,9 +20,9 @@ export default function FollowingModal({
 }: Props) {
   const { account } = useWeb3();
   // console.log("팔로잉목록 = ", userFollowing);
-  const [open, setOpen] = useState(false);
-  const handleModalOpen = () => setOpen(true);
-  const handleModalClose = () => setOpen(false);
+  const [isModal, setIsModal] = useState(false);
+  const handleModalOpen = () => setIsModal(true);
+  const handleModalClose = () => setIsModal(false);
   const style = {
     position: "absolute",
     top: "50%",
@@ -41,7 +41,7 @@ export default function FollowingModal({
     {
       onSuccess: async () => {
         console.log("following 삭제 성공!");
-        await queryClient.invalidateQueries(["userInfo"]);
+        await queryClient.invalidateQueries(["users", "me"]);
       },
     }
   );
@@ -61,39 +61,25 @@ export default function FollowingModal({
         <span className="mr-2 font-bold">{userFollowing.length}</span>
         <span className="font-semibold text-gray-400">Followings</span>
       </button>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={open}
-        onClose={handleModalClose}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-      >
-        <Fade in={open}>
-          <Box sx={style}>
-            <div className="flex border-b-[2px] border-gray-200 pb-2 justify-between">
-              <Typography
-                id="transition-modal-title"
-                variant="h6"
-                component="h2"
-                sx={{ alignSelf: "center", marginX: "auto" }}
+      {isModal && (
+        <div className="fixed top-0 left-0 flex justify-center items-center w-full h-full">
+          <div className="w-full h-full bg-black opacity-50"></div>
+          <div className="absolute max-w-[400px] w-[80%] h-[300px] bg-white shadow-lg border p-4 flex flex-col overflow-auto">
+            <h1 className="text-center text-xl font-black pb-4">
+              Following
+              <button
+                className="text-right absolute right-5"
+                onClick={handleModalClose}
               >
-                팔로잉
-              </Typography>
-              <button onClick={handleModalClose} className="hover:text-red-300">
                 X
               </button>
-            </div>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+            </h1>
+            <hr className="py-2" />
+            <div className="overflow-auto">
               {userFollowing.map((following: any) => {
                 if (following) {
                   return (
-                    <li key={following.address} className="list-none mb-2">
+                    <li key={following.address} className="list-none mb-3">
                       <div className="flex justify-between">
                         <UserAvatar
                           size="small"
@@ -104,7 +90,7 @@ export default function FollowingModal({
                         />
                         {delBtn ? (
                           <button
-                            className="px-4 py-2 bg-gray-300 rounded-xl font-black hover:text-violet-500"
+                            className="px-4 py-2 bg-gray-200 rounded-xl font-extrabold hover:text-violet-500"
                             onClick={(e) => {
                               handleDeleteFollower(following.address);
                             }}
@@ -119,10 +105,10 @@ export default function FollowingModal({
                   );
                 }
               })}
-            </Typography>
-          </Box>
-        </Fade>
-      </Modal>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
