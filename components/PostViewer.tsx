@@ -113,15 +113,13 @@ export default function PostViewer({
             {/* current owner */}
             <div className="px-1 flex space-x-2 items-center">
               {ownerImage && (
-                <div className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6">
-                  <Image
-                    className="rounded-full"
-                    width={40}
-                    height={40}
-                    src={ownerImage}
-                    alt="owner avatar"
-                  />
-                </div>
+                <Image
+                  className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6"
+                  width={40}
+                  height={40}
+                  src={ownerImage}
+                  alt="owner avatar"
+                />
               )}
               <span className="text-sm font-extrabold text-pantone">Current Owner</span>
               {ownerName !== undefined ? (
