@@ -20,12 +20,6 @@ import axios from "axios";
 import ProgressLoading from "@/components/ProgressLoading";
 import { useRouter } from "next/router";
 
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-
 enum FileType {
   IMAGE = "image",
   VIDEO = "video",
@@ -102,7 +96,7 @@ export default function Upload() {
         description,
         count,
         price,
-        mintId: Number(mintId),
+        mintId: Number(mintId) + 1,
       },
       {
         headers: {

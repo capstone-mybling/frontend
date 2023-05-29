@@ -138,7 +138,7 @@ const Home = ({ address }: HomeProps) => {
 
   const purchase = async () => {
     const itemId = postData!.contract.itemId;
-    const response = await (
+    await (
       await marketplaceContract.purchaseItem(BigInt(itemId), {
         value: ethers.parseEther((postData!.price * 1.01).toString()),
       })
@@ -161,9 +161,9 @@ const Home = ({ address }: HomeProps) => {
   const toMarketPlace = async () => {
     const mintId = postData!.contract.mintId;
     await (
-      await nftContract.setApprovalForAll(
+      await nftContract.approve(
         process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
-        true
+        mintId
       )
     ).wait();
 
