@@ -116,7 +116,10 @@ const handler = async (
 
     if (formData.files.avatar) {
       const avatar = fs.createReadStream(formData.files.avatar.filepath);
-      const avatarHash = await uploadFileToIPFS(avatar, formData.files.avatar.filename);
+      const avatarHash = await uploadFileToIPFS(
+        avatar,
+        `avatar_${address}_${Date.now()}`
+      );
       userData.avatar = `https://ipfs.io/ipfs/${avatarHash.ipfsHash}`;
     }
 
