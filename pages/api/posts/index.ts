@@ -135,7 +135,7 @@ const handler = async (
         authorAddress: user!.address,
         contractAddress: contract.hash,
         address: ipfsHash,
-        thumbnail: "https://gateway.pinata.cloud/ipfs/" + imageHash,
+        thumbnail: "https://ipfs.io/ipfs/" + imageHash,
         price: +price,
         count: +count,
         currentOwnerAddress: user!.address,

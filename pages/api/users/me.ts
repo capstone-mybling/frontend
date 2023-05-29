@@ -7,6 +7,7 @@ import getRedisClient from "@libs/server/redis";
 import ErrorCode from "@libs/server/error_code";
 import parsedFormData from "@libs/server/parseFormData";
 import fs from "fs";
+import { uploadFileToIPFS } from "@libs/server/ipfs";
 
 export const config = {
   api: {
@@ -114,13 +115,12 @@ const handler = async (
     }
 
     if (formData.files.avatar) {
-      const avatar = fs.readFileSync(formData.files.avatar.filepath);
-      const avatarPath = `/avatar/${
-        formData.files.avatar.newFilename
-      }.${formData.files.avatar.originalFilename.split(".").pop()}`;
-      fs.writeFileSync(`public${avatarPath}`, avatar);
-      fs.unlinkSync(formData.files.avatar.filepath);
-      userData.avatar = avatarPath;
+      const avatar = fs.createReadStream(formData.files.avatar.filepath);
+      const avatarHash = await uploadFileToIPFS(
+        avatar,
+        `avatar_${address}_${Date.now()}`
+      );
+      userData.avatar = `https://ipfs.io/ipfs/${avatarHash.ipfsHash}`;
     }
 
     const updatedUser = await client.user.update({
