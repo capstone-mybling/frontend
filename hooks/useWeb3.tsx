@@ -123,8 +123,8 @@ const useWeb3 = () => {
       return false;
     }
 
-    console.log(process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS!);
-    console.log(process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS!);
+    // console.log(process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS!);
+    // console.log(process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS!);
 
     const marketplace = new ethers.Contract(
       process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS!,

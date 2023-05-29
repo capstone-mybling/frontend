@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Layout from "@/components/Layout";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Post, PostComment, User } from "@libs/client/types";
@@ -35,7 +35,22 @@ const Explore: NextPage = () => {
     queryFn: () =>
       axios.get("api/posts/explore").then((response) => response.data.data),
   });
-  return isLoading || data == undefined ? (
+  const [isReady, setIsReady] = useState<boolean>(true);
+  const [mixData, setMixData] = useState<DetailPost[]>();
+  useEffect(() => {
+    if (data) {
+      setMixData([...data]);
+      console.log("data = ", data);
+    }
+  }, [data]);
+  useEffect(() => {
+    if (mixData) {
+      mixData?.sort(() => Math.random() - 0.5);
+      console.log("mix data = ", mixData);
+      setIsReady(false);
+    }
+  }, [mixData]);
+  return isReady || data == undefined ? (
     <ExploreLoading />
   ) : (
     <Layout>
@@ -55,7 +70,7 @@ const Explore: NextPage = () => {
         modules={[EffectCreative]}
         className="mySwiper2"
       >
-        {data?.map((post) => (
+        {mixData?.map((post) => (
           <SwiperSlide
             key={post.id}
             className="shadow-2xl h-screen aspect-auto"
