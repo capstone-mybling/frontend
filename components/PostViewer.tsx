@@ -115,6 +115,7 @@ export default function PostViewer({
               {ownerImage && (
                 <div className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6">
                   <Image
+                    className="rounded-full"
                     width={40}
                     height={40}
                     src={ownerImage}
