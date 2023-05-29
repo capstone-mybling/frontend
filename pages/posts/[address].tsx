@@ -161,9 +161,9 @@ const Home = ({ address }: HomeProps) => {
   const toMarketPlace = async () => {
     const mintId = postData!.contract.mintId;
     await (
-      await nftContract.approve(
+      await nftContract.setApprovalForAll(
         process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
-        mintId
+        true
       )
     ).wait();
 
@@ -258,7 +258,7 @@ const Home = ({ address }: HomeProps) => {
         <div className="flex flex-col px-2 justify-center">
           <div className="flex felx-row justify-between">
             <span className="ml-1 font-bold text-sm">
-              MFT #{postData!.contract.mintId}
+              MFT &nbsp;
               <Link
                 passHref
                 legacyBehavior
@@ -270,10 +270,9 @@ const Home = ({ address }: HomeProps) => {
                   target="_blank"
                   className="hover:text-blue-500 text-sky-500 hover:underline"
                 >
-                  {postData!.contract.mintId}
+                  #{postData!.contract.mintId}
                 </a>
               </Link>
-              &nbsp;&#93;
             </span>
             <div className="flex items-center space-x-2 ml-1">
               <EtheriumIcon />
@@ -297,9 +296,6 @@ const Home = ({ address }: HomeProps) => {
                   />
                 </div>
               )}
-              <span className="text-sm font-extrabold text-pantone">
-                Current Owner
-              </span>
               <span className="text-sm font-extrabold text-pantone">
                 Current Owner
               </span>
