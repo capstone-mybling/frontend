@@ -264,15 +264,13 @@ const Home = ({ address }: HomeProps) => {
           <section className="flex justify-between mb-4">
             <div className="px-1 flex space-x-2 items-center">
               {postData!.currentOwner?.avatar && (
-                <div className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6">
-                  <Image
-                    className="rounded-full"
-                    width={40}
-                    height={40}
-                    src={postData!.currentOwner.avatar}
-                    alt="owner avatar"
-                  />
-                </div>
+                <Image
+                  className="inline-block rounded-full ring-2 ring-pantone-light w-6 h-6"
+                  width={40}
+                  height={40}
+                  src={postData!.currentOwner.avatar}
+                  alt="owner avatar"
+                />
               )}
               <span className="text-sm font-extrabold text-pantone">Current Owner</span>
               {postData!.currentOwner !== null ? (
