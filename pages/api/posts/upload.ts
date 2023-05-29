@@ -67,7 +67,7 @@ const handler = async (
   const ipfsFile = await uploadFileToIPFS(uploadedFile, formData.fields.name);
   const ipfsJson = await uploadJsonToIPFS(
     {
-      image_url: `https://gateway.pinata.cloud/ipfs/${ipfsFile.ipfsHash}`,
+      image_url: `https://ipfs.io/ipfs/${ipfsFile.ipfsHash}`,
       image: `ipfs://${ipfsFile.ipfsHash}`,
       description: formData.fields.description,
       name: formData.fields.name,

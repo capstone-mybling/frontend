@@ -465,7 +465,7 @@ const Home = ({ address }: HomeProps) => {
                     <Link
                       passHref
                       legacyBehavior
-                      href={`https://goerli.etherscan.io/address/0x7d56062dd1c44c6cb784a1c2ab1ec3d14ea84e13`}
+                      href={`https://goerli.etherscan.io/address/${process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS}`}
                     >
                       <a target="_blank">
                         <Image
@@ -485,9 +485,9 @@ const Home = ({ address }: HomeProps) => {
                     <Link
                       passHref
                       legacyBehavior
-                      href={`https://testnets.opensea.io/assets/goerli/0x7d56062dd1c44c6cb784a1c2ab1ec3d14ea84e13/${
-                        postData!.contract.mintId + 1
-                      }`}
+                      href={`https://testnets.opensea.io/assets/goerli/${
+                        process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS
+                      }/${postData!.contract.mintId + 1}`}
                     >
                       <a target="_blank">
                         <Image
