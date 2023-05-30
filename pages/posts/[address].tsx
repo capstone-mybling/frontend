@@ -1,5 +1,12 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Contract, Post, PostComment, PostStatus, Transfer, User } from "@/libs/client/types";
+import {
+  Contract,
+  Post,
+  PostComment,
+  PostStatus,
+  Transfer,
+  User,
+} from "@/libs/client/types";
 import { GetServerSideProps } from "next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -89,18 +96,24 @@ interface HomeProps {
 
 const Home = ({ address }: HomeProps) => {
   const queryClient = useQueryClient();
-  const { account, marketplaceContract, nftContract, accountOrigin } = useWeb3();
+  const { account, marketplaceContract, nftContract, accountOrigin } =
+    useWeb3();
 
   //calling API and handling data
   const { data: postData, isLoading: postIsLoading } = useQuery<DetailPost>({
     queryKey: ["post", address],
-    queryFn: async () => await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
+    queryFn: async () =>
+      await axios.get(`/api/posts/${address}`).then((res) => res.data.data),
   });
 
-  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<CommentDetail[]>({
+  const { data: commentsData, isLoading: commentsIsLoading } = useQuery<
+    CommentDetail[]
+  >({
     queryKey: ["postComments", address],
     queryFn: async () =>
-      await axios.get(`/api/posts/${address}/comments`).then((res) => res.data.data),
+      await axios
+        .get(`/api/posts/${address}/comments`)
+        .then((res) => res.data.data),
   });
 
   useEffect(() => {
@@ -131,11 +144,14 @@ const Home = ({ address }: HomeProps) => {
       })
     ).wait();
 
-    const patchResponse = await axios.patch(`/api/posts/${postData!.address}/purchase`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const patchResponse = await axios.patch(
+      `/api/posts/${postData!.address}/purchase`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (patchResponse.status === 200) {
       setSaleInfo(PostStatus.SOLD_OUT);
@@ -145,7 +161,10 @@ const Home = ({ address }: HomeProps) => {
   const toMarketPlace = async () => {
     const mintId = postData!.contract.mintId;
     await (
-      await nftContract.approve(process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS, mintId)
+      await nftContract.approve(
+        process.env.NEXT_PUBLIC_MARKET_PLACE_CONTRACT_ADDRESS,
+        mintId
+      )
     ).wait();
 
     const listingPrice = ethers.parseEther(postData!.price.toString());
@@ -184,7 +203,7 @@ const Home = ({ address }: HomeProps) => {
   return (
     <Layout disableFooter>
       <Fragment>
-        <div className="py-4 px-4 mx-auto shadow-sm space-y-2 flex flex-row items-start space-x-10 justify-between">
+        <div className="overflow-hidden max-w-full py-4 px-4 mx-auto shadow-sm space-y-2 flex flex-row items-start space-x-10 justify-between">
           {/* header info : 사용자 정보 & 작성시간 */}
           <div className="flex flex-1 items-center justify-between">
             <UserAvatar
@@ -195,7 +214,8 @@ const Home = ({ address }: HomeProps) => {
               isMine={account === postData!.authorAddress}
             />
             {account === postData!.authorAddress ? (
-              !postData!.isSold && postData!.status === PostStatus.NOT_FOR_SALE ? (
+              !postData!.isSold &&
+              postData!.status === PostStatus.NOT_FOR_SALE ? (
                 <button
                   onClick={toMarketPlace}
                   className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white hover:opacity-70 hover:bg-violet-800 transition duration-300"
@@ -207,7 +227,8 @@ const Home = ({ address }: HomeProps) => {
                   {saleInfo === PostStatus.ON_SALE ? "판매중" : "판매완료"}
                 </button>
               )
-            ) : postData!.isSold || postData!.status === PostStatus.NOT_FOR_SALE ? (
+            ) : postData!.isSold ||
+              postData!.status === PostStatus.NOT_FOR_SALE ? (
               <button className="bg-black opacity-30 px-6 py-1 rounded-2xl text-white pointer-events-none disabled">
                 {saleInfo === PostStatus.SOLD_OUT ? "판매완료" : "구매불가"}
               </button>
@@ -257,7 +278,9 @@ const Home = ({ address }: HomeProps) => {
               <EtheriumIcon />
               <div className="flex">
                 <span>{postData!.price}</span>
-                <span className=" text-cyan-950 font-extrabold">&nbsp;GETH</span>
+                <span className=" text-cyan-950 font-extrabold">
+                  &nbsp;GETH
+                </span>
               </div>
             </div>
           </div>
@@ -272,7 +295,9 @@ const Home = ({ address }: HomeProps) => {
                   alt="owner avatar"
                 />
               )}
-              <span className="text-sm font-extrabold text-pantone">Current Owner</span>
+              <span className="text-sm font-extrabold text-pantone">
+                Current Owner
+              </span>
               {postData!.currentOwner !== null ? (
                 <Link
                   className="text-sm font-bold text-pantone-darker"
@@ -281,12 +306,7 @@ const Home = ({ address }: HomeProps) => {
                   {postData!.currentOwner?.username}
                 </Link>
               ) : (
-                <Image
-                  width={40}
-                  height={40}
-                  src={Logo}
-                  alt="MFT"
-                />
+                <Image width={40} height={40} src={Logo} alt="MFT" />
               )}
             </div>
             <div className="flex items-center justify-end my-2">
@@ -304,7 +324,9 @@ const Home = ({ address }: HomeProps) => {
                 <h1 className="font-bold text-2xl">{postData!.name}</h1>
               </div>
               <div>
-                <p className="text-gray-500">{dateCalculator(postData!.createdAt)}</p>
+                <p className="text-gray-500">
+                  {dateCalculator(postData!.createdAt)}
+                </p>
               </div>
             </div>
             <p className="my-4">{postData!.description}</p>
@@ -375,10 +397,7 @@ const Home = ({ address }: HomeProps) => {
                             key={comment.id}
                             className="flex justify-between px-2 flex-col pb-4"
                           >
-                            <Comment
-                              comment={comment}
-                              address={address}
-                            />
+                            <Comment comment={comment} address={address} />
                           </li>
                         )))}
                   </ul>
@@ -387,10 +406,7 @@ const Home = ({ address }: HomeProps) => {
               {tabIndex === TabType.SALES && (
                 <div className="mt-4 flex-col-1 justify-center w-full">
                   {postData!.transfers.map((transfer) => (
-                    <TransferCard
-                      key={transfer.id}
-                      transfer={transfer}
-                    />
+                    <TransferCard key={transfer.id} transfer={transfer} />
                   ))}
                 </div>
               )}
@@ -402,8 +418,12 @@ const Home = ({ address }: HomeProps) => {
                   </div>
                   <hr />
                   <div className="w-full flex justify-center items-center h-14 text-[18px]">
-                    <p className="w-[20%] font-bold text-pantone-dark">작가 주소</p>
-                    <p className="w-[80%] text-[14px] text-right break-words">{accountOrigin}</p>
+                    <p className="w-[20%] font-bold text-pantone-dark">
+                      작가 주소
+                    </p>
+                    <p className="w-[80%] text-[14px] text-right break-words">
+                      {accountOrigin}
+                    </p>
                   </div>
                   <hr />
                   <div className="flex justify-between items-center h-14 text-[18px]">
@@ -424,7 +444,9 @@ const Home = ({ address }: HomeProps) => {
                     <Link
                       passHref
                       legacyBehavior
-                      href={`https://goerli.etherscan.io/tx/${postData!.contractAddress}`}
+                      href={`https://goerli.etherscan.io/tx/${
+                        postData!.contractAddress
+                      }`}
                     >
                       <a target="_blank">
                         <Image
@@ -456,7 +478,9 @@ const Home = ({ address }: HomeProps) => {
                   </div>
                   <hr />
                   <div className="flex justify-between items-center h-14">
-                    <p className="font-bold text-pantone-dark">OpenSea 마켓플레이스</p>
+                    <p className="font-bold text-pantone-dark">
+                      OpenSea 마켓플레이스
+                    </p>
                     <Link
                       passHref
                       legacyBehavior

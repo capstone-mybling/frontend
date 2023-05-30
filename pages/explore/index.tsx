@@ -39,17 +39,10 @@ const Explore: NextPage = () => {
   const [mixData, setMixData] = useState<DetailPost[]>();
   useEffect(() => {
     if (data) {
-      setMixData([...data]);
-      console.log("data = ", data);
-    }
-  }, [data]);
-  useEffect(() => {
-    if (mixData) {
-      mixData?.sort(() => Math.random() - 0.5);
-      console.log("mix data = ", mixData);
+      setMixData((prev) => [...data].sort(() => Math.random() - 0.5));
       setIsReady(false);
     }
-  }, [mixData]);
+  }, [data]);
   return isReady || data == undefined ? (
     <ExploreLoading />
   ) : (
