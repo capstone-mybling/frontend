@@ -462,7 +462,7 @@ const Home = ({ address }: HomeProps) => {
                       legacyBehavior
                       href={`https://testnets.opensea.io/assets/goerli/${
                         process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS
-                      }/${postData!.contract.mintId + 1}`}
+                      }/${postData!.contract.mintId}`}
                     >
                       <a target="_blank">
                         <Image
